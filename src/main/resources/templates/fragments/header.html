@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="gnbHeader" class="header">
+    <a th:href="@{/}" class="logo">BRORDER</a>
+    <ul class="nav-menu">
+        <li><a th:href="@{/review/store/1}">메뉴 (리뷰테스트)</a></li>
+        <li><a href="#">이벤트</a></li>
+        <li><a href="#">매장찾기</a></li>
+        <li><a href="#">브랜드</a></li>
+        <li><a href="#">고객센터</a></li>
+    </ul>
+    <div class="header-icons">
+        <button class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <a th:href="@{/review/my}" class="icon-btn"><i class="fa-solid fa-user"></i></a>
+        <a th:href="@{/}" class="icon-btn">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span class="badge">0</span>
+        </a>
+    </div>
+</header>
+</html>

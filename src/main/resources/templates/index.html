@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRORDER - 맛있는 배달 주문</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* 피그마 변수 매핑을 위한 루트 스타일 설정 */
+        :root {
+            --primary-mint: #2AC1BC;
+            --primary-red: #D4183D;
+            --primary-gold: #FFCA28;
+            --dark-charcoal: #333333;
+            --light-gray: #F8F9FA;
+            --border-color: #E9ECEF;
+            --shadow-style: 0 8px 24px rgba(0,0,0,0.08);
+            --card-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            color: var(--dark-charcoal);
+            overflow-x: hidden;
+        }
+
+        /* ----------------------------------
+              GNB HEADER (Auto Layout: Horizontal)
+           ------------------------------------- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 10%;
+            border-bottom: 1px solid var(--border-color);
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-red);
+            letter-spacing: -1px;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .logo:hover { transform: scale(1.05); }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+        .nav-menu a:hover { color: var(--primary-mint); }
+
+        .header-icons {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-charcoal);
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+        }
+        .icon-btn:hover { color: var(--primary-red); }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-red);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+
+        /* ----------------------------------
+              HERO BANNER (2단 분할 레이아웃)
+           ------------------------------------- */
+        .hero-section {
+            background-color: #5c8d62; /* 외곽 초록 배경 */
+            padding: 40px 10%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* 왼쪽 프로모션 영역 (민트) */
+        .hero-left {
+            background: linear-gradient(135deg, var(--primary-mint), #23a6a1);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            color: white;
+            position: relative;
+        }
+
+        .promo-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .hero-left h1 {
+            font-size: 42px;
+            font-weight: 900;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .hero-left p {
+            font-size: 18px;
+            margin-bottom: 35px;
+            opacity: 0.9;
+        }
+
+        .hero-btn {
+            background: white;
+            color: var(--primary-mint);
+            padding: 14px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* 오른쪽 베스트 쇼케이스 영역 (레드 + 모션 이미지 애니메이션) */
+        .hero-right {
+            background: linear-gradient(135deg, var(--primary-red), #b01030);
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            text-align: center;
+        }
+
+        .best-tag {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--primary-gold);
+            color: var(--dark-charcoal);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .hero-right h2 {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 25px;
+        }
+
+        /* 회전 모션 및 확대 애니메이션 적용 박스 */
+        .pizza-display-box {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin-bottom: 25px;
+        }
+
+        .pizza-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 6px solid rgba(255,255,255,0.2);
+            box-shadow: var(--card-shadow);
+            animation: rotateMotion 40s linear infinite;
+        }
+
+        @keyframes rotateMotion {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 실시간 마감 타이머 스타일 박스 */
+        .timer-box {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timer-box i { color: var(--primary-gold); animation: pulse 1s infinite alternate; }
+
+        @keyframes pulse {
+            from { opacity: 0.6; } to { opacity: 1; }
+        }
+
+        .price-tag {
+            font-size: 16px;
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .sale-price {
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .order-btn {
+            background: white;
+            color: var(--primary-red);
+            padding: 12px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            text-decoration: none; /* 링크화 대응 */
+        }
+        .order-btn:hover { transform: scale(1.05); }
+
+        /* ----------------------------------
+              QUICK ACTION MENU (6단 카테고리 아이콘)
+           ------------------------------------- */
+        .quick-section {
+            padding: 50px 10%;
+            display: flex;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .quick-grid {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            gap: 20px;
+        }
+
+        .quick-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none; /* 링크화 대응 */
+            color: var(--dark-charcoal);
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-style);
+            transition: all 0.3s ease;
+        }
+
+        /* 시안 맞춤형 아이콘 컬러 그라데이션 배치 */
+        .q-1 { background: linear-gradient(135deg, #2AC1BC, #1ba39f); }
+        .q-2 { background: linear-gradient(135deg, #FFCA28, #e0b016); }
+        .q-3 { background: linear-gradient(135deg, #D4183D, #b01030); }
+        .q-4 { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .q-5 { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .q-6 { background: linear-gradient(135deg, #607D8B, #455A64); }
+
+        .quick-item:hover .icon-circle {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .quick-item h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .quick-item p { font-size: 12px; color: #888; }
+
+        /* ----------------------------------
+              MAIN CONTENT - GRID (인기메뉴 TOP 5)
+           ------------------------------------- */
+        .menu-section {
+            padding: 60px 10%;
+            background-color: var(--light-gray);
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 왼쪽 거대 대장 카드 (Featured Item) */
+        .featured-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-style);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .badge-red {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--primary-red);
+            color: white;
+            padding: 6px 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 2;
+        }
+
+        .featured-img-box {
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            background: #f1f1f1;
+        }
+        .featured-img-box img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .featured-card:hover .featured-img-box img { transform: scale(1.05); }
+
+        .featured-info {
+            padding: 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .menu-meta-title { font-size: 24px; font-weight: 900; margin-bottom: 10px; }
+        .menu-desc { font-size: 15px; color: #666; line-height: 1.5; margin-bottom: 20px; }
+
+        .rating-box { color: var(--primary-gold); font-size: 14px; margin-bottom: 15px; }
+
+        .price-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        .price-group .price { font-size: 24px; font-weight: 900; color: var(--primary-charcoal); }
+
+        .action-inline-btn {
+            background: var(--primary-mint);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none; /* 링크화 대응 */
+        }
+        .action-inline-btn:hover { background: #1ba39f; }
+
+        /* 오른쪽 2x2 서브 그리드 박스 */
+        .sub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .sub-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-style);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .sub-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .sub-img-box {
+            width: 100%;
+            height: 160px;
+            background: #f1f1f1;
+        }
+        .sub-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .sub-info {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .sub-info h4 { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+        .sub-info p { font-size: 13px; color: #777; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .sub-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 900;
+        }
+
+        .mini-btn {
+            background: none;
+            border: 1px solid var(--primary-mint);
+            color: var(--primary-mint);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none; /* 링크화 대응 */
+        }
+        .mini-btn:hover { background: var(--primary-mint); color: white; }
+
+        /* ----------------------------------
+              STORE LOCATOR SECTION (매장 찾기 3단)
+           ------------------------------------- */
+        .store-section {
+            padding: 60px 10%;
+            background: #fff;
+        }
+
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .store-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-style);
+        }
+
+        .store-img-box {
+            width: 100%;
+            height: 180px;
+            position: relative;
+        }
+        .store-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .store-overlay-tag {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 12px;
+            font-weight: 700;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .store-info {
+            padding: 20px;
+        }
+        .store-info p {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .store-btn {
+            width: 100%;
+            background: none;
+            border: 1px solid #ced4da;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--dark-charcoal);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none; /* 링크화 대응 */
+            display: block;
+            text-align: center;
+        }
+        .store-btn:hover { border-color: var(--primary-mint); color: var(--primary-mint); }
+
+        /* ----------------------------------
+              FOOTER
+           ------------------------------------- */
+        .footer {
+            background: var(--dark-charcoal);
+            color: #a0a0a0;
+            padding: 50px 10% 30px 10%;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #444;
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-links { display: flex; gap: 20px; list-style: none; }
+        .footer-links a { color: #fff; text-decoration: none; font-weight: 700; }
+
+        .sns-icons { display: flex; gap: 15px; font-size: 18px; }
+        .sns-icons i { cursor: pointer; transition: color 0.2s; }
+        .sns-icons i:hover { color: #fff; }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .company-info p { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: gnbHeader}"></div>
+
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-left">
+            <span class="promo-tag"><i class="fa-solid fa-star"></i> 특별 프로모션</span>
+            <h1>이달의 야관장자<br>무료증정 이벤트</h1>
+            <p>프리미엄 피자 주문 시 야관장자 사이드 메뉴 무료!</p>
+            <a th:href="@{/review/store/1}" class="hero-btn">자세히 보기</a>
+        </div>
+        <div class="hero-right">
+            <span class="best-tag">BEST</span>
+            <h2>슈퍼브로더 콤보 피자</h2>
+
+            <div class="pizza-display-box">
+                <img class="pizza-img" src="https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=500&q=80" alt="Super Brorder Pizza">
+            </div>
+
+            <div class="timer-box">
+                <i class="fa-solid fa-clock"></i> 타임 세일 종료까지 <span id="countdown">00:00:00</span>
+            </div>
+
+            <div class="price-tag">29,900원</div>
+            <div class="sale-price">25,900원</div>
+            <a th:href="@{/review/store/1}" class="order-btn">주문하기</a>
+        </div>
+    </div>
+</section>
+
+<section class="quick-section">
+    <div class="quick-grid">
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-1"><i class="fa-solid fa-motorcycle"></i></div>
+            <h3>배달 주문</h3>
+            <p>빠른 배달</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-2"><i class="fa-solid fa-bag-shopping"></i></div>
+            <h3>포장 주문</h3>
+            <p>매장 방문</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-3"><i class="fa-solid fa-gift"></i></div>
+            <h3>이벤트</h3>
+            <p>특별 혜택</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-4"><i class="fa-solid fa-store"></i></div>
+            <h3>매장 찾기</h3>
+            <p>가까운 매장</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-5"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3>예약 주문</h3>
+            <p>원하는 시간</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item">
+            <div class="icon-circle q-6"><i class="fa-solid fa-phone"></i></div>
+            <h3>전화 주문</h3>
+            <p>1588-0000</p>
+        </a>
+    </div>
+</section>
+
+<section class="menu-section">
+    <h2 class="section-title">최애추천 인기메뉴 TOP5 🔥</h2>
+    <div class="grid-container">
+        <div class="featured-card">
+            <span class="badge-red">BEST 01</span>
+            <div class="featured-img-box">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="슈퍼 브로더 콤보">
+            </div>
+            <div class="featured-info">
+                <div>
+                    <div class="menu-meta-title">슈퍼 브로더 콤보</div>
+                    <p class="menu-desc">페퍼로니, 이탈리안 소시지, 양송이, 양파, 올리브가 토핑된 최고의 오리지널 콤보 피자</p>
+                    <div class="rating-box">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.9 (1,247)</span>
+                    </div>
+                </div>
+                <div class="price-group">
+                    <div class="price">25,900원</div>
+                    <a th:href="@{/review/store/1}" class="action-inline-btn">주문하기</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-grid">
+            <div class="sub-card">
+                <div class="sub-img-box"><img src="https://images.unsplash.com/photo-1571066811602-716837d681de?auto=format&fit=crop&w=400&q=80"></div>
+                <div class="sub-info">
+                    <h4>콤보 피자</h4>
+                    <p>페퍼로니와 양송이의 환상 조합</p>
+                    <div class="sub-price-row"><span>23,900원</span><a th:href="@{/review/store/1}" class="mini-btn">주문</a></div>
+                </div>
+            </div>
+            <div class="sub-card">
+                <div class="sub-img-box"><img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80"></div>
+                <div class="sub-info">
+                    <h4>BBQ 치킨 피자</h4>
+                    <p>특제 바비큐 소스와 구운 치킨살</p>
+                    <div class="sub-price-row"><span>26,900원</span><a th:href="@{/review/store/1}" class="mini-btn">주문</a></div>
+                </div>
+            </div>
+            <div class="sub-card">
+                <div class="sub-img-box"><img src="https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80"></div>
+                <div class="sub-info">
+                    <h4>치즈 매니아</h4>
+                    <p>5가지 고급 치즈의 진하고 고소한 맛</p>
+                    <div class="sub-price-row"><span>24,900원</span><a th:href="@{/review/store/1}" class="mini-btn">주문</a></div>
+                </div>
+            </div>
+            <div class="sub-card">
+                <div class="sub-img-box"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80"></div>
+                <div class="sub-info">
+                    <h4>포테이토 가든</h4>
+                    <p>담백한 감자와 부드러운 화이트 소스</p>
+                    <div class="sub-price-row"><span>21,900원</span><a th:href="@{/review/store/1}" class="mini-btn">주문</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="store-section">
+    <h2 class="section-title">더 좋은 맛을, 더 빠르게 만날 매장찾기 📍</h2>
+    <div class="store-grid">
+        <div class="store-card">
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80">
+                <span class="store-overlay-tag">서울점</span>
+            </div>
+            <div class="store-info">
+                <p><i class="fa-solid fa-location-dot"></i> 서울특별시 강남구 테헤란로 123</p>
+                <a th:href="@{/review/store/1}" class="store-btn">매장 상세보기</a>
+            </div>
+        </div>
+        <div class="store-card">
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80">
+                <span class="store-overlay-tag">대전점</span>
+            </div>
+            <div class="store-info">
+                <p><i class="fa-solid fa-location-dot"></i> 대전광역시 서구 둔산로 456</p>
+                <a th:href="@{/review/store/1}" class="store-btn">매장 상세보기</a>
+            </div>
+        </div>
+        <div class="store-card">
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=400&q=80">
+                <span class="store-overlay-tag">부산점</span>
+            </div>
+            <div class="store-info">
+                <p><i class="fa-solid fa-location-dot"></i> 부산광역시 해운대구 해운대로 789</p>
+                <a th:href="@{/review/store/1}" class="store-btn">매장 상세보기</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer :: defaultFooter}"></div>
+
+<script>
+    function startTimer(duration, display) {
+        var timer = duration, hours, minutes, seconds;
+        setInterval(function () {
+            hours = parseInt(timer / 3600, 10);
+            minutes = parseInt((timer % 3600) / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = hours + ":" + minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration; // 타임오버 시 리셋
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        var threeHours = 60 * 60 * 3; // 3시간 타임세일 모션 설정
+        var display = document.querySelector('#countdown');
+        startTimer(threeHours, display);
+    };
+</script>
+</body>
+</html>
