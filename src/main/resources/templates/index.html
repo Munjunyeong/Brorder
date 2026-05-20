@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<div>
+			<h3>Brorder</h3>
+		</div>
+		
+		<div th:if="${session.users == null}">
+			<a href="login">로그인</a>
+			<a href="register">회원가입</a>
+		</div>
+		<div th:if="${session.users != null}">
+			<a href="logout">로그아웃</a>
+			<a th:href="@{|/users/${session.users.userid}/address|}">주소관리</a>
+			<a th:href="@{|/users/${session.users.userid}|}">유저정보</a>
+		</div>
+		
+		<div>
+			<div>
+				<a href="">스토어</a>
+				<a href="">주문</a>
+				<a href="">메뉴</a>
+				<a href="">리뷰</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
