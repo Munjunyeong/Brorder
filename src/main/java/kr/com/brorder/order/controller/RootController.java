@@ -1,4 +1,4 @@
-package kr.com.brorder;
+package kr.com.brorder.order.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

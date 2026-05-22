@@ -24,4 +24,18 @@
               )
     </insert>
 
+    <select id="listByOrderId"
+            resultType="kr.com.brorder.order.model.OrderMenu">
+
+        SELECT
+            order_menu_id AS orderMenuId,
+            order_id      AS orderId,
+            menu_id       AS menuId,
+            option_id     AS optionId,
+            price         AS price
+        FROM order_menu
+        WHERE order_id = #{orderId}
+
+    </select>
+
 </mapper>

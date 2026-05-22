@@ -3,10 +3,8 @@ package kr.com.brorder.order.controller;
 import java.util.List;
 
 import kr.com.brorder.order.dto.request.OrderCreateRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import kr.com.brorder.order.dto.response.OrderDetailResponse;
+import org.springframework.web.bind.annotation.*;
 
 import kr.com.brorder.order.model.Order;
 import kr.com.brorder.order.service.OrderService;
@@ -28,5 +26,10 @@ public class OrderController {
     @GetMapping("/orders")
     public List<Order> list() {
         return orderService.list();
+    }
+
+    @GetMapping("/orders/{orderId}")
+    public OrderDetailResponse item(@PathVariable Long orderId) {
+        return orderService.item(orderId);
     }
 }
