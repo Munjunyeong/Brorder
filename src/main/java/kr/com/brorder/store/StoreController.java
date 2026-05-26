@@ -62,15 +62,17 @@ public class StoreController {
     }
 
     // 4. 수정 데이터 처리
-    @PostMapping("/update")
-    public String updateStore(@ModelAttribute Store store) {
+    @PostMapping("{storeId}/update")
+    public String updateStore(@PathVariable("storeId") Integer  storeId, @ModelAttribute Store store) {
+        store.setStoreId(storeId);
+
         storeService.updateStore(store);
         return "redirect:/store/detail/" + store.getStoreId();
     }
 
     // 5. 삭제 처리
-    @PostMapping("/delete")
-    public String deleteStore(@RequestParam("storeId") Integer storeId) {
+    @PostMapping("{storeId}/delete")
+    public String deleteStore(@PathVariable("storeId") Integer storeId) {
         storeService.removeStore(storeId);
         return "redirect:/store/list";
     }

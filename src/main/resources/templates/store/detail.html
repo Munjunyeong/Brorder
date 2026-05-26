@@ -32,8 +32,7 @@
     <a th:href="@{/store/{id}/update(id=${store.storeId})}">정보 수정</a>
 
     <!-- 삭제 요청 처리 -->
-    <form th:action="@{/store/delete}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-        <input type="hidden" name="storeId" th:value="${store.storeId}">
+    <form th:action="@{/store/{id}/delete(id=${store.storeId})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
         <button type="submit" style="color: red;">가게 삭제</button>
     </form>
 </div>
