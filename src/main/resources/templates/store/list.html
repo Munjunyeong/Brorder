@@ -33,8 +33,9 @@
               th:class="${store.status == 'OPEN' ? 'status-open' : 'status-close'}">OPEN</span>
     </p>
 
-    <!-- 상세페이지 이동 버튼 (쿼리스트링 방식으로 id 전달) -->
-    <a th:href="@{/store/detail(store_id=${store.storeId})}">가게 보기</a>
+    <!-- 상세페이지 이동 버튼 (restful 방식으로 id 전달) -->
+    <a th:href="@{/store/detail/{id}(id=${store.storeId})}">가게 보기</a>
+
 </div>
 
 

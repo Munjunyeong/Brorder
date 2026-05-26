@@ -24,8 +24,8 @@ public class StoreController {
     }
 
     // 2. 특정 판매처 상세 정보 화면 (GET /store/detail?store_id=1)
-    @GetMapping("/detail")
-    public String storeDetail(@RequestParam(value = "store_id", required = false) Integer store_id, Model model) {
+    @GetMapping("/detail/{storeId}")
+    public String storeDetail(@PathVariable("storeId") Integer store_id, Model model) {
         // 만약 값이 안 넘어왔을 경우에 대한 방어 코드 추가
         if (store_id == null) {
             return "redirect:/store/list"; // 값이 없으면 그냥 리스트 화면으로 튕겨버림
@@ -55,8 +55,8 @@ public class StoreController {
     }
 
     // 3. 수정 화면 이동
-    @GetMapping("/update")
-    public String updateForm(@RequestParam("store_id") Integer storeId, Model model) {
+    @GetMapping("/update/{storeId}")
+    public String updateForm(@PathVariable("storeId") Integer storeId, Model model) {
         model.addAttribute("store", storeService.getStoreById(storeId));
         return "store/update"; // src/main/resources/templates/store/update.html 반환
     }
@@ -65,7 +65,7 @@ public class StoreController {
     @PostMapping("/update")
     public String updateStore(@ModelAttribute Store store) {
         storeService.updateStore(store);
-        return "redirect:/store/detail?store_id=" + store.getStoreId();
+        return "redirect:/store/detail/" + store.getStoreId();
     }
 
     // 5. 삭제 처리
