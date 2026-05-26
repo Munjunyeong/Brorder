@@ -40,6 +40,6 @@ public interface ReviewMapper {
      */
     void deleteById(int reviewId);
 
-    // ReviewMapper.java 파일 가장 하단에 추가
-    void update(Review review);
+//    // ReviewMapper.java 파일 가장 하단에 추가
+//    void update(Review review);
 }
