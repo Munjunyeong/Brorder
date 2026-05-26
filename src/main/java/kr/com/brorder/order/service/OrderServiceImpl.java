@@ -39,13 +39,13 @@ public class OrderServiceImpl implements OrderService {
 
         request.setTotalPrice(totalPrice);
 
-        // 1️⃣ ORDER 저장
+
         orderMapper.insert(request);
 
-        // 2️⃣ 생성된 orderId 가져오기
+
         int orderId = request.getOrderId();
 
-        // 3️⃣ ORDER_MENU 저장
+
         if (request.getItems() != null) {
 
             for (OrderMenuCreateRequest item : request.getItems()) {
