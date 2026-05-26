@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>음식 주문 사이트 - 판매처 목록</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .store-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
+        .status-open { color: green; font-weight: bold; }
+        .status-close { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<h1>배달 가능한 판매처 목록</h1>
+<a th:href="@{/store/add}">[신규 판매처 등록하기]</a>
+<hr>
+
+<!-- 컨트롤러에서 보낸 "stores" 리스트가 비어있을 때 -->
+<div th:if="${#lists.isEmpty(stores)}">
+    <p>등록된 판매처가 없습니다.</p>
+</div>
+
+<!-- 컨트롤러에서 보낸 "stores" 리스트 반복문 실행 -->
+<div th:unless="${#lists.isEmpty(stores)}" th:each="store : ${stores}" class="store-card">
+    <h3 th:text="${store.name}">가게 이름</h3>
+    <p>카테고리: <span th:text="${store.category}">한식</span></p>
+    <p>주소: <span th:text="${store.address}">가게 주소</span></p>
+    <p>별점: <span th:text="${'★ ' + store.rating}">★ 5</span></p>
+    <p>상태:
+        <!-- 조건문으로 영업 상태별 클래스 적용 -->
+        <span th:text="${store.status}"
+              th:class="${store.status == 'OPEN' ? 'status-open' : 'status-close'}">OPEN</span>
+    </p>
+
+    <!-- 상세페이지 이동 버튼 (restful 방식으로 id 전달) -->
+    <a th:href="@{/store/detail/{id}(id=${store.storeId})}">가게 보기</a>
+
+</div>
+
+
+</body>
+</html>

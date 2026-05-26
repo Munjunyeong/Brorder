@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>음식 주문 사이트 - 판매처 상세</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        .detail-box { border: 2px solid #333; padding: 20px; border-radius: 8px; max-width: 500px; }
+    </style>
+</head>
+<body>
+
+<h1>판매처 상세 정보</h1>
+<hr>
+
+<div class="detail-box">
+    <h2 th:text="${store.name}">대박치킨</h2>
+    <p><strong>카테고리:</strong> <span th:text="${store.category}">치킨</span></p>
+    <p><strong>전화번호:</strong> <span th:text="${store.phone}">042-123-4567</span></p>
+    <p><strong>가게위치:</strong> <span th:text="${store.address}">대전광역시 동구</span></p>
+    <p><strong>가게평점:</strong> <span th:text="${'★ ' + store.rating}">★ 5</span></p>
+    <p><strong>등록일자:</strong> <span th:text="${#temporals.format(store.createdData, 'yyyy-MM-dd HH:mm')}">2026-05-19</span></p>
+    <p><strong>현재상태:</strong> <span th:text="${store.status}">OPEN</span></p>
+</div>
+
+<br>
+<!-- 목록으로 돌아가기 링크 -->
+<a th:href="@{/store/list}">← 판매처 목록으로 돌아가기</a>
+<br>
+<div style="display: flex; gap: 10px;">
+    <!-- 수정 화면 이동 -->
+    <a th:href="@{/store/{id}/update(id=${store.storeId})}">정보 수정</a>
+
+    <!-- 삭제 요청 처리 -->
+    <form th:action="@{/store/delete}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <input type="hidden" name="storeId" th:value="${store.storeId}">
+        <button type="submit" style="color: red;">가게 삭제</button>
+    </form>
+</div>
+<hr>
+
+</body>
+</html>
