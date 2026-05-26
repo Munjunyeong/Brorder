@@ -37,5 +37,9 @@
         WHERE order_id = #{orderId}
 
     </select>
+    <delete id="deleteByOrderId">
+        DELETE FROM order_menu
+        WHERE order_id = #{orderId}
+    </delete>
 
 </mapper>

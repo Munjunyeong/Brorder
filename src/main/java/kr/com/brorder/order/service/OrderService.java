@@ -13,4 +13,6 @@ public interface OrderService {
     List<Order> list();
 
     OrderDetailResponse item(Long orderId);
+
+    void delete(Long orderId);
 }

@@ -31,6 +31,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void insert(OrderCreateRequest request) {
 
+        int totalPrice = 0;
+
+        for (OrderMenuCreateRequest item : request.getItems()) {
+            totalPrice += item.getPrice();
+        }
+
+        request.setTotalPrice(totalPrice);
+
         // 1️⃣ ORDER 저장
         orderMapper.insert(request);
 
@@ -38,14 +46,17 @@ public class OrderServiceImpl implements OrderService {
         int orderId = request.getOrderId();
 
         // 3️⃣ ORDER_MENU 저장
-        for (OrderMenuCreateRequest item : request.getItems()) {
+        if (request.getItems() != null) {
 
-            orderMenuMapper.insert(
-                    orderId,
-                    item.getMenuId(),
-                    item.getOptionId(),
-                    item.getPrice()
-            );
+            for (OrderMenuCreateRequest item : request.getItems()) {
+
+                orderMenuMapper.insert(
+                        orderId,
+                        item.getMenuId(),
+                        item.getOptionId(),
+                        item.getPrice()
+                );
+            }
         }
     }
 
@@ -97,5 +108,13 @@ public class OrderServiceImpl implements OrderService {
         response.setItems(items);
 
         return response;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long orderId) {
+
+        orderMenuMapper.deleteByOrderId(orderId);
+        orderMapper.delete(orderId);
     }
 }

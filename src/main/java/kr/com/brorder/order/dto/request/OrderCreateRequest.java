@@ -11,6 +11,7 @@ public class OrderCreateRequest {
     private int storeId;
     private String paymentMethod;
     private String requests;
+    private int totalPrice;
 
     private List<OrderMenuCreateRequest> items;
 
@@ -60,5 +61,13 @@ public class OrderCreateRequest {
 
     public void setItems(List<OrderMenuCreateRequest> items) {
         this.items = items;
+    }
+    
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

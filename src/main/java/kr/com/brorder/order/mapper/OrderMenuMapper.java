@@ -11,4 +11,5 @@ public interface OrderMenuMapper {
     void insert(int orderId, Long menuId, Long optionId, int price);
 
     List<OrderMenu> listByOrderId(Long orderId);
+    void deleteByOrderId(Long orderId);
 }

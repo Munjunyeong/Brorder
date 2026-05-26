@@ -68,4 +68,10 @@
 
     </select>
 
+    <delete id="delete">
+
+        DELETE FROM orders
+        WHERE order_id = #{orderId}
+
+    </delete>
 </mapper>

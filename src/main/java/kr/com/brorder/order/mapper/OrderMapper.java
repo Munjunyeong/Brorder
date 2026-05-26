@@ -17,5 +17,5 @@ public interface OrderMapper {
 
     Order item(Long orderId);
 
-    List<OrderMenu> listByOrderId(Long orderId);
+    void delete(Long orderId);
 }
