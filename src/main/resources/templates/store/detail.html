@@ -18,7 +18,7 @@
     <p><strong>카테고리:</strong> <span th:text="${store.category}">치킨</span></p>
     <p><strong>전화번호:</strong> <span th:text="${store.phone}">042-123-4567</span></p>
     <p><strong>가게위치:</strong> <span th:text="${store.address}">대전광역시 동구</span></p>
-    <p><strong>가게평점:</strong> <span th:text="${'★ ' + store.rating}">★ 5</span></p>
+<!--    <p><strong>가게평점:</strong> <span th:text="${'★ ' + store.rating}">★ 5</span></p>-->
     <p><strong>등록일자:</strong> <span th:text="${#temporals.format(store.createdData, 'yyyy-MM-dd HH:mm')}">2026-05-19</span></p>
     <p><strong>현재상태:</strong> <span th:text="${store.status}">OPEN</span></p>
 </div>

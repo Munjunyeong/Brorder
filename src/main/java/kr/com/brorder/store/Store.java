@@ -8,7 +8,6 @@ public class Store {
     private String category;
     private String address;
     private String phone;
-    private Integer rating;
     private LocalDateTime createdData;
     private String status;
 
@@ -50,14 +49,6 @@ public class Store {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
     }
 
     public LocalDateTime getCreatedData() {

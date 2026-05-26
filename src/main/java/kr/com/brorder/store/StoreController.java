@@ -23,8 +23,8 @@ public class StoreController {
         return "store/list"; // src/main/resources/templates/store/list.html
     }
 
-    // 2. 특정 판매처 상세 정보 화면 (GET /store/detail?store_id=1)
-    @GetMapping("/detail/{storeId}")
+    // 2. 특정 판매처 상세 정보 화면 (GET /store/{storeId})
+    @GetMapping("/{storeId}")
     public String storeDetail(@PathVariable("storeId") Integer store_id, Model model) {
         // 만약 값이 안 넘어왔을 경우에 대한 방어 코드 추가
         if (store_id == null) {
@@ -67,7 +67,7 @@ public class StoreController {
         store.setStoreId(storeId);
 
         storeService.updateStore(store);
-        return "redirect:/store/detail/" + store.getStoreId();
+        return "redirect:/store/" + store.getStoreId();
     }
 
     // 5. 삭제 처리
