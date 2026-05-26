@@ -55,7 +55,7 @@ public class StoreController {
     }
 
     // 3. 수정 화면 이동
-    @GetMapping("/update/{storeId}")
+    @GetMapping("/{storeId}/update")
     public String updateForm(@PathVariable("storeId") Integer storeId, Model model) {
         model.addAttribute("store", storeService.getStoreById(storeId));
         return "store/update"; // src/main/resources/templates/store/update.html 반환

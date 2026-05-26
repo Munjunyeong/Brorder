@@ -29,7 +29,7 @@
 <br>
 <div style="display: flex; gap: 10px;">
     <!-- 수정 화면 이동 -->
-    <a th:href="@{/store/update/{id}(id=${store.storeId})}">정보 수정</a>
+    <a th:href="@{/store/{id}/update(id=${store.storeId})}">정보 수정</a>
 
     <!-- 삭제 요청 처리 -->
     <form th:action="@{/store/delete}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
