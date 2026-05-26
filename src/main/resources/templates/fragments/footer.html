@@ -1,27 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<footer th:fragment="defaultFooter" class="footer">
-    <div class="footer-top">
-        <ul class="footer-links">
-            <li><a href="#">개인정보처리방침</a></li>
-            <li><a href="#">위치기반서비스</a></li>
-            <li><a href="#">이용약관</a></li>
-            <li><a href="#">회사소개</a></li>
-            <li><a href="#">고객센터</a></li>
-        </ul>
-        <div class="sns-icons">
-            <i class="fa-brands fa-instagram"></i>
-            <i class="fa-brands fa-facebook"></i>
-            <i class="fa-brands fa-youtube"></i>
-            <i class="fa-brands fa-twitter"></i>
+<body>
+<footer th:fragment="defaultFooter" class="brorder-footer">
+    <div class="brorder-footer-inner">
+        <div class="footer-top">
+            <div class="footer-brand-col">
+                <a href="/" class="footer-logo">BRORDER<span class="footer-logo-dot"></span></a>
+                <p class="footer-brand-desc">맛있는 음식을 더 빠르게.<br>브로더와 함께 더 맛있는 일상을 만드세요.</p>
+            </div>
+            <div class="footer-nav-col">
+                <div class="footer-nav-group">
+                    <h5>서비스</h5>
+                    <ul>
+                        <li><a href="#">배달 주문</a></li>
+                        <li><a href="#">포장 주문</a></li>
+                        <li><a href="#">BRORDER PASS</a></li>
+                        <li><a href="#">이벤트</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-group">
+                    <h5>회사</h5>
+                    <ul>
+                        <li><a href="#">회사 소개</a></li>
+                        <li><a href="#">매장 파트너</a></li>
+                        <li><a href="#">라이더 모집</a></li>
+                        <li><a href="#">채용 공고</a></li>
+                    </ul>
+                </div>
+                <div class="footer-nav-group">
+                    <h5>지원</h5>
+                    <ul>
+                        <li><a href="#">고객센터</a></li>
+                        <li><a href="#">공지사항</a></li>
+                        <li><a href="#">자주 묻는 질문</a></li>
+                        <li><a href="#">1:1 문의</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-social-col">
+                <h5>팔로우</h5>
+                <div class="footer-social-icons">
+                    <a href="#" class="social-icon-btn" title="인스타그램"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="social-icon-btn" title="유튜브"><i class="fa-brands fa-youtube"></i></a>
+                    <a href="#" class="social-icon-btn" title="카카오톡"><i class="fa-brands fa-kakao"></i></a>
+                    <a href="#" class="social-icon-btn" title="블로그"><i class="fa-solid fa-blog"></i></a>
+                </div>
+                <div class="footer-app-row">
+                    <a href="#" class="footer-app-badge">
+                        <i class="fa-brands fa-apple"></i>
+                        <span>App Store</span>
+                    </a>
+                    <a href="#" class="footer-app-badge">
+                        <i class="fa-brands fa-google-play"></i>
+                        <span>Google Play</span>
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="footer-bottom">
-        <div class="company-info">
-            <p>주소 : 대전광역시 서구 둔산로 주식회사 BRORDER</p>
-            <p>콜센터 주문 : 1588-0000 | 온라인 이용 문의 : 1566-0889</p>
-            <p>Copyright © 2026 BRORDER. All rights reserved.</p>
+
+        <hr class="footer-divider">
+
+        <ul class="footer-nav-links">
+            <li><a href="#" class="privacy-accent">개인정보처리방침</a></li>
+            <li><a href="#">위치기반서비스 이용약관</a></li>
+            <li><a href="#">서비스 이용약관</a></li>
+            <li><a href="#">청소년 보호정책</a></li>
+            <li><a href="#">사업자 정보 확인</a></li>
+        </ul>
+
+        <div class="footer-info-details">
+            <p><strong style="color:#999;">주식회사 브로더</strong> · 대표이사: 홍길동 · 사업자등록번호: 123-45-67890</p>
+            <p>통신판매업 신고번호: 제2024-서울강남-0001호 · 주소: 서울특별시 강남구 테헤란로 123 브로더빌딩 8층</p>
+            <p>고객센터: <strong style="color:#ccc;">1588-0000</strong> (평일 09:00~22:00 / 주말·공휴일 10:00~20:00) · 이메일: help@brorder.co.kr</p>
+            <p class="footer-copyright">© 2024 BRORDER Inc. All rights reserved. 브로더는 통신판매중개자이며, 통신판매의 당사자가 아닙니다.</p>
         </div>
     </div>
 </footer>
+</body>
 </html>

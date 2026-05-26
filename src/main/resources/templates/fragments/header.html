@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<header th:fragment="gnbHeader" class="header">
-    <a th:href="@{/}" class="logo">BRORDER</a>
+<body>
+<header th:fragment="gnbHeader" class="header" id="mainHeader">
+    <a href="/" class="logo">
+        BRORDER<span class="logo-dot"></span>
+    </a>
+
     <ul class="nav-menu">
-        <li><a th:href="@{/review/store/1}">메뉴 (리뷰테스트)</a></li>
+        <li><a href="/review/store/1">메뉴 (리뷰테스트)</a></li>
         <li><a href="#">이벤트</a></li>
         <li><a href="#">매장찾기</a></li>
         <li><a href="#">브랜드</a></li>
         <li><a href="#">고객센터</a></li>
     </ul>
-    <div class="header-icons">
-        <button class="icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <a th:href="@{/review/my}" class="icon-btn"><i class="fa-solid fa-user"></i></a>
-        <a th:href="@{/}" class="icon-btn">
-            <i class="fa-solid fa-cart-shopping"></i>
-            <span class="badge">0</span>
-        </a>
+
+    <div class="header-right">
+        <div th:if="${session.loginUserId == null}" class="auth-btn-group">
+            <a href="/login" class="btn-auth btn-auth-login">로그인</a>
+            <a href="/register" class="btn-auth btn-auth-register">회원가입</a>
+        </div>
+
+        <div th:if="${session.loginUserId != null}" class="auth-btn-group">
+            <a href="/users/my/review" class="icon-btn" title="마이페이지">
+                <i class="fa-solid fa-user"></i>
+            </a>
+            <a href="#" class="icon-btn" title="장바구니">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span class="i-badge">0</span>
+            </a>
+        </div>
     </div>
 </header>
+</body>
 </html>

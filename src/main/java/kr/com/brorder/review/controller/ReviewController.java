@@ -48,17 +48,11 @@ public class ReviewController {
      * 사용자가 작성한 데이터(DTO)를 받아 로그인 세션을 검증한 후 안전하게 데이터베이스에 저장함
      */
     @PostMapping("/write")
-    public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
+    public void writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer loginUserId = (Integer) session.getAttribute("loginUserId");
 
-        if (loginUserId == null) {
-            return "redirect:/user/login";
-        }
-
         reviewService.writeReview(requestDTO, loginUserId);
-
-        return "redirect:/review/store/" + requestDTO.getStoreId();
     }
 
     /**
@@ -70,10 +64,6 @@ public class ReviewController {
         HttpSession session = request.getSession();
         Integer loginUserId = (Integer) session.getAttribute("loginUserId");
 
-        if (loginUserId == null) {
-            return "redirect:/user/login";
-        }
-
         List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(loginUserId);
         model.addAttribute("myReviewList", myReviews);
 
@@ -84,26 +74,14 @@ public class ReviewController {
      * [리뷰 삭제 처리]
      * 삭제 후 원래 보던 화면으로 자연스럽게 돌아가도록 분기 처리(마이페이지 또는 해당 가게 화면)를 수행함
      */
-    @ResponseBody
     @PostMapping("/delete/{reviewId}")
-    public String deleteReview(@PathVariable("reviewId") int reviewId,
-                               @RequestParam("storeId") int storeId,
-                               HttpServletRequest request) {
+    public void deleteReview(@PathVariable("reviewId") int reviewId,
+                             @RequestParam("storeId") int storeId,
+                             HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer loginUserId = (Integer) session.getAttribute("loginUserId");
 
-        if (loginUserId == null) {
-            return "<script>alert('로그인이 필요한 서비스입니다.'); location.href='/user/login';</script>";
-        }
-
         reviewService.removeReview(reviewId, loginUserId);
-
-        String redirectUrl = (storeId == 0) ? "/review/my" : "/review/store/" + storeId;
-
-        return "<script>" +
-                "alert('삭제되었습니다.');" +
-                "location.href='" + redirectUrl + "';" +
-                "</script>";
     }
 
     /**
@@ -121,22 +99,13 @@ public class ReviewController {
      * [리뷰 수정 처리]
      * 사용자가 새로 수정한 평점, 내용, 사진 정보를 반영하고 본인 확인 세션 검증 후 업데이트를 완료함
      */
-    @ResponseBody
     @PostMapping("/update/{reviewId}")
-    public String updateReview(@PathVariable("reviewId") int reviewId,
-                               @ModelAttribute ReviewRequestDTO requestDTO,
-                               HttpServletRequest request) {
+    public void updateReview(@PathVariable("reviewId") int reviewId,
+                             @ModelAttribute ReviewRequestDTO requestDTO,
+                             HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer loginUserId = (Integer) session.getAttribute("loginUserId");
 
-        if (loginUserId == null) {
-            return "<script>alert('로그인이 필요합니다.'); location.href='/user/login';</script>";
-        }
-
         reviewService.modifyReview(reviewId, requestDTO, loginUserId);
-        return "<script>" +
-                "alert('글이 수정되었습니다.');" +
-                "location.href='/review/store/" + requestDTO.getStoreId() + "';" +
-                "</script>";
     }
 }
