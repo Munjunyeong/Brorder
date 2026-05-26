@@ -1,4 +1,4 @@
-package kr.com.brorder;
+package kr.com.brorder.order.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -80,6 +80,6 @@ public class RootController {
 		model.addAttribute("findpw", findpw);
 		
 		return "user/resultpw";
-	}
+	} //테스트용 주석 추가
 
 }

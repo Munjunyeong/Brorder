@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>주문 상세</title>
+</head>
+<body>
+
+<h1>주문 상세</h1>
+
+<div>
+    <strong>주문번호:</strong>
+    <span th:text="${order.orderId}"></span>
+</div>
+
+<div>
+    <strong>유저번호:</strong>
+    <span th:text="${order.userId}"></span>
+</div>
+
+<div>
+    <strong>가게번호:</strong>
+    <span th:text="${order.storeId}"></span>
+</div>
+
+<div>
+    <strong>결제방식:</strong>
+    <span th:text="${order.paymentMethod}"></span>
+</div>
+
+<div>
+    <strong>총금액:</strong>
+    <span th:text="${order.totalPrice}"></span>
+</div>
+
+<div>
+    <strong>요청사항:</strong>
+    <span th:text="${order.requests}"></span>
+</div>
+
+<hr>
+
+<h2>주문 메뉴</h2>
+
+<table border="1">
+
+    <tr>
+        <th>주문메뉴번호</th>
+        <th>메뉴번호</th>
+        <th>옵션번호</th>
+        <th>가격</th>
+    </tr>
+
+    <tr th:each="item : ${order.items}">
+
+        <td th:text="${item.orderMenuId}"></td>
+
+        <td th:text="${item.menuId}"></td>
+
+        <td th:text="${item.optionId}"></td>
+
+        <td th:text="${item.price}"></td>
+
+    </tr>
+
+</table>
+
+<br>
+
+<div>
+    <a href="/orders">
+        목록으로
+    </a>
+</div>
+
+<div>
+    <a th:href="@{/orders/delete/{id}(id=${order.orderId})}">
+        삭제
+    </a>
+</div>
+
+</body>
+</html>
