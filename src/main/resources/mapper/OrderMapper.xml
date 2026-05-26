@@ -45,7 +45,7 @@
             requests       AS requests,
             created_data   AS createdData
         FROM orders
-        ORDER BY order_id DESC
+        ORDER BY order_id ASC
 
     </select>
 
