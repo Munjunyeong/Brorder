@@ -297,7 +297,6 @@
             align-items: center;
             text-align: center;
             cursor: pointer;
-            text-decoration: none; /* 링크화 대응 */
             color: var(--dark-charcoal);
         }
 
@@ -562,40 +561,6 @@
             text-align: center;
         }
         .store-btn:hover { border-color: var(--primary-mint); color: var(--primary-mint); }
-
-        /* ----------------------------------
-              FOOTER
-           ------------------------------------- */
-        .footer {
-            background: var(--dark-charcoal);
-            color: #a0a0a0;
-            padding: 50px 10% 30px 10%;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .footer-top {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #444;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-        }
-
-        .footer-links { display: flex; gap: 20px; list-style: none; }
-        .footer-links a { color: #fff; text-decoration: none; font-weight: 700; }
-
-        .sns-icons { display: flex; gap: 15px; font-size: 18px; }
-        .sns-icons i { cursor: pointer; transition: color 0.2s; }
-        .sns-icons i:hover { color: #fff; }
-
-        .footer-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .company-info p { margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -646,7 +611,7 @@
             <h3>이벤트</h3>
             <p>특별 혜택</p>
         </a>
-        <a th:href="@{/review/store/1}" class="quick-item">
+        <a th:href="@{/review/store/1}$" class="quick-item">
             <div class="icon-circle q-4"><i class="fa-solid fa-store"></i></div>
             <h3>매장 찾기</h3>
             <p>가까운 매장</p>
@@ -769,7 +734,9 @@
 
 <script>
     function startTimer(duration, display) {
-        var timer = duration, hours, minutes, seconds;
+        let timer = duration;
+        let hours, minutes, seconds;
+
         setInterval(function () {
             hours = parseInt(timer / 3600, 10);
             minutes = parseInt((timer % 3600) / 60, 10);
@@ -788,8 +755,8 @@
     }
 
     window.onload = function () {
-        var threeHours = 60 * 60 * 3; // 3시간 타임세일 모션 설정
-        var display = document.querySelector('#countdown');
+        const threeHours = 60 * 60 * 3; // 변경되지 않는 상수는 const 할당
+        const display = document.querySelector('#countdown');
         startTimer(threeHours, display);
     };
 </script>
