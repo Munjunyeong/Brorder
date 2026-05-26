@@ -35,7 +35,7 @@ public class OrderServiceImpl implements OrderService {
         orderMapper.insert(request);
 
         // 2️⃣ 생성된 orderId 가져오기
-        Long orderId = request.getOrderId();
+        int orderId = request.getOrderId();
 
         // 3️⃣ ORDER_MENU 저장
         for (OrderMenuCreateRequest item : request.getItems()) {

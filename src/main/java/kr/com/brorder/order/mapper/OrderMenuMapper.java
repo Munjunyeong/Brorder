@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface OrderMenuMapper {
 
-    void insert(Long orderId, Long menuId, Long optionId, int price);
+    void insert(int orderId, Long menuId, Long optionId, int price);
 
     List<OrderMenu> listByOrderId(Long orderId);
 }

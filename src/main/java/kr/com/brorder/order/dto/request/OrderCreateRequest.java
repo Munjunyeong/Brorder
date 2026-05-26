@@ -4,39 +4,37 @@ import java.util.List;
 
 public class OrderCreateRequest {
 
-    // 🔥 DB에서 생성 후 채워지는 값 (MyBatis용)
-    private Long orderId;
+    // MyBatis generated key용
+    private int orderId;
 
-    private Long userId;
-    private Long storeId;
+    private int userId;
+    private int storeId;
     private String paymentMethod;
     private String requests;
 
     private List<OrderMenuCreateRequest> items;
 
-    // getter / setter
-
-    public Long getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
 
-    public Long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public Long getStoreId() {
+    public int getStoreId() {
         return storeId;
     }
 
-    public void setStoreId(Long storeId) {
+    public void setStoreId(int storeId) {
         this.storeId = storeId;
     }
 
