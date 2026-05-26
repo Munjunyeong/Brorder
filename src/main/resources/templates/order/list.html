@@ -24,6 +24,7 @@
         <th>가게번호</th>
         <th>총금액</th>
         <th>결제방식</th>
+        <th>요청사항</th>
     </tr>
 
     <tr th:each="item : ${list}">
@@ -41,6 +42,8 @@
         <td th:text="${item.totalPrice}"></td>
 
         <td th:text="${item.paymentMethod}"></td>
+
+        <td th:text="${item.requests}"></td>
 
     </tr>
 
