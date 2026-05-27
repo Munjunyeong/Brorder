@@ -1,53 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>주문 목록</title>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <title>주문 목록 - BRORDER</title>
+    <style>
+        .order-list-section { padding: 60px var(--side-pad); background: var(--light-gray); min-height: calc(100vh - 80px - 300px); }
+        .order-card { background: #fff; border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 20px; transition: transform .2s, box-shadow .2s; text-decoration: none; color: inherit; display: block; }
+        .order-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-mint); }
+        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--border-color); }
+        .order-id { font-weight: 900; color: var(--primary-red); font-size: 14px; }
+        .order-date { font-size: 13px; color: #999; }
+        .order-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
+        .info-item { display: flex; flex-direction: column; gap: 4px; }
+        .info-label { font-size: 11px; color: #aaa; font-weight: 700; text-transform: uppercase; }
+        .info-value { font-size: 15px; font-weight: 800; }
+        .price-value { color: var(--primary-red); }
+        .requests-box { margin-top: 12px; padding: 10px 14px; background: var(--light-gray); border-radius: 10px; font-size: 13px; color: #666; }
+        .add-order-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--primary-mint); color: #fff; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 14px; margin-bottom: 30px; transition: all .2s; box-shadow: 0 4px 14px rgba(42,193,188,0.3); }
+        .add-order-btn:hover { background: #1fa09c; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,193,188,0.4); }
+    </style>
 </head>
 <body>
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
 
-<h1>주문 목록</h1>
+<section class="order-list-section">
+    <div class="section-inner">
+        <div class="section-head">
+            <h2><i class="fa-solid fa-list-ul"></i> 주문 내역</h2>
+            <a href="/orders/add" class="add-order-btn"><i class="fa-solid fa-plus"></i> 새 주문 등록</a>
+        </div>
 
-<div>
-    <a href="/orders/add">
-        주문 등록
-    </a>
-</div>
+        <div th:if="${#lists.isEmpty(list)}" style="text-align: center; padding: 100px 0;">
+            <i class="fa-solid fa-box-open" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
+            <p style="color: #999; font-weight: 700;">주문 내역이 없습니다.</p>
+        </div>
 
-<br>
-
-<table border="1">
-
-    <tr>
-        <th>주문번호</th>
-        <th>유저번호</th>
-        <th>가게번호</th>
-        <th>총금액</th>
-        <th>결제방식</th>
-        <th>요청사항</th>
-    </tr>
-
-    <tr th:each="item : ${list}">
-
-        <td>
-            <a th:href="@{/orders/{id}(id=${item.orderId})}"
-               th:text="${item.orderId}">
+        <div th:each="item : ${list}">
+            <a th:href="@{/orders/{id}(id=${item.orderId})}" class="order-card reveal">
+                <div class="order-header">
+                    <span class="order-id">ORDER #<span th:text="${item.orderId}"></span></span>
+                    <span class="order-date" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy-MM-dd HH:mm') : ''}"></span>
+                </div>
+                <div class="order-info-grid">
+                    <div class="info-item">
+                        <span class="info-label">가게 번호</span>
+                        <span class="info-value"><i class="fa-solid fa-store" style="color: var(--primary-mint);"></i> Store <span th:text="${item.storeId}"></span></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">총 결제금액</span>
+                        <span class="info-value price-value" th:text="${#numbers.formatInteger(item.totalPrice, 3, 'COMMA') + '원'}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">결제수단</span>
+                        <span class="info-value" th:text="${item.paymentMethod}"></span>
+                    </div>
+                </div>
+                <div class="requests-box" th:if="${item.requests != null && !item.requests.empty}">
+                    <i class="fa-solid fa-comment-dots"></i> <span th:text="${item.requests}"></span>
+                </div>
             </a>
-        </td>
+        </div>
+    </div>
+</section>
 
-        <td th:text="${item.userId}"></td>
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
 
-        <td th:text="${item.storeId}"></td>
-
-        <td th:text="${item.totalPrice}"></td>
-
-        <td th:text="${item.paymentMethod}"></td>
-
-        <td th:text="${item.requests}"></td>
-
-    </tr>
-
-</table>
-
+<script>
+    /* Scroll Reveal */
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                revealObs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => revealObs.observe(el));
+</script>
 </body>
 </html>

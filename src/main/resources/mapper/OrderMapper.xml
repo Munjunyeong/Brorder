@@ -43,7 +43,7 @@
             payment_method AS paymentMethod,
             total_price    AS totalPrice,
             requests       AS requests,
-            created_data   AS createdData
+            created_data   AS createdAt
         FROM orders
         ORDER BY order_id ASC
 
@@ -62,7 +62,7 @@
             payment_method AS paymentMethod,
             total_price    AS totalPrice,
             requests       AS requests,
-            created_data   AS createdData
+            created_data   AS createdAt
         FROM orders
         WHERE order_id = #{orderId}
 

@@ -11,7 +11,7 @@ public class OrderDetailResponse {
     private String paymentMethod;
     private int totalPrice;
     private String requests;
-    private Timestamp createdData;
+    private Timestamp createdAt;
 
     private List<OrderMenuResponse> items;
 
@@ -63,12 +63,12 @@ public class OrderDetailResponse {
         this.requests = requests;
     }
 
-    public Timestamp getCreatedData() {
-        return createdData;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedData(Timestamp createdData) {
-        this.createdData = createdData;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public List<OrderMenuResponse> getItems() {

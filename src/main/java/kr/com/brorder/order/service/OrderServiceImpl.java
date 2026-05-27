@@ -85,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
         response.setPaymentMethod(order.getPaymentMethod());
         response.setTotalPrice(order.getTotalPrice());
         response.setRequests(order.getRequests());
-        response.setCreatedData(order.getCreatedData());
+        response.setCreatedAt(order.getCreatedAt());
 
         // 메뉴 리스트 변환
         List<OrderMenuResponse> items =
