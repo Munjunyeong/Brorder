@@ -1,487 +1,1172 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRORDER - 맛있는 배달 주문</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        .hero { font-size: 16px; } /* 개별 페이지 커스텀 스타일 선언부 유지구역 */
-        .reveal-scale { opacity: 0; }
+        :root {
+            --primary-mint: #2AC1BC;
+            --primary-red: #D4183D;
+            --primary-gold: #FFCA28;
+            --dark-charcoal: #333333;
+            --light-gray: #F8F9FA;
+            --border-color: #E9ECEF;
+            --shadow-style: 0 8px 24px rgba(0,0,0,0.08);
+            --card-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Noto Sans KR', sans-serif; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: #ffffff;
+            color: var(--dark-charcoal);
+            overflow-x: hidden;
+        }
+
+        /* ==============================
+           NOTICE STRIP (TOP)
+        ============================== */
+        .notice-strip {
+            background: linear-gradient(90deg, var(--primary-red), #b01030, var(--primary-red));
+            background-size: 200% 100%;
+            animation: stripFlow 4s linear infinite;
+            color: white;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 0;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .notice-strip-inner {
+            display: inline-flex;
+            align-items: center;
+            gap: 30px;
+            white-space: nowrap;
+        }
+        .notice-strip-inner span { opacity: 0.8; }
+        .notice-strip-inner strong { opacity: 1; }
+        @keyframes stripFlow {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        /* ==============================
+           GNB HEADER
+        ============================== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10%;
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: box-shadow 0.3s ease, height 0.3s ease;
+        }
+        .header.scrolled {
+            box-shadow: 0 4px 24px rgba(0,0,0,0.09);
+            height: 62px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-red);
+            letter-spacing: -1px;
+            text-decoration: none;
+            transition: transform 0.2s ease, opacity 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo:hover { transform: scale(1.05); opacity: 0.85; }
+        .logo-dot { width: 8px; height: 8px; background: var(--primary-mint); border-radius: 50%; display: inline-block; animation: logoDotBounce 1.6s ease-in-out infinite; }
+        @keyframes logoDotBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .nav-menu { display: flex; gap: 35px; list-style: none; }
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--dark-charcoal);
+            font-weight: 700;
+            font-size: 15px;
+            transition: color 0.2s;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--primary-mint);
+            border-radius: 2px;
+            transition: width 0.25s ease;
+        }
+        .nav-menu a:hover { color: var(--primary-mint); }
+        .nav-menu a:hover::after { width: 100%; }
+
+        .header-icons { display: flex; gap: 20px; align-items: center; }
+        .icon-btn {
+            background: none; border: none;
+            font-size: 19px; color: var(--dark-charcoal);
+            cursor: pointer; position: relative;
+            transition: color 0.2s, transform 0.2s;
+            padding: 6px;
+            border-radius: 8px;
+        }
+        .icon-btn:hover { color: var(--primary-red); transform: scale(1.12); background: #fff0f3; }
+        .badge {
+            position: absolute; top: -4px; right: -4px;
+            background: var(--primary-red); color: #fff;
+            font-size: 10px; font-weight: 900;
+            min-width: 18px; height: 18px;
+            padding: 0 4px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+            animation: badgePop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+        }
+        @keyframes badgePop {
+            0% { transform: scale(0); } 100% { transform: scale(1); }
+        }
+
+        /* ==============================
+           HERO SECTION
+        ============================== */
+        .hero-section {
+            background: linear-gradient(160deg, #4a7a52 0%, #5c8d62 40%, #6b9e72 100%);
+            padding: 48px 10%;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .hero-container {
+            width: 100%; max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+            position: relative;
+        }
+
+        /* LEFT */
+        .hero-left {
+            background: linear-gradient(145deg, #2AC1BC 0%, #1fa9a4 50%, #17908c 100%);
+            padding: 64px 56px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-left::before {
+            content: '';
+            position: absolute;
+            width: 300px; height: 300px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            bottom: -80px; right: -80px;
+            pointer-events: none;
+        }
+        .hero-left::after {
+            content: '';
+            position: absolute;
+            width: 180px; height: 180px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            top: -40px; left: -40px;
+            pointer-events: none;
+        }
+
+        .promo-tag {
+            background: rgba(255,255,255,0.18);
+            padding: 7px 18px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255,255,255,0.3);
+            display: inline-flex; align-items: center; gap: 7px;
+            animation: fadeSlideUp 0.7s ease both;
+            backdrop-filter: blur(8px);
+        }
+        .promo-tag i { animation: spinStar 3s linear infinite; }
+        @keyframes spinStar {
+            0%, 80%, 100% { transform: rotate(0deg); }
+            85% { transform: rotate(20deg); }
+            90% { transform: rotate(-15deg); }
+        }
+
+        .hero-left h1 {
+            font-size: 40px; font-weight: 900;
+            line-height: 1.3; margin-bottom: 16px;
+            animation: fadeSlideUp 0.7s 0.1s ease both;
+            position: relative; z-index: 1;
+        }
+        .hero-left p {
+            font-size: 16px; margin-bottom: 38px;
+            opacity: 0.9; line-height: 1.6;
+            animation: fadeSlideUp 0.7s 0.2s ease both;
+            position: relative; z-index: 1;
+        }
+        .hero-btn {
+            background: white;
+            color: var(--primary-mint);
+            padding: 14px 34px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 15px;
+            text-decoration: none;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            animation: fadeSlideUp 0.7s 0.3s ease both;
+            display: inline-flex; align-items: center; gap: 8px;
+            position: relative; z-index: 1;
+        }
+        .hero-btn::after { content: '\f054'; font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 12px; transition: transform 0.25s; }
+        .hero-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 12px 30px rgba(0,0,0,0.18); color: var(--primary-mint); }
+        .hero-btn:hover::after { transform: translateX(4px); }
+
+        /* Floating leaves decoration */
+        .hero-leaf {
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.12;
+            pointer-events: none;
+            animation: floatLeaf 6s ease-in-out infinite;
+        }
+        .hero-leaf:nth-child(1) { bottom: 30px; right: 20px; animation-delay: 0s; }
+        .hero-leaf:nth-child(2) { top: 20px; right: 60px; font-size: 24px; animation-delay: 2s; }
+        @keyframes floatLeaf {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(8deg); }
+        }
+
+        /* RIGHT */
+        .hero-right {
+            background: linear-gradient(145deg, #D4183D 0%, #b8153500 50%, #961130 100%);
+            background: linear-gradient(145deg, #D4183D, #9e0f2c);
+            padding: 56px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            text-align: center;
+            overflow: hidden;
+        }
+        .hero-right::before {
+            content: '';
+            position: absolute;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(255,202,40,0.12) 0%, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .best-tag {
+            position: absolute; top: 28px; right: 28px;
+            background: var(--primary-gold);
+            color: var(--dark-charcoal);
+            padding: 6px 16px; border-radius: 20px;
+            font-weight: 900; font-size: 13px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 12px rgba(255,202,40,0.4);
+            animation: badgePop 0.6s 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+        }
+
+        .hero-right h2 {
+            font-size: 32px; font-weight: 900;
+            margin-bottom: 28px; position: relative; z-index: 1;
+            animation: fadeSlideUp 0.7s 0.15s ease both;
+        }
+
+        .pizza-display-box {
+            position: relative; width: 220px; height: 220px;
+            margin-bottom: 28px;
+        }
+        .pizza-ring {
+            position: absolute; inset: -14px;
+            border-radius: 50%;
+            border: 3px dashed rgba(255,255,255,0.25);
+            animation: rotateSlow 20s linear infinite reverse;
+        }
+        .pizza-ring-2 {
+            position: absolute; inset: -28px;
+            border-radius: 50%;
+            border: 2px dotted rgba(255,202,40,0.2);
+            animation: rotateSlow 30s linear infinite;
+        }
+        .pizza-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.25);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.3), 0 0 0 2px rgba(255,202,40,0.3);
+            animation: rotateMotion 40s linear infinite;
+        }
+        @keyframes rotateMotion { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rotateSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .timer-box {
+            background: rgba(0,0,0,0.35);
+            padding: 10px 22px; border-radius: 30px;
+            font-size: 14px; font-weight: 700;
+            margin-bottom: 18px;
+            border: 1px solid rgba(255,255,255,0.15);
+            display: inline-flex; align-items: center; gap: 9px;
+            backdrop-filter: blur(8px);
+            position: relative; z-index: 1;
+        }
+        .timer-box i { color: var(--primary-gold); animation: pulseFade 1s infinite alternate; }
+        #countdown { color: var(--primary-gold); font-size: 16px; letter-spacing: 2px; font-variant-numeric: tabular-nums; }
+        @keyframes pulseFade { from { opacity: 0.6; } to { opacity: 1; transform: scale(1.1); } }
+
+        .price-tag { font-size: 15px; text-decoration: line-through; opacity: 0.5; margin-bottom: 4px; position: relative; z-index: 1; }
+        .sale-price { font-size: 34px; font-weight: 900; color: white; margin-bottom: 24px; position: relative; z-index: 1; }
+        .sale-badge { display: inline-block; background: var(--primary-gold); color: #333; font-size: 12px; font-weight: 900; padding: 3px 10px; border-radius: 6px; margin-left: 8px; vertical-align: middle; position: relative; z-index: 1; }
+
+        .order-btn {
+            background: white; color: var(--primary-red);
+            padding: 14px 48px; border-radius: 30px;
+            font-weight: 800; font-size: 15px;
+            border: none; cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            transition: all 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+            text-decoration: none; display: inline-block;
+            position: relative; z-index: 1;
+        }
+        .order-btn:hover { transform: scale(1.06) translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.25); color: var(--primary-red); }
+
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==============================
+           QUICK SECTION
+        ============================== */
+        .quick-section {
+            padding: 52px 10%;
+            display: flex; justify-content: center;
+            background: #fff;
+            position: relative;
+        }
+        .quick-section::after {
+            content: '';
+            position: absolute; bottom: 0; left: 10%; right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+        }
+
+        .quick-grid {
+            display: flex; justify-content: space-between;
+            width: 100%; max-width: 1200px; gap: 16px;
+        }
+
+        .quick-item {
+            flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            cursor: pointer;
+            color: var(--dark-charcoal);
+            text-decoration: none;
+            padding: 20px 10px;
+            border-radius: 16px;
+            transition: background 0.22s;
+        }
+        .quick-item:hover { background: var(--light-gray); }
+
+        .icon-circle {
+            width: 68px; height: 68px;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: white;
+            margin-bottom: 14px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            transition: all 0.32s cubic-bezier(0.175,0.885,0.32,1.275);
+            position: relative;
+        }
+        .icon-circle::after {
+            content: '';
+            position: absolute; inset: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .quick-item:hover .icon-circle { transform: translateY(-10px) scale(1.08); box-shadow: 0 16px 32px rgba(0,0,0,0.18); }
+        .quick-item:hover .icon-circle::after { border-color: currentColor; transform: scale(1.1); opacity: 0.3; }
+
+        .q-1 { background: linear-gradient(135deg, #2AC1BC, #1ba39f); }
+        .q-2 { background: linear-gradient(135deg, #FFCA28, #e0b016); }
+        .q-3 { background: linear-gradient(135deg, #D4183D, #b01030); }
+        .q-4 { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .q-5 { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .q-6 { background: linear-gradient(135deg, #607D8B, #455A64); }
+
+        .quick-item h3 { font-size: 15px; font-weight: 800; margin-bottom: 5px; color: var(--dark-charcoal); }
+        .quick-item p { font-size: 12px; color: #999; font-weight: 500; }
+
+        /* ==============================
+           PROMO BAND
+        ============================== */
+        .promo-band {
+            background: linear-gradient(90deg, var(--primary-mint), #1fa9a4);
+            padding: 28px 10%;
+            display: flex; align-items: center; justify-content: space-between;
+            overflow: hidden; position: relative;
+        }
+        .promo-band::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255,255,255,0.03) 30px, rgba(255,255,255,0.03) 60px);
+        }
+        .promo-band-text { color: white; position: relative; z-index: 1; }
+        .promo-band-text h3 { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+        .promo-band-text p { font-size: 14px; opacity: 0.85; }
+        .promo-band-badges { display: flex; gap: 12px; flex-wrap: wrap; position: relative; z-index: 1; }
+        .promo-chip {
+            background: rgba(255,255,255,0.18);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 8px 18px;
+            border-radius: 30px; font-size: 13px; font-weight: 700;
+            backdrop-filter: blur(4px);
+            display: inline-flex; align-items: center; gap: 7px;
+            transition: background 0.2s;
+            cursor: default;
+        }
+        .promo-chip:hover { background: rgba(255,255,255,0.28); }
+        .promo-chip i { color: var(--primary-gold); }
+
+        /* ==============================
+           MENU SECTION
+        ============================== */
+        .menu-section {
+            padding: 70px 10%;
+            background-color: var(--light-gray);
+        }
+
+        .section-header {
+            display: flex; align-items: center; justify-content: space-between;
+            max-width: 1200px; margin: 0 auto 32px auto;
+        }
+        .section-title {
+            font-size: 26px; font-weight: 900;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-title .fire-icon { color: var(--primary-red); animation: flicker 1.2s ease-in-out infinite alternate; }
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-3deg); }
+            100% { transform: scale(1.1) rotate(3deg); }
+        }
+        .section-more-link {
+            font-size: 14px; font-weight: 700; color: #999;
+            text-decoration: none; display: flex; align-items: center; gap: 5px;
+            transition: color 0.2s;
+        }
+        .section-more-link:hover { color: var(--primary-mint); }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1.15fr 1.85fr;
+            gap: 28px; max-width: 1200px; margin: 0 auto;
+        }
+
+        .featured-card {
+            background: white; border-radius: 24px;
+            overflow: hidden; box-shadow: var(--shadow-style);
+            display: flex; flex-direction: column;
+            border: 1px solid var(--border-color);
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .featured-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow); }
+
+        .badge-red {
+            position: absolute; top: 18px; left: 18px;
+            background: var(--primary-red); color: white;
+            padding: 5px 12px; font-weight: 800;
+            border-radius: 6px; font-size: 13px; z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-img-box { width: 100%; height: 300px; overflow: hidden; background: #eee; }
+        .featured-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.55s ease; }
+        .featured-card:hover .featured-img-box img { transform: scale(1.06); }
+
+        .featured-info { padding: 28px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .menu-meta-title { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+        .menu-desc { font-size: 14px; color: #777; line-height: 1.6; margin-bottom: 16px; }
+
+        .rating-box { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+        .rating-box .stars { color: var(--primary-gold); font-size: 14px; display: flex; gap: 2px; }
+        .rating-box .rating-text { font-size: 13px; color: #777; font-weight: 700; }
+
+        .delivery-info { display: flex; gap: 14px; margin-bottom: 18px; }
+        .d-chip {
+            display: inline-flex; align-items: center; gap: 5px;
+            background: var(--light-gray); color: #666;
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: 700;
+        }
+        .d-chip i { color: var(--primary-mint); font-size: 11px; }
+
+        .price-group { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 18px; }
+        .price-group .price { font-size: 22px; font-weight: 900; color: var(--dark-charcoal); }
+        .action-inline-btn {
+            background: linear-gradient(135deg, var(--primary-mint), #1ba39f);
+            color: white; border: none;
+            padding: 11px 26px; border-radius: 20px;
+            font-weight: 800; font-size: 14px;
+            cursor: pointer; transition: all 0.25s;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+        }
+        .action-inline-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(42,193,188,0.35); color: white; }
+
+        .sub-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        .sub-card {
+            background: white; border-radius: 20px;
+            overflow: hidden; box-shadow: var(--shadow-style);
+            border: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            cursor: pointer;
+        }
+        .sub-card:hover { transform: translateY(-6px); box-shadow: 0 16px 36px rgba(0,0,0,0.11); }
+
+        .sub-img-box { width: 100%; height: 150px; overflow: hidden; background: #eee; position: relative; }
+        .sub-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .sub-card:hover .sub-img-box img { transform: scale(1.07); }
+
+        .sub-rank {
+            position: absolute; top: 10px; left: 10px;
+            background: rgba(0,0,0,0.6); color: white;
+            font-size: 11px; font-weight: 900;
+            padding: 3px 9px; border-radius: 4px;
+        }
+
+        .sub-info { padding: 18px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+        .sub-info h4 { font-size: 15px; font-weight: 800; margin-bottom: 5px; }
+        .sub-info p { font-size: 12px; color: #888; margin-bottom: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .sub-price-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 900; }
+        .mini-btn {
+            background: none; border: 1.5px solid var(--primary-mint);
+            color: var(--primary-mint); padding: 5px 14px;
+            border-radius: 12px; font-size: 12px; font-weight: 700;
+            cursor: pointer; text-decoration: none;
+            transition: all 0.2s;
+        }
+        .mini-btn:hover { background: var(--primary-mint); color: white; transform: scale(1.05); }
+
+        /* ==============================
+           STORE SECTION
+        ============================== */
+        .store-section { padding: 70px 10%; background: #fff; }
+
+        .store-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+
+        .store-card {
+            background: white; border-radius: 20px;
+            overflow: hidden; border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-style);
+            transition: transform 0.28s ease, box-shadow 0.28s ease;
+        }
+        .store-card:hover { transform: translateY(-8px); box-shadow: 0 20px 48px rgba(0,0,0,0.12); }
+
+        .store-img-box { width: 100%; height: 190px; position: relative; overflow: hidden; }
+        .store-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .store-card:hover .store-img-box img { transform: scale(1.06); }
+
+        .store-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%); }
+        .store-overlay-tag {
+            position: absolute; bottom: 14px; left: 14px;
+            background: rgba(0,0,0,0.65);
+            color: white; padding: 5px 13px;
+            font-weight: 800; font-size: 13px; border-radius: 6px;
+            backdrop-filter: blur(4px);
+        }
+        .store-status {
+            position: absolute; top: 14px; right: 14px;
+            background: #22c55e; color: white;
+            font-size: 11px; font-weight: 700;
+            padding: 4px 10px; border-radius: 20px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .store-status .dot { width: 6px; height: 6px; background: white; border-radius: 50%; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .store-info { padding: 20px; }
+        .store-name { font-size: 16px; font-weight: 900; margin-bottom: 8px; }
+        .store-meta { display: flex; gap: 14px; margin-bottom: 12px; }
+        .store-meta-item { font-size: 12px; color: #888; display: flex; align-items: center; gap: 4px; font-weight: 600; }
+        .store-meta-item i { color: var(--primary-mint); font-size: 11px; }
+        .store-info-addr {
+            font-size: 13px; color: #777;
+            margin-bottom: 16px;
+            display: flex; align-items: flex-start; gap: 5px;
+            line-height: 1.5;
+        }
+        .store-info-addr i { color: var(--primary-red); margin-top: 2px; flex-shrink: 0; }
+
+        .store-btn {
+            width: 100%; background: none;
+            border: 1.5px solid var(--border-color);
+            padding: 11px; border-radius: 10px;
+            font-weight: 800; font-size: 14px;
+            color: var(--dark-charcoal); cursor: pointer;
+            transition: all 0.22s; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+        }
+        .store-btn:hover { border-color: var(--primary-mint); color: var(--primary-mint); background: rgba(42,193,188,0.04); }
+
+        /* ==============================
+           REVIEW BANNER
+        ============================== */
+        .review-cta-section {
+            padding: 60px 10%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative; overflow: hidden;
+        }
+        .review-cta-section::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(42,193,188,0.12) 0%, transparent 60%),
+            radial-gradient(ellipse at 70% 50%, rgba(212,24,61,0.10) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .review-cta-inner {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between; gap: 40px;
+            position: relative; z-index: 1;
+        }
+        .review-cta-text h2 { font-size: 30px; font-weight: 900; color: white; margin-bottom: 10px; }
+        .review-cta-text p { font-size: 15px; color: rgba(255,255,255,0.65); line-height: 1.6; }
+        .review-cta-stats { display: flex; gap: 40px; }
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 32px; font-weight: 900; color: var(--primary-mint); display: block; }
+        .stat-label { font-size: 13px; color: rgba(255,255,255,0.55); font-weight: 600; margin-top: 4px; display: block; }
+        .review-cta-btn {
+            background: linear-gradient(135deg, var(--primary-mint), #1ba39f);
+            color: white; padding: 16px 38px;
+            border-radius: 30px; font-weight: 800; font-size: 15px;
+            text-decoration: none; white-space: nowrap;
+            box-shadow: 0 8px 24px rgba(42,193,188,0.35);
+            transition: all 0.28s cubic-bezier(0.175,0.885,0.32,1.275);
+            display: inline-flex; align-items: center; gap: 9px;
+        }
+        .review-cta-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 16px 36px rgba(42,193,188,0.45); color: white; }
+
+        /* ==============================
+           SCROLL REVEAL
+        ============================== */
+        .reveal {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+
+        /* ==============================
+           SCROLL-TO-TOP
+        ============================== */
+        .scroll-top {
+            position: fixed; bottom: 32px; right: 32px;
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, var(--primary-mint), #1ba39f);
+            color: white; border: none;
+            border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 6px 20px rgba(42,193,188,0.4);
+            transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+            opacity: 0; pointer-events: none;
+            z-index: 999;
+        }
+        .scroll-top.show { opacity: 1; pointer-events: all; }
+        .scroll-top:hover { transform: scale(1.12) translateY(-3px); box-shadow: 0 12px 30px rgba(42,193,188,0.5); }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+        @media (max-width: 900px) {
+            .header { padding: 0 5%; }
+            .nav-menu { gap: 20px; }
+            .hero-section { padding: 28px 5%; }
+            .hero-container { grid-template-columns: 1fr; }
+            .hero-left { padding: 44px 36px; }
+            .hero-right { padding: 44px 36px; }
+            .grid-container { grid-template-columns: 1fr; }
+            .sub-grid { grid-template-columns: 1fr 1fr; }
+            .store-grid { grid-template-columns: 1fr; }
+            .review-cta-inner { flex-direction: column; text-align: center; }
+            .review-cta-stats { justify-content: center; }
+            .quick-grid { flex-wrap: wrap; }
+            .quick-item { min-width: 28%; }
+            .promo-band { flex-direction: column; gap: 20px; }
+        }
     </style>
 </head>
 <body>
 
-<div class="notice-strip" aria-label="공지사항">
-    <div class="marquee-track" id="marqueeTrack">
-        <strong><i class="fa-solid fa-bolt"></i> 오늘만! 치킨 주문시 콜라 무료</strong><span>|</span>
-        <strong><i class="fa-solid fa-truck-fast"></i> 3만원 이상 배달비 무료</strong><span>|</span>
-        <span>신규 가입 시 3,000원 쿠폰 즉시 지급</span><span>|</span>
-        <strong><i class="fa-solid fa-moon"></i> 새벽 배달 24시간 운영중</strong><span>|</span>
-        <span>BRORDER PASS 구독하고 매달 무제한 무료 배달</span><span>|</span>
-        <strong><i class="fa-solid fa-bolt"></i> 오늘만! 치킨 주문시 콜라 무료</strong><span>|</span>
-        <strong><i class="fa-solid fa-truck-fast"></i> 3만원 이상 배달비 무료</strong><span>|</span>
-        <span>신규 가입 시 3,000원 쿠폰 즉시 지급</span><span>|</span>
-        <strong><i class="fa-solid fa-moon"></i> 새벽 배달 24시간 운영중</strong><span>|</span>
-        <span>BRORDER PASS 구독하고 매달 무제한 무료 배달</span>
+<!-- NOTICE STRIP -->
+<div class="notice-strip">
+    <div class="notice-strip-inner">
+        <strong><i class="fa-solid fa-bolt"></i> 오늘만! 슈퍼브로더 콤보 25% 할인</strong>
+        <span>|</span>
+        <span>지금 주문하면 배달비 무료</span>
+        <span>|</span>
+        <strong>신규 가입 시 3,000원 쿠폰 증정</strong>
+        <span>|</span>
+        <span>새벽 배달 24시간 운영중</span>
     </div>
 </div>
 
-<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+<div th:replace="~{fragments/header :: gnbHeader}"></div>
 
-<section class="hero">
-    <div class="hero-left">
-        <div class="hero-eyebrow"><span class="live-dot"></span>지금 실시간 배달 중</div>
-        <h1 class="hero-title">맛있는 음식을<br><span class="accent">30분</span> 안에 받아보세요</h1>
-        <p class="hero-subtitle">치킨, 피자, 중식, 일식, 분식까지<br>내 주변 최고의 맛집을 브로더에서 만나세요</p>
-        <div class="hero-search-bar">
-            <input type="text" placeholder="음식 이름 또는 매장명 검색...">
-            <button class="hero-search-btn"><i class="fa-solid fa-magnifying-glass"></i> 검색하기</button>
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-left">
+            <div class="hero-leaf"><i class="fa-solid fa-leaf" style="font-size:48px; color:rgba(255,255,255,0.15);"></i></div>
+            <div class="hero-leaf"><i class="fa-solid fa-seedling" style="font-size:28px; color:rgba(255,255,255,0.1);"></i></div>
+            <span class="promo-tag"><i class="fa-solid fa-star"></i> 특별 프로모션</span>
+            <h1>이달의 야관장자<br>무료증정 이벤트</h1>
+            <p>프리미엄 피자 주문 시 야관장자 사이드 메뉴 무료!</p>
+            <a th:href="@{/review/store/1}" class="hero-btn">자세히 보기</a>
         </div>
-        <div class="hero-chips">
-            <a th:href="@{/review/store/1}" class="hero-chip"># 치킨</a>
-            <a th:href="@{/review/store/1}" class="hero-chip"># 피자</a>
-            <a th:href="@{/review/store/1}" class="hero-chip"># 중국집</a>
-            <a th:href="@{/review/store/1}" class="hero-chip"># 분식</a>
-            <a th:href="@{/review/store/1}" class="hero-chip"># 야식</a>
-            <a th:href="@{/review/store/1}" class="hero-chip"># 한식</a>
+        <div class="hero-right">
+            <span class="best-tag">BEST</span>
+            <h2>슈퍼브로더 콤보 피자</h2>
+            <div class="pizza-display-box">
+                <div class="pizza-ring-2"></div>
+                <div class="pizza-ring"></div>
+                <img class="pizza-img" src="https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=500&q=80" alt="Super Brorder Pizza">
+            </div>
+            <div class="timer-box">
+                <i class="fa-solid fa-clock"></i>
+                타임 세일 종료까지
+                <span id="countdown">00:00:00</span>
+            </div>
+            <div class="price-tag">29,900원</div>
+            <div class="sale-price">25,900원 <span class="sale-badge">-13%</span></div>
+            <a th:href="@{/review/store/1}" class="order-btn">지금 주문하기</a>
         </div>
-    </div>
-    <div class="hero-right">
-        <a th:href="@{/review/store/1}" class="hero-promo-card">
-            <div class="hpc-icon hpc-1"><i class="fa-solid fa-fire"></i></div>
-            <div class="hpc-body">
-                <div class="hpc-label">오늘의 특가</div>
-                <div class="hpc-title">타임딜 진행중</div>
-                <div class="hpc-sub">최대 30% 할인 · 종료까지 <span id="countdown">03:00:00</span></div>
-            </div>
-            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
-        </a>
-        <a th:href="@{/review/store/1}" class="hero-promo-card">
-            <div class="hpc-icon hpc-2"><i class="fa-solid fa-crown"></i></div>
-            <div class="hpc-body">
-                <div class="hpc-label">BRORDER PASS</div>
-                <div class="hpc-title">무제한 무료배달</div>
-                <div class="hpc-sub">월 2,900원 · 첫 달 무료 체험</div>
-            </div>
-            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
-        </a>
-        <a th:href="@{/review/store/1}" class="hero-promo-card">
-            <div class="hpc-icon hpc-3"><i class="fa-solid fa-gift"></i></div>
-            <div class="hpc-body">
-                <div class="hpc-label">신규 가입 혜택</div>
-                <div class="hpc-title">3,000원 쿠폰 증정</div>
-                <div class="hpc-sub">가입 즉시 쿠폰 발급 · 이번달 한정</div>
-            </div>
-            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
-        </a>
     </div>
 </section>
 
-<div class="category-section">
-    <div class="category-scroll">
-        <a th:href="@{/review/store/1}" class="cat-tab active"><i class="fa-solid fa-border-all"></i> 전체</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-drumstick-bite"></i> 치킨</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-pizza-slice"></i> 피자</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-bowl-rice"></i> 한식</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-fish"></i> 일식</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-wonton"></i> 중식</a>
-        <a th:href="@{/review/store/1----}" class="cat-tab"><i class="fa-solid fa-bread-slice"></i> 분식</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-burger"></i> 패스트푸드</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-cake-candles"></i> 디저트</a>
-        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-mug-hot"></i> 카페</a>
-    </div>
-</div>
-
+<!-- QUICK ACTION -->
 <section class="quick-section">
-    <div class="section-inner">
-        <div class="quick-grid">
-            <a th:href="@{/review/store/1}" class="quick-item reveal">
-                <div class="q-icon q-1"><i class="fa-solid fa-motorcycle"></i></div><span>배달 주문</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d1">
-                <div class="q-icon q-2"><i class="fa-solid fa-bag-shopping"></i></div><span>포장 주문</span>
-            </a>
-            <a th:href="@{/review/store/1 chain-reveal}" class="quick-item reveal reveal-d2">
-                <div class="q-icon q-3"><i class="fa-solid fa-fire-flame-curved"></i></div><span>인기 맛집</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d3">
-                <div class="q-icon q-4"><i class="fa-solid fa-star"></i></div><span>별점 TOP</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d4">
-                <div class="q-icon q-5"><i class="fa-solid fa-gift"></i></div><span>이벤트</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d5">
-                <div class="q-icon q-6"><i class="fa-solid fa-leaf"></i></div><span>건강식</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d6">
-                <div class="q-icon q-7"><i class="fa-solid fa-moon"></i></div><span>야식 특가</span>
-            </a>
-            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d7">
-                <div class="q-icon q-8"><i class="fa-solid fa-crown"></i></div><span>PASS 혜택</span>
-            </a>
-        </div>
+    <div class="quick-grid">
+        <a th:href="@{/review/store/1}" class="quick-item reveal">
+            <div class="icon-circle q-1"><i class="fa-solid fa-motorcycle"></i></div>
+            <h3>배달 주문</h3>
+            <p>빠른 배달</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item reveal reveal-delay-1">
+            <div class="icon-circle q-2"><i class="fa-solid fa-bag-shopping"></i></div>
+            <h3>포장 주문</h3>
+            <p>매장 방문</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item reveal reveal-delay-2">
+            <div class="icon-circle q-3"><i class="fa-solid fa-gift"></i></div>
+            <h3>이벤트</h3>
+            <p>특별 혜택</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item reveal reveal-delay-3">
+            <div class="icon-circle q-4"><i class="fa-solid fa-store"></i></div>
+            <h3>매장 찾기</h3>
+            <p>가까운 매장</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item reveal reveal-delay-4">
+            <div class="icon-circle q-5"><i class="fa-solid fa-calendar-check"></i></div>
+            <h3>예약 주문</h3>
+            <p>원하는 시간</p>
+        </a>
+        <a th:href="@{/review/store/1}" class="quick-item reveal reveal-delay-5">
+            <div class="icon-circle q-6"><i class="fa-solid fa-phone"></i></div>
+            <h3>전화 주문</h3>
+            <p>1588-0000</p>
+        </a>
     </div>
 </section>
 
-<div class="dual-banner">
-    <div class="dual-banner-inner">
-        <a th:href="@{/review/store/1}" class="banner-card bc-1 reveal">
-            <div class="bc-text">
-                <div class="bc-tag">이벤트</div>
-                <h3>이달의 야관장자<br>무료증정 이벤트</h3>
-                <p>프리미엄 메뉴 주문 시 야관장자 무료</p>
-            </div>
-            <div class="bc-visual"><i class="fa-solid fa-gift"></i></div>
-        </a>
-        <a th:href="@{/review/store/1}" class="banner-card bc-2 reveal reveal-d2">
-            <div class="bc-text">
-                <div class="bc-tag" style="background:rgba(0,0,0,.18);">신규 혜택</div>
-                <h3>첫 주문 3,000원 할인<br>지금 가입하세요</h3>
-                <p>쿠폰 즉시 지급 + 배달비 첫 3회 무료</p>
-            </div>
-            <div class="bc-visual"><i class="fa-solid fa-truck-fast"></i></div>
-        </a>
+<!-- PROMO BAND -->
+<div class="promo-band reveal">
+    <div class="promo-band-text">
+        <h3><i class="fa-solid fa-percent"></i> 회원 전용 특가 혜택을 누려보세요!</h3>
+        <p>지금 가입하면 첫 주문 3,000원 할인 + 무료 배달 쿠폰 증정</p>
+    </div>
+    <div class="promo-band-badges">
+        <span class="promo-chip"><i class="fa-solid fa-tag"></i> 신규 3,000원 할인</span>
+        <span class="promo-chip"><i class="fa-solid fa-truck-fast"></i> 배달비 무료</span>
+        <span class="promo-chip"><i class="fa-solid fa-star"></i> 포인트 2배 적립</span>
     </div>
 </div>
 
-<section class="popular-section">
-    <div class="section-head">
-        <h2><i class="fa-solid fa-fire"></i> 지금 인기 맛집</h2>
-        <a th:href="@{/review/store/1}" class="see-all">전체 보기 <i class="fa-solid fa-chevron-right"></i></a>
-    </div>
-    <div class="restaurant-grid">
-        <a th:href="@{/review/store/1}" class="rest-card reveal">
-            <div class="rest-img-wrap">
-                <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80" alt="BBQ치킨">
-                <span class="rest-badge">HOT</span>
-            </div>
-            <div class="rest-body">
-                <div class="rest-name">황금올리브 치킨</div>
-                <div class="rest-tags"><span class="rest-tag">치킨</span><span class="rest-tag">배달빠름</span></div>
-                <div class="rest-meta">
-                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.9 (2,841)</div>
-                    <div class="rest-delivery">배달 20-30분</div>
-                </div>
-                <div class="rest-min-order">최소주문 15,000원 · 배달비 0원</div>
-            </div>
-        </a>
-        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d1">
-            <div class="rest-img-wrap">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" alt="수제버거">
-                <span class="rest-badge new">NEW</span>
-            </div>
-            <div class="rest-body">
-                <div class="rest-name">브로더 수제버거</div>
-                <div class="rest-tags"><span class="rest-tag">패스트푸드</span><span class="rest-tag">신규오픈</span></div>
-                <div class="rest-meta">
-                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.7 (543)</div>
-                    <div class="rest-delivery">배달 25-35분</div>
-                </div>
-                <div class="rest-min-order">최소주문 12,000원 · 배달비 1,500원</div>
-            </div>
-        </a>
-        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d2">
-            <div class="rest-img-wrap">
-                <img src="https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=400&q=80" alt="짜장면">
-                <span class="rest-badge">인기</span>
-            </div>
-            <div class="rest-body">
-                <div class="rest-name">용문각 중국집</div>
-                <div class="rest-tags"><span class="rest-tag">중식</span><span class="rest-tag">단골많음</span></div>
-                <div class="rest-meta">
-                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.8 (1,922)</div>
-                    <div class="rest-delivery">배달 30-40분</div>
-                </div>
-                <div class="rest-min-order">최소주문 18,000원 · 배달비 0원</div>
-            </div>
-        </a>
-        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d3">
-            <div class="rest-img-wrap">
-                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=400&q=80" alt="초밥">
-                <span class="rest-badge sale">SALE</span>
-            </div>
-            <div class="rest-body">
-                <div class="rest-name">스시로 초밥전문</div>
-                <div class="rest-tags"><span class="rest-tag">일식</span><span class="rest-tag">초밥</span></div>
-                <div class="rest-meta">
-                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.9 (3,107)</div>
-                    <div class="rest-delivery">배달 35-45분</div>
-                </div>
-                <div class="rest-min-order">최소주문 20,000원 · 배달비 2,000원</div>
-            </div>
+<!-- MENU SECTION -->
+<section class="menu-section">
+    <div class="section-header">
+        <h2 class="section-title">
+            <i class="fa-solid fa-fire fire-icon"></i>
+            최애추천 인기메뉴 TOP5
+        </h2>
+        <a th:href="@{/review/store/1}" class="section-more-link">
+            전체 메뉴 보기 <i class="fa-solid fa-chevron-right"></i>
         </a>
     </div>
-</section>
+    <div class="grid-container">
+        <div class="featured-card reveal">
+            <span class="badge-red">BEST 01</span>
+            <div class="featured-img-box">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="슈퍼 브로더 콤보">
+            </div>
+            <div class="featured-info">
+                <div>
+                    <div class="menu-meta-title">슈퍼 브로더 콤보</div>
+                    <p class="menu-desc">페퍼로니, 이탈리안 소시지, 양송이, 양파, 올리브가 토핑된 최고의 오리지널 콤보 피자</p>
+                    <div class="rating-box">
+                        <div class="stars">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <span class="rating-text">4.9 (1,247개 리뷰)</span>
+                    </div>
+                    <div class="delivery-info">
+                        <span class="d-chip"><i class="fa-solid fa-truck-fast"></i> 평균 23분</span>
+                        <span class="d-chip"><i class="fa-solid fa-won-sign"></i> 배달비 무료</span>
+                    </div>
+                </div>
+                <div class="price-group">
+                    <div class="price">25,900원</div>
+                    <a th:href="@{/review/store/1}" class="action-inline-btn">
+                        <i class="fa-solid fa-cart-plus"></i> 주문하기
+                    </a>
+                </div>
+            </div>
+        </div>
 
-<section class="timesale-section">
-    <div class="timesale-header">
-        <h2><i class="fa-solid fa-bolt" style="color:var(--primary-gold);"></i>타임딜 특가</h2>
-        <div class="ts-timer"><i class="fa-solid fa-clock"></i>종료까지&nbsp;<span id="countdown2">03:00:00</span></div>
-    </div>
-    <div class="timesale-grid">
-        <div class="ts-card reveal">
-            <div class="ts-img-wrap">
-                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" alt="콤보피자">
-                <div class="ts-discount"><span class="ts-pct">-25%</span></div>
+        <div class="sub-grid">
+            <div class="sub-card reveal reveal-delay-1">
+                <div class="sub-img-box">
+                    <img src="https://images.unsplash.com/photo-1571066811602-716837d681de?auto=format&fit=crop&w=400&q=80" alt="콤보 피자">
+                    <span class="sub-rank">BEST 02</span>
+                </div>
+                <div class="sub-info">
+                    <h4>콤보 피자</h4>
+                    <p>페퍼로니와 양송이의 환상 조합</p>
+                    <div class="sub-price-row">
+                        <span>23,900원</span>
+                        <a th:href="@{/review/store/1}" class="mini-btn">주문</a>
+                    </div>
+                </div>
             </div>
-            <div class="ts-body">
-                <div class="ts-name">슈퍼브로더 콤보 피자</div>
-                <div class="ts-prices"><span class="ts-original">29,900원</span><span class="ts-sale">22,400원</span></div>
-                <div class="ts-store">BRORDER 강남점</div>
+            <div class="sub-card reveal reveal-delay-2">
+                <div class="sub-img-box">
+                    <img src="https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80" alt="BBQ 치킨 피자">
+                    <span class="sub-rank">BEST 03</span>
+                </div>
+                <div class="sub-info">
+                    <h4>BBQ 치킨 피자</h4>
+                    <p>특제 바비큐 소스와 구운 치킨살</p>
+                    <div class="sub-price-row">
+                        <span>26,900원</span>
+                        <a th:href="@{/review/store/1}" class="mini-btn">주문</a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="ts-card reveal reveal-d1">
-            <div class="ts-img-wrap">
-                <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=300&q=80" alt="황금치킨">
-                <div class="ts-discount"><span class="ts-pct">-20%</span></div>
+            <div class="sub-card reveal reveal-delay-3">
+                <div class="sub-img-box">
+                    <img src="https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80" alt="치즈 매니아">
+                    <span class="sub-rank">BEST 04</span>
+                </div>
+                <div class="sub-info">
+                    <h4>치즈 매니아</h4>
+                    <p>5가지 고급 치즈의 진하고 고소한 맛</p>
+                    <div class="sub-price-row">
+                        <span>24,900원</span>
+                        <a th:href="@{/review/store/1}" class="mini-btn">주문</a>
+                    </div>
+                </div>
             </div>
-            <div class="ts-body">
-                <div class="ts-name">황금올리브 반반치킨</div>
-                <div class="ts-prices"><span class="ts-original">22,000원</span><span class="ts-sale">17,600원</span></div>
-                <div class="ts-store">황금올리브 대전점</div>
-            </div>
-        </div>
-        <div class="ts-card reveal reveal-d2">
-            <div class="ts-img-wrap">
-                <img src="https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?auto=format&fit=crop&w=300&q=80" alt="스시세트">
-                <div class="ts-discount"><span class="ts-pct">-15%</span></div>
-            </div>
-            <div class="ts-body">
-                <div class="ts-name">프리미엄 스시 12피스</div>
-                <div class="ts-prices"><span class="ts-original">28,000원</span><span class="ts-sale">23,800원</span></div>
-                <div class="ts-store">스시로 해운대점</div>
-            </div>
-        </div>
-        <div class="ts-card reveal reveal-d3">
-            <div class="ts-img-wrap">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" alt="수제버거">
-                <div class="ts-discount"><span class="ts-pct">-30%</span></div>
-            </div>
-            <div class="ts-body">
-                <div class="ts-name">더블 스모크 버거세트</div>
-                <div class="ts-prices"><span class="ts-original">14,500원</span><span class="ts-sale">10,150원</span></div>
-                <div class="ts-store">브로더 수제버거</div>
-            </div>
-        </div>
-        <div class="ts-card reveal reveal-d4">
-            <div class="ts-img-wrap">
-                <img src="https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=300&q=80" alt="짜장면">
-                <div class="ts-discount"><span class="ts-pct">-18%</span></div>
-            </div>
-            <div class="ts-body">
-                <div class="ts-name">짜장 + 짬뽕 세트</div>
-                <div class="ts-prices"><span class="ts-original">16,000원</span><span class="ts-sale">13,120원</span></div>
-                <div class="ts-store">용문각 대전점</div>
+            <div class="sub-card reveal reveal-delay-4">
+                <div class="sub-img-box">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80" alt="포테이토 가든">
+                    <span class="sub-rank">BEST 05</span>
+                </div>
+                <div class="sub-info">
+                    <h4>포테이토 가든</h4>
+                    <p>담백한 감자와 부드러운 화이트 소스</p>
+                    <div class="sub-price-row">
+                        <span>21,900원</span>
+                        <a th:href="@{/review/store/1}" class="mini-btn">주문</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<div class="promo-band">
-    <div class="promo-band-inner">
-        <div class="pb-item reveal">
-            <div class="pb-icon pbi-1"><i class="fa-solid fa-truck-fast"></i></div>
-            <div class="pb-text"><h4>빠른 배달 보장</h4><p>평균 30분 이내 도착 · 늦으면 쿠폰 지급</p></div>
-        </div>
-        <div class="pb-item reveal reveal-d2">
-            <div class="pb-icon pbi-2"><i class="fa-solid fa-crown"></i></div>
-            <div class="pb-text"><h4>BRORDER PASS</h4><p>월 2,900원으로 무제한 무료 배달 혜택</p></div>
-        </div>
-        <div class="pb-item reveal reveal-d4">
-            <div class="pb-icon pbi-3"><i class="fa-solid fa-headset"></i></div>
-            <div class="pb-text"><h4>24시간 고객센터</h4><p>언제든지 문의 가능 · 평균 응답 3분</p></div>
-        </div>
-    </div>
-</div>
-
-<section class="review-cta">
-    <div class="review-cta-inner reveal-scale">
-        <div class="rct-text">
+<!-- REVIEW CTA SECTION -->
+<section class="review-cta-section">
+    <div class="review-cta-inner">
+        <div class="review-cta-text reveal">
             <h2>고객님의 소중한 한마디가<br>브로더를 더 맛있게 만듭니다</h2>
-            <p>주문하신 음식에 대한 솔직한 리뷰를 남겨주세요.<br>리뷰 작성 시 포인트 200P를 바로 적립해 드립니다.</p>
+            <p>주문하신 음식에 대한 솔직한 리뷰를 남겨주세요.<br>리뷰 작성 시 포인트를 적립해 드립니다.</p>
         </div>
-        <div class="rct-stats">
-            <div class="stat-item"><span class="stat-num" id="stat-reviews">0</span><span class="stat-label">총 리뷰 수</span></div>
-            <div class="stat-item"><span class="stat-num" id="stat-rating">0.0</span><span class="stat-label">평균 별점</span></div>
-            <div class="stat-item"><span class="stat-num" id="stat-orders">0</span><span class="stat-label">월 주문 건수</span></div>
+        <div class="review-cta-stats reveal reveal-delay-1">
+            <div class="stat-item">
+                <span class="stat-num" id="stat-reviews">0</span>
+                <span class="stat-label">총 리뷰 수</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" id="stat-rating">0.0</span>
+                <span class="stat-label">평균 별점</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num" id="stat-orders">0</span>
+                <span class="stat-label">월 주문 건수</span>
+            </div>
         </div>
-        <div class="rct-action">
-            <a th:href="@{/review/store/1}" class="rct-btn-main"><i class="fa-solid fa-pen-to-square"></i> 리뷰 작성하기</a>
-            <a th:href="@{/review/store/1}" class="rct-btn-sub"><i class="fa-solid fa-list"></i> 내 리뷰 관리</a>
-        </div>
+        <a th:href="@{/review/store/1}" class="review-cta-btn reveal reveal-delay-2">
+            <i class="fa-solid fa-pen-to-square"></i>
+            리뷰 작성하러 가기
+        </a>
     </div>
 </section>
 
+<!-- STORE SECTION -->
 <section class="store-section">
-    <div class="section-head">
-        <h2><i class="fa-solid fa-location-dot" style="color:var(--primary-red);"></i>내 주변 BRORDER 매장</h2>
-        <a th:href="@{/review/store/1}" class="see-all">전체 매장 보기 <i class="fa-solid fa-chevron-right"></i></a>
+    <div class="section-header" style="max-width:1200px; margin:0 auto 32px auto;">
+        <h2 class="section-title">
+            <i class="fa-solid fa-location-dot" style="color:var(--primary-red);"></i>
+            더 좋은 맛을, 더 빠르게 만날 매장찾기
+        </h2>
+        <a th:href="@{/review/store/1}" class="section-more-link">
+            전체 매장 보기 <i class="fa-solid fa-chevron-right"></i>
+        </a>
     </div>
     <div class="store-grid">
         <div class="store-card reveal">
-            <div class="store-img-wrap">
-                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80" alt="서울점">
-                <div class="store-overlay"></div><span class="store-overlay-tag">서울 강남점</span>
-                <span class="store-status-badge status-open"><span class="status-dot"></span>영업중</span>
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80" alt="서울점">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">서울점</span>
+                <span class="store-status"><span class="dot"></span> 영업중</span>
             </div>
-            <div class="store-body">
+            <div class="store-info">
                 <div class="store-name">BRORDER 강남점</div>
-                <div class="store-meta-row">
-                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 20-30분</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.8 (1,024)</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>배달비 무료</span>
+                <div class="store-meta">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i> 배달 20-30분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i> 4.8</span>
                 </div>
-                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>서울특별시 강남구 테헤란로 123</div>
-                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+                <div class="store-info-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    서울특별시 강남구 테헤란로 123
+                </div>
+                <a th:href="@{/review/store/1}" class="store-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
             </div>
         </div>
-        <div class="store-card reveal reveal-d2">
-            <div class="store-img-wrap">
-                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=500&q=80" alt="대전점">
-                <div class="store-overlay"></div><span class="store-overlay-tag">대전점</span>
-                <span class="store-status-badge status-open"><span class="status-dot"></span>영업중</span>
+        <div class="store-card reveal reveal-delay-2">
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=400&q=80" alt="대전점">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">대전점</span>
+                <span class="store-status"><span class="dot"></span> 영업중</span>
             </div>
-            <div class="store-body">
+            <div class="store-info">
                 <div class="store-name">BRORDER 대전점</div>
-                <div class="store-meta-row">
-                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 25-35분</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.7 (876)</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>1,500원</span>
+                <div class="store-meta">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i> 배달 25-35분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i> 4.7</span>
                 </div>
-                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>대전광역시 서구 둔산로 456</div>
-                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+                <div class="store-info-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    대전광역시 서구 둔산로 456
+                </div>
+                <a th:href="@{/review/store/1}" class="store-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
             </div>
         </div>
-        <div class="store-card reveal reveal-d4">
-            <div class="store-img-wrap">
-                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=500&q=80" alt="부산점">
-                <div class="store-overlay"></div><span class="store-overlay-tag">부산 해운대점</span>
-                <span class="store-status-badge status-prep"><span class="status-dot"></span>준비중</span>
+        <div class="store-card reveal reveal-delay-4">
+            <div class="store-img-box">
+                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=400&q=80" alt="부산점">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">부산점</span>
+                <span class="store-status" style="background:#f59e0b;"><span class="dot"></span> 준비중</span>
             </div>
-            <div class="store-body">
+            <div class="store-info">
                 <div class="store-name">BRORDER 해운대점</div>
-                <div class="store-meta-row">
-                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 30-40분</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.9 (2,311)</span>
-                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>2,000원</span>
+                <div class="store-meta">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i> 배달 30-40분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i> 4.9</span>
                 </div>
-                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>부산광역시 해운대구 해운대로 789</div>
-                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+                <div class="store-info-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    부산광역시 해운대구 해운대로 789
+                </div>
+                <a th:href="@{/review/store/1}" class="store-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
             </div>
         </div>
     </div>
 </section>
 
-<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+<div th:replace="~{fragments/footer :: defaultFooter}"></div>
 
+<!-- SCROLL TO TOP -->
 <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
     <i class="fa-solid fa-chevron-up"></i>
 </button>
 
 <script>
-    /* ── HEADER SCROLL ── */
-    const headerEl = document.getElementById('mainHeader');
-    const scrollTopBtn = document.getElementById('scrollTopBtn');
-    window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        if (headerEl) headerEl.classList.toggle('scrolled', y > 60);
-        if (scrollTopBtn) scrollTopBtn.classList.toggle('show', y > 320);
-    }, { passive: true });
-
-    /* ── COUNTDOWN ── */
-    function startTimer(duration, els) {
-        let t = duration;
-        const tick = () => {
-            const h = String(Math.floor(t / 3600)).padStart(2,'0');
-            const m = String(Math.floor((t % 3600) / 60)).padStart(2,'0');
-            const s = String(t % 60).padStart(2,'0');
-            const str = `${h}:${m}:${s}`;
-            els.forEach(el => { if (el) el.textContent = str; });
-            if (--t < 0) t = duration;
-        };
-        tick();
-        setInterval(tick, 1000);
+    /* ---- COUNTDOWN TIMER ---- */
+    function startTimer(duration, display) {
+        let timer = duration;
+        setInterval(function () {
+            const hours   = Math.floor(timer / 3600);
+            const minutes = Math.floor((timer % 3600) / 60);
+            const seconds = timer % 60;
+            display.textContent =
+                String(hours).padStart(2,'0') + ':' +
+                String(minutes).padStart(2,'0') + ':' +
+                String(seconds).padStart(2,'0');
+            if (--timer < 0) timer = duration;
+        }, 1000);
     }
-    startTimer(10800, [
-        document.getElementById('countdown'),
-        document.getElementById('countdown2')
-    ]);
 
-    /* ── SCROLL REVEAL ── */
-    const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
-    const revealObs = new IntersectionObserver(entries => {
+    /* ---- HEADER SCROLL EFFECT ---- */
+    const header = document.querySelector('.header');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 60) {
+            if (header) header.classList.add('scrolled');
+            scrollTopBtn.classList.add('show');
+        } else {
+            if (header) header.classList.remove('scrolled');
+            scrollTopBtn.classList.remove('show');
+        }
+    });
+
+    /* ---- SCROLL REVEAL ---- */
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
                 e.target.classList.add('visible');
-                revealObs.unobserve(e.target);
+                observer.unobserve(e.target);
             }
         });
-    }, { threshold: 0.08 });
-    revealEls.forEach(el => revealObs.observe(el));
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
 
-    /* ── COUNT-UP (review CTA stats) ── */
-    function countUp(el, target, isFloat, ms) {
-        if (!el) return;
+    /* ---- COUNT-UP ANIMATION ---- */
+    function countUp(el, target, suffix, duration) {
         const start = performance.now();
-        const step = now => {
-            const p = Math.min((now - start) / ms, 1);
-            const eased = 1 - Math.pow(1 - p, 3);
-            const v = eased * target;
-            el.textContent = isFloat ? v.toFixed(1) : Math.floor(v).toLocaleString();
-            if (p < 1) requestAnimationFrame(step);
+        const isFloat = suffix === '.0' || String(target).includes('.');
+        function step(now) {
+            const progress = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const value = eased * target;
+            el.textContent = isFloat ? value.toFixed(1) : Math.floor(value).toLocaleString();
+            if (progress < 1) requestAnimationFrame(step);
             else el.textContent = isFloat ? target.toFixed(1) : target.toLocaleString();
-        };
+        }
         requestAnimationFrame(step);
     }
-    const ctaObs = new IntersectionObserver(entries => {
+
+    const statsObserver = new IntersectionObserver((entries) => {
         entries.forEach(e => {
             if (e.isIntersecting) {
-                countUp(document.getElementById('stat-reviews'), 24680, false, 1800);
-                countUp(document.getElementById('stat-rating'),  4.8,   true,  1200);
-                countUp(document.getElementById('stat-orders'),  8500,  false, 1600);
-                ctaObs.disconnect();
+                countUp(document.getElementById('stat-reviews'), 12480, '', 1600);
+                countUp(document.getElementById('stat-rating'), 4.8, '.0', 1200);
+                countUp(document.getElementById('stat-orders'), 3200, '', 1400);
+                statsObserver.disconnect();
             }
         });
     }, { threshold: 0.3 });
-    const ctaSection = document.querySelector('.review-cta');
-    if (ctaSection) ctaObs.observe(ctaSection);
 
-    /* ── RIPPLE EFFECT ── */
-    const rippleStyle = document.createElement('style');
-    rippleStyle.textContent = '@keyframes ripple{to{transform:scale(3);opacity:0;}}';
-    document.head.appendChild(rippleStyle);
+    const statsSection = document.querySelector('.review-cta-section');
+    if (statsSection) statsObserver.observe(statsSection);
 
-    document.querySelectorAll('.rest-card, .store-card, .ts-card').forEach(card => {
+    /* ---- SUB-CARD RIPPLE EFFECT ---- */
+    document.querySelectorAll('.sub-card, .store-card').forEach(card => {
         card.addEventListener('click', function(e) {
-            const r = document.createElement('span');
+            const ripple = document.createElement('span');
             const rect = this.getBoundingClientRect();
             const size = Math.max(rect.width, rect.height);
-            r.style.cssText = [
-                `position:absolute`,
-                `border-radius:50%`,
-                `width:${size}px`,
-                `height:${size}px`,
-                `left:${e.clientX - rect.left - size / 2}px`,
-                `top:${e.clientY - rect.top - size / 2}px`,
-                `background:rgba(42,193,188,.1)`,
-                `transform:scale(0)`,
-                `animation:ripple .55s ease-out forwards`,
-                `pointer-events:none`,
-                `z-index:5`
-            ].join(';');
+            ripple.style.cssText = `
+                position:absolute; border-radius:50%;
+                width:${size}px; height:${size}px;
+                left:${e.clientX - rect.left - size/2}px;
+                top:${e.clientY - rect.top - size/2}px;
+                background:rgba(42,193,188,0.15);
+                transform:scale(0); animation:rippleAnim 0.5s linear;
+                pointer-events:none; z-index:10;
+            `;
             this.style.position = 'relative';
             this.style.overflow = 'hidden';
-            this.appendChild(r);
-            setTimeout(() => r.remove(), 600);
+            this.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
         });
     });
 
-    /* ── CATEGORY TAB ACTIVE ── */
-    document.querySelectorAll('.cat-tab').forEach(tab => {
-        tab.addEventListener('click', function() {
-            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        @keyframes rippleAnim {
+            to { transform: scale(2.5); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+
+    /* ---- INIT ---- */
+    window.onload = function () {
+        const display = document.querySelector('#countdown');
+        if (display) startTimer(60 * 60 * 3, display);
+    };
 </script>
 </body>
 </html>
+```
