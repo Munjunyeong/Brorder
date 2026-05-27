@@ -7,7 +7,7 @@
     </a>
 
     <ul class="nav-menu">
-        <li><a href="/review/store/1">음식배달</a></li>
+        <li><a href="store/list">음식배달</a></li>
         <li><a href="#">포장주문</a></li>
         <li><a href="#">이벤트</a></li>
         <li><a href="#">브랜드</a></li>
@@ -15,12 +15,12 @@
     </ul>
 
     <div class="header-right">
-        <div th:if="${session.loginUserId == null}" class="auth-btn-group">
+        <div th:if="${session.users == null}" class="auth-btn-group">
             <a href="/login" class="btn-auth btn-auth-login">로그인</a>
             <a href="/register" class="btn-auth btn-auth-register">회원가입</a>
         </div>
 
-        <div th:if="${session.loginUserId != null}" class="auth-btn-group">
+        <div th:if="${session.users != null}" class="auth-btn-group">
             <a href="/users/my/review" class="icon-btn" title="마이페이지">
                 <i class="fa-solid fa-user"></i>
             </a>
@@ -28,6 +28,8 @@
                 <i class="fa-solid fa-basket-shopping"></i>
                 <span class="i-badge">0</span>
             </a>
+            <a href="/logout" class="btn-auth btn-auth-login">로그아웃</a>
+
         </div>
     </div>
 </header>
