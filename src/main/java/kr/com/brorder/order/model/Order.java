@@ -10,7 +10,7 @@ public class Order {
     private String paymentMethod;
     private int totalPrice;
     private String requests;
-    private Timestamp createdData;
+    private Timestamp createdAt;
 
     public int getOrderId() {
         return orderId;
@@ -60,11 +60,11 @@ public class Order {
         this.requests = requests;
     }
 
-    public Timestamp getCreatedData() {
-        return createdData;
+    public Timestamp getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedData(Timestamp createdData) {
-        this.createdData = createdData;
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 }
