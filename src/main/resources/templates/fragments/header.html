@@ -15,12 +15,12 @@
     </ul>
 
     <div class="header-right">
-        <div th:if="${session.loginUserId == null}" class="auth-btn-group">
+        <div th:if="${session.users == null}" class="auth-btn-group">
             <a href="/login" class="btn-auth btn-auth-login">로그인</a>
             <a href="/register" class="btn-auth btn-auth-register">회원가입</a>
         </div>
 
-        <div th:if="${session.loginUserId != null}" class="auth-btn-group">
+        <div th:if="${session.users != null}" class="auth-btn-group">
             <a href="/users/my/review" class="icon-btn" title="마이페이지">
                 <i class="fa-solid fa-user"></i>
             </a>
