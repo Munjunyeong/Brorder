@@ -4,7 +4,7 @@
 <body>
 <h1>가게 정보 수정</h1>
 <hr>
-<form th:action="@{/store/update}" method="post">
+<form th:action="@{/store/{id}/update(id=${store.storeId})}" method="post">
     <!-- 반드시 변경 대상 Id를 hidden으로 같이 전송해야 쿼리가 성립합니다 -->
     <input type="hidden" name="storeId" th:value="${store.storeId}">
 
@@ -26,6 +26,6 @@
     </label><br><br>
     <button type="submit">수정 완료</button>
 </form>
-<a th:href="@{/store/detail(store_id=${store.storeId})}">취소</a>
+<a th:href="@{/store/{id}(id=${store.storeId})}">취소</a>
 </body>
 </html>

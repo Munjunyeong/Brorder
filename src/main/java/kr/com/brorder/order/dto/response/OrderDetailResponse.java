@@ -1,19 +1,19 @@
-package kr.com.brorder.order.dto.request;
+package kr.com.brorder.order.dto.response;
 
+import java.sql.Timestamp;
 import java.util.List;
 
-public class OrderCreateRequest {
+public class OrderDetailResponse {
 
-    // MyBatis generated key용
     private int orderId;
-
     private int userId;
     private int storeId;
     private String paymentMethod;
-    private String requests;
     private int totalPrice;
+    private String requests;
+    private Timestamp createdData;
 
-    private List<OrderMenuCreateRequest> items;
+    private List<OrderMenuResponse> items;
 
     public int getOrderId() {
         return orderId;
@@ -47,6 +47,14 @@ public class OrderCreateRequest {
         this.paymentMethod = paymentMethod;
     }
 
+    public int getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(int totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public String getRequests() {
         return requests;
     }
@@ -55,19 +63,19 @@ public class OrderCreateRequest {
         this.requests = requests;
     }
 
-    public List<OrderMenuCreateRequest> getItems() {
+    public Timestamp getCreatedData() {
+        return createdData;
+    }
+
+    public void setCreatedData(Timestamp createdData) {
+        this.createdData = createdData;
+    }
+
+    public List<OrderMenuResponse> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderMenuCreateRequest> items) {
+    public void setItems(List<OrderMenuResponse> items) {
         this.items = items;
-    }
-    
-    public int getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
     }
 }
