@@ -1,0 +1,96 @@
+/* ══ [교정 완료] 스크롤 스냅 모션 완벽 제거 및 브라우저 순정 스크롤 시스템 복원 ══ */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ══ SECTION SLIDE-IN ANIMATION ══ */
+.snap-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.snap-section.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* hero 기본 노출 상태 */
+.hero.snap-section {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ══ 기존 reveal 유지 ══ */
+.reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.reveal-d1 {
+    transition-delay: .08s;
+}
+
+.reveal-d2 {
+    transition-delay: .16s;
+}
+
+.reveal-d3 {
+    transition-delay: .24s;
+}
+
+.reveal-d4 {
+    transition-delay: .32s;
+}
+
+.reveal-d5 {
+    transition-delay: .40s;
+}
+
+.reveal-d6 {
+    transition-delay: .48s;
+}
+
+.reveal-d7 {
+    transition-delay: .56s;
+}
+
+.reveal-d8 {
+    transition-delay: .64s;
+}
+
+.reveal-scale {
+    opacity: 0;
+    transform: scale(.94) translateY(20px);
+    transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1);
+}
+
+.reveal-scale.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* 배너 태그 강조 상태 */
+.bc-tag-dark {
+    background: rgba(0,0,0,.18);
+}
+
+/* 섹션 제목 위치 아이콘 색상 */
+.section-head-location-icon {
+    color: var(--primary-red);
+}
+
+/* 리플 애니메이션 */
+@keyframes ripple {
+    to {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
