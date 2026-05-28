@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+
+    <style>
+        /* ══ [교정 완료] 스크롤 스냅 모션 완벽 제거 및 브라우저 순정 스크롤 시스템 복원 ══ */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ══ SECTION SLIDE-IN ANIMATION ══ */
+        .snap-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+            transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .snap-section.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* hero는 처음부태 보이게 */
+        .hero.snap-section {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ══ 기존 reveal 유지 ══ */
+        .reveal { opacity: 0; transform: translateY(32px); transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-d1 { transition-delay: .08s; }
+        .reveal-d2 { transition-delay: .16s; }
+        .reveal-d3 { transition-delay: .24s; }
+        .reveal-d4 { transition-delay: .32s; }
+        .reveal-d5 { transition-delay: .40s; }
+        .reveal-d6 { transition-delay: .48s; }
+        .reveal-d7 { transition-delay: .56s; }
+        .reveal-d8 { transition-delay: .64s; }
+        .reveal-scale { opacity: 0; transform: scale(.94) translateY(20px); transition: opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1); }
+        .reveal-scale.visible { opacity: 1; transform: scale(1) translateY(0); }
+    </style>
 </head>
 <body>
+<<<<<<< HEAD
 	<div>
 		<div>
 			<h3>Brorder</h3>
@@ -29,5 +68,414 @@
 			</div>
 		</div>
 	</div>
+=======
+
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+
+<section class="hero snap-section">
+    <div class="hero-left">
+        <div class="hero-eyebrow"><span class="live-dot"></span>지금 실시간 배달 중</div>
+        <h1 class="hero-title">맛있는 음식을<br><span class="accent">30분</span> 안에 받아보세요</h1>
+        <p class="hero-subtitle">치킨, 피자, 중식, 일식, 분식까지<br>내 주변 최고의 맛집을 브로더에서 만나세요</p>
+        <div class="hero-search-bar">
+            <input type="text" placeholder="음식 이름 또는 매장명 검색...">
+            <button class="hero-search-btn"><i class="fa-solid fa-magnifying-glass"></i> 검색하기</button>
+        </div>
+        <div class="hero-chips">
+            <a th:href="@{/review/store/1}" class="hero-chip"># 치킨</a>
+            <a th:href="@{/review/store/1 Antiquewhite}" class="hero-chip"># 피자</a>
+            <a th:href="@{/review/store/1}" class="hero-chip"># 중국집</a>
+            <a th:href="@{/review/store/1}" class="hero-chip"># 분식</a>
+            <a th:href="@{/review/store/1}" class="hero-chip"># 야식</a>
+            <a th:href="@{/review/store/1}" class="hero-chip"># 한식</a>
+        </div>
+    </div>
+    <div class="hero-right">
+        <a th:href="@{/review/store/1}" class="hero-promo-card">
+            <div class="hpc-icon hpc-1"><i class="fa-solid fa-fire"></i></div>
+            <div class="hpc-body">
+                <div class="hpc-label">오늘의 특가</div>
+                <div class="hpc-title">타임딜 진행중</div>
+                <div class="hpc-sub">최대 30% 할인 · 종료까지 <span id="countdown">03:00:00</span></div>
+            </div>
+            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
+        </a>
+        <a th:href="@{/review/store/1}" class="hero-promo-card">
+            <div class="hpc-icon hpc-2"><i class="fa-solid fa-crown"></i></div>
+            <div class="hpc-body">
+                <div class="hpc-label">BRORDER PASS</div>
+                <div class="hpc-title">무제한 무료배달</div>
+                <div class="hpc-sub">월 2,900원 · 첫 달 무료 체험</div>
+            </div>
+            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
+        </a>
+        <a th:href="@{/review/store/1}" class="hero-promo-card">
+            <div class="hpc-icon hpc-3"><i class="fa-solid fa-gift"></i></div>
+            <div class="hpc-body">
+                <div class="hpc-label">신규 가입 혜택</div>
+                <div class="hpc-title">3,000원 쿠폰 증정</div>
+                <div class="hpc-sub">가입 즉시 쿠폰 발급 · 이번달 한정</div>
+            </div>
+            <i class="fa-solid fa-chevron-right hpc-arrow"></i>
+        </a>
+    </div>
+</section>
+
+<div class="category-section">
+    <div class="category-scroll">
+        <a th:href="@{/review/store/1}" class="cat-tab active"><i class="fa-solid fa-border-all"></i> 전체</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-drumstick-bite"></i> 치킨</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-pizza-slice"></i> 피자</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-bowl-rice"></i> 한식</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-fish"></i> 일식</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-wonton"></i> 중식</a>
+        <a th:href="@{/review/store/1----}" class="cat-tab"><i class="fa-solid fa-bread-slice"></i> 분식</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-burger"></i> 패스트푸드</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-cake-candles"></i> 디저트</a>
+        <a th:href="@{/review/store/1}" class="cat-tab"><i class="fa-solid fa-mug-hot"></i> 카페</a>
+    </div>
+</div>
+
+<section class="quick-section snap-section">
+    <div class="section-inner">
+        <div class="quick-grid">
+            <a th:href="@{/review/store/1}" class="quick-item reveal">
+                <div class="q-icon q-1"><i class="fa-solid fa-motorcycle"></i></div><span>배달 주문</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d1">
+                <div class="q-icon q-2"><i class="fa-solid fa-bag-shopping"></i></div><span>포장 주문</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d2">
+                <div class="q-icon q-3"><i class="fa-solid fa-fire-flame-curved"></i></div><span>인기 맛집</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d3">
+                <div class="q-icon q-4"><i class="fa-solid fa-star"></i></div><span>별점 TOP</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d4">
+                <div class="q-icon q-5"><i class="fa-solid fa-gift"></i></div><span>이벤트</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d5">
+                <div class="q-icon q-6"><i class="fa-solid fa-leaf"></i></div><span>건강식</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d6">
+                <div class="q-icon q-7"><i class="fa-solid fa-moon"></i></div><span>야식 특가</span>
+            </a>
+            <a th:href="@{/review/store/1}" class="quick-item reveal reveal-d7">
+                <div class="q-icon q-8"><i class="fa-solid fa-crown"></i></div><span>PASS 혜택</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<div class="dual-banner snap-section">
+    <div class="dual-banner-inner">
+        <a th:href="@{/review/store/1}" class="banner-card bc-1 reveal">
+            <div class="bc-text">
+                <div class="bc-tag">이벤트</div>
+                <h3>이달의 사이드 메뉴<br>무료증정 이벤트</h3>
+                <p>프리미엄 메뉴 주문 시 사이드메뉴 무료</p>
+            </div>
+            <div class="bc-visual"><i class="fa-solid fa-gift"></i></div>
+        </a>
+        <a th:href="@{/review/store/1}" class="banner-card bc-2 reveal reveal-d2">
+            <div class="bc-text">
+                <div class="bc-tag" style="background:rgba(0,0,0,.18);">신규 혜택</div>
+                <h3>첫 주문 3,000원 할인<br>지금 가입하세요</h3>
+                <p>쿠폰 즉시 지급 + 배달비 첫 3회 무료</p>
+            </div>
+            <div class="bc-visual"><i class="fa-solid fa-truck-fast"></i></div>
+        </a>
+    </div>
+</div>
+
+<section class="popular-section snap-section">
+    <div class="section-head">
+        <h2><i class="fa-solid fa-fire"></i> 지금 인기 맛집</h2>
+        <a th:href="@{/review/store/1}" class="see-all">전체 보기 <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+    <div class="restaurant-grid">
+        <a th:href="@{/review/store/1}" class="rest-card reveal">
+            <div class="rest-img-wrap">
+                <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=400&q=80" alt="BBQ치킨">
+                <span class="rest-badge">HOT</span>
+            </div>
+            <div class="rest-body">
+                <div class="rest-name">황금올리브 치킨</div>
+                <div class="rest-tags"><span class="rest-tag">치킨</span><span class="rest-tag">배달빠름</span></div>
+                <div class="rest-meta">
+                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.9 (2,841)</div>
+                    <div class="rest-delivery">배달 20-30분</div>
+                </div>
+                <div class="rest-min-order">최소주문 15,000원 · 배달비 0원</div>
+            </div>
+        </a>
+        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d1">
+            <div class="rest-img-wrap">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80" alt="수제버거">
+                <span class="rest-badge new">NEW</span>
+            </div>
+            <div class="rest-body">
+                <div class="rest-name">브로더 수제버거</div>
+                <div class="rest-tags"><span class="rest-tag">패스트푸드</span><span class="rest-tag">신규오픈</span></div>
+                <div class="rest-meta">
+                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.7 (543)</div>
+                    <div class="rest-delivery">배달 25-35분</div>
+                </div>
+                <div class="rest-min-order">최소주문 12,000원 · 배달비 1,500원</div>
+            </div>
+        </a>
+        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d2">
+            <div class="rest-img-wrap">
+                <img src="https://images.unsplash.com/photo-1557872943-16a5ac26437e?auto=format&fit=crop&w=400&q=80" alt="짜장면">
+                <span class="rest-badge">인기</span>
+            </div>
+            <div class="rest-body">
+                <div class="rest-name">용문각 중국집</div>
+                <div class="rest-tags"><span class="rest-tag">중식</span><span class="rest-tag">단골많음</span></div>
+                <div class="rest-meta">
+                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.8 (1,922)</div>
+                    <div class="rest-delivery">배달 30-40분</div>
+                </div>
+                <div class="rest-min-order">최소주문 18,000원 · 배달비 0원</div>
+            </div>
+        </a>
+        <a th:href="@{/review/store/1}" class="rest-card reveal reveal-d3">
+            <div class="rest-img-wrap">
+                <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=400&q=80" alt="초밥">
+                <span class="rest-badge sale">SALE</span>
+            </div>
+            <div class="rest-body">
+                <div class="rest-name">스시로 초밥전문</div>
+                <div class="rest-tags"><span class="rest-tag">일식</span><span class="rest-tag">초밥</span></div>
+                <div class="rest-meta">
+                    <div class="rest-rating"><i class="fa-solid fa-star"></i> 4.9 (3,107)</div>
+                    <div class="rest-delivery">배달 35-45분</div>
+                </div>
+                <div class="rest-min-order">최소주문 20,000원 · 배달비 2,000원</div>
+            </div>
+        </a>
+    </div>
+</section>
+
+<div class="promo-band">
+    <div class="promo-band-inner">
+        <div class="pb-item reveal">
+            <div class="pb-icon pbi-1"><i class="fa-solid fa-truck-fast"></i></div>
+            <div class="pb-text"><h4>빠른 배달 보장</h4><p>평균 30분 이내 도착 · 늦으면 쿠폰 지급</p></div>
+        </div>
+        <div class="pb-item reveal reveal-d2">
+            <div class="pb-icon pbi-2"><i class="fa-solid fa-crown"></i></div>
+            <div class="pb-text"><h4>BRORDER PASS</h4><p>월 2,900원으로 무제한 무료 배달 혜택</p></div>
+        </div>
+        <div class="pb-item reveal reveal-d4">
+            <div class="pb-icon pbi-3"><i class="fa-solid fa-headset"></i></div>
+            <div class="pb-text"><h4>24시간 고객센터</h4><p>언제든지 문의 가능 · 평균 응답 3분</p></div>
+        </div>
+    </div>
+</div>
+
+<section class="review-cta snap-section">
+    <div class="review-cta-inner reveal-scale">
+        <div class="rct-text">
+            <h2>고객님의 소중한 한마디가<br>브로더를 더 맛있게 만듭니다</h2>
+            <p>주문하신 음식에 대한 솔직한 리뷰를 남겨주세요.<br>리뷰 작성 시 포인트 200P를 바로 적립해 드립니다.</p>
+        </div>
+        <div class="rct-stats">
+            <div class="stat-item"><span class="stat-num" id="stat-reviews">0</span><span class="stat-label">총 리뷰 수</span></div>
+            <div class="stat-item"><span class="stat-num" id="stat-rating">0.0</span><span class="stat-label">평균 별점</span></div>
+            <div class="stat-item"><span class="stat-num" id="stat-orders">0</span><span class="stat-label">월 주문 건수</span></div>
+        </div>
+        <div class="rct-action">
+            <a th:href="@{/review/store/1}" class="rct-btn-main"><i class="fa-solid fa-pen-to-square"></i> 리뷰 작성하기</a>
+            <a th:href="@{/review/store/1}" class="rct-btn-sub"><i class="fa-solid fa-list"></i> 내 리뷰 관리</a>
+        </div>
+    </div>
+</section>
+
+<section class="store-section snap-section">
+    <div class="section-head">
+        <h2><i class="fa-solid fa-location-dot" style="color:var(--primary-red);"></i>내 주변 BRORDER 매장</h2>
+        <a th:href="@{/review/store/1}" class="see-all">전체 매장 보기 <i class="fa-solid fa-chevron-right"></i></a>
+    </div>
+    <div class="store-grid">
+        <div class="store-card reveal">
+            <div class="store-img-wrap">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=80" alt="서울점">
+                <div class="store-overlay"></div><span class="store-overlay-tag">서울 강남점</span>
+                <span class="store-status-badge status-open"><span class="status-dot"></span>영업중</span>
+            </div>
+            <div class="store-body">
+                <div class="store-name">BRORDER 강남점</div>
+                <div class="store-meta-row">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 20-30분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.8 (1,024)</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>배달비 무료</span>
+                </div>
+                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>서울특별시 강남구 테헤란로 123</div>
+                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+            </div>
+        </div>
+        <div class="store-card reveal reveal-d2">
+            <div class="store-img-wrap">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=500&q=80" alt="대전점">
+                <div class="store-overlay"></div><span class="store-overlay-tag">대전점</span>
+                <span class="store-status-badge status-open"><span class="status-dot"></span>영업중</span>
+            </div>
+            <div class="store-body">
+                <div class="store-name">BRORDER 대전점</div>
+                <div class="store-meta-row">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 25-35분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.7 (876)</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>1,500원</span>
+                </div>
+                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>대전광역시 서구 둔산로 456</div>
+                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+            </div>
+        </div>
+        <div class="store-card reveal reveal-d4">
+            <div class="store-img-wrap">
+                <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=500&q=80" alt="부산점">
+                <div class="store-overlay"></div><span class="store-overlay-tag">부산 해운대점</span>
+                <span class="store-status-badge status-prep"><span class="status-dot"></span>준비중</span>
+            </div>
+            <div class="store-body">
+                <div class="store-name">BRORDER 해운대점</div>
+                <div class="store-meta-row">
+                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i>배달 30-40분</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-star"></i>4.9 (2,311)</span>
+                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i>2,000원</span>
+                </div>
+                <div class="store-addr"><i class="fa-solid fa-location-dot"></i>부산광역시 해운대구 해운대로 789</div>
+                <a th:href="@{/review/store/1}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script>
+    /* ── HEADER SCROLL ── */
+    const headerEl = document.getElementById('mainHeader');
+    const scrollTopBtn = document.getElementById('scrollTopBtn');
+    window.addEventListener('scroll', () => {
+        const y = window.scrollY;
+        if (headerEl) headerEl.classList.toggle('scrolled', y > 60);
+        if (scrollTopBtn) scrollTopBtn.classList.toggle('show', y > 320);
+    }, { passive: true });
+
+    /* ── COUNTDOWN ── */
+    function startTimer(duration, els) {
+        let t = duration;
+        const tick = () => {
+            const h = String(Math.floor(t / 3600)).padStart(2,'0');
+            const m = String(Math.floor((t % 3600) / 60)).padStart(2,'0');
+            const s = String(t % 60).padStart(2,'0');
+            const str = `${h}:${m}:${s}`;
+            els.forEach(el => { if (el) el.textContent = str; });
+            if (--t < 0) t = duration;
+        };
+        tick();
+        setInterval(tick, 1000);
+    }
+    /* [교정 완료] 삭제된 countdown2 요소를 제외하고 히어로 카드 카운트다운만 매핑 처리함 */
+    startTimer(10800, [
+        document.getElementById('countdown')
+    ]);
+
+    /* ── SCROLL REVEAL (기존 .reveal) ── */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
+    const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                revealObs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    revealEls.forEach(el => revealObs.observe(el));
+
+    /* ── SNAP SECTION SLIDE-IN ── */
+    const snapSections = document.querySelectorAll('.snap-section');
+    const snapObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('in-view');
+                snapObs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.05 });
+    snapSections.forEach(el => snapObs.observe(el));
+
+    /* ── COUNT-UP (review CTA stats) ── */
+    function countUp(el, target, isFloat, ms) {
+        if (!el) return;
+        const start = performance.now();
+        const step = now => {
+            const p = Math.min((now - start) / ms, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            const v = eased * target;
+            el.textContent = isFloat ? v.toFixed(1) : Math.floor(v).toLocaleString();
+            if (p < 1) requestAnimationFrame(step);
+            else el.textContent = isFloat ? target.toFixed(1) : target.toLocaleString();
+        };
+        requestAnimationFrame(step);
+    }
+    const ctaObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                countUp(document.getElementById('stat-reviews'), 24680, false, 1800);
+                countUp(document.getElementById('stat-rating'),  4.8,   true,  1200);
+                countUp(document.getElementById('stat-orders'),  8500,  false, 1600);
+                ctaObs.disconnect();
+            }
+        });
+    }, { threshold: 0.3 });
+    const ctaSection = document.querySelector('.review-cta');
+    if (ctaSection) ctaObs.observe(ctaSection);
+
+    /* ── RIPPLE EFFECT ── */
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = '@keyframes ripple{to{transform:scale(3);opacity:0;}}';
+    document.head.appendChild(rippleStyle);
+
+    document.querySelectorAll('.rest-card, .store-card, .ts-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            const r = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            r.style.cssText = [
+                `position:absolute`,
+                `border-radius:50%`,
+                `width:${size}px`,
+                `height:${size}px`,
+                `left:${e.clientX - rect.left - size / 2}px`,
+                `top:${e.clientY - rect.top - size / 2}px`,
+                `background:rgba(42,193,188,.1)`,
+                `transform:scale(0)`,
+                `animation:ripple .55s ease-out forwards`,
+                `pointer-events:none`,
+                `z-index:5`
+            ].join(';');
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(r);
+            setTimeout(() => r.remove(), 600);
+        });
+    });
+
+    /* ── CATEGORY TAB ACTIVE ── */
+    document.querySelectorAll('.cat-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+>>>>>>> master
 </body>
 </html>
