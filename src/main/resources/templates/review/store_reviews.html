@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가게 리뷰 관리</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --teal: #2ac1bc;
+            --teal-dark: #1f9994;
+            --teal-light: rgba(42,193,188,0.1);
+            --primary: #D4183D;
+            --star: #FFBE00;
+            --bg: #f4f5f7;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            --card-hover-shadow: 0 14px 44px rgba(0,0,0,0.13);
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: #222;
+            min-height: 100vh;
+        }
+
+        /* ===== GNB ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8%;
+            height: 64px;
+            border-bottom: 1px solid #eee;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 200;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .logo { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: -1.5px; text-decoration: none; }
+        .nav-menu { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
+        .nav-menu a {
+            text-decoration: none; color: #333; font-weight: 700; font-size: 15px;
+            position: relative; padding-bottom: 4px; transition: color 0.2s;
+        }
+        .nav-menu a::after {
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px; background: var(--teal); transition: width 0.25s;
+        }
+        .nav-menu a:hover { color: var(--teal); }
+        .nav-menu a:hover::after { width: 100%; }
+        .header-icons { display: flex; gap: 20px; align-items: center; }
+        .icon-btn { background: none; border: none; font-size: 19px; color: #444; cursor: pointer; position: relative; transition: color 0.2s, transform 0.2s; }
+        .icon-btn:hover { color: var(--teal); transform: scale(1.1); }
+        .badge { position: absolute; top: -7px; right: -9px; background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 10px; }
+
+        /* ===== PAGE WRAPPER ===== */
+        .page-wrapper {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 40px 16px 80px;
+        }
+
+        /* ===== HERO HEADER ===== */
+        .app-hero {
+            background: linear-gradient(135deg, var(--teal) 0%, #1ca8a3 50%, #148a85 100%);
+            border-radius: var(--radius);
+            padding: 36px 40px;
+            margin-bottom: 36px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(42,193,188,0.28);
+            animation: heroSlideIn 0.6s cubic-bezier(0.16,1,0.3,1) both;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .app-hero::before {
+            content: '';
+            position: absolute;
+            top: -50px; right: 140px;
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .app-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; left: 20%;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        .hero-dot {
+            width: 6px; height: 6px;
+            background: #7ffffd;
+            border-radius: 50%;
+            animation: pulse 1.5s ease infinite;
+        }
+        .hero-title { font-size: 1.8rem; font-weight: 900; color: #fff; letter-spacing: -1px; margin: 0 0 8px; }
+        .hero-sub { color: rgba(255,255,255,0.75); font-size: 0.92rem; margin: 0; }
+        .hero-sub strong { color: #fff; text-decoration: underline; }
+        .hero-icon-wrap {
+            width: 90px; height: 90px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+            animation: iconBounce 0.6s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+            z-index: 1;
+        }
+
+        /* ===== TWO COLUMN LAYOUT ===== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .two-col { grid-template-columns: 1fr; }
+            .write-panel { position: static !important; }
+        }
+
+        /* ===== WRITE FORM PANEL ===== */
+        .write-panel {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 28px;
+            position: sticky;
+            top: 84px;
+            animation: fadeUp 0.5s 0.1s ease both;
+        }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--teal-light);
+        }
+        .panel-icon {
+            width: 38px; height: 38px;
+            background: var(--teal-light);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .panel-icon i { color: var(--teal); font-size: 16px; }
+        .panel-title { font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px; }
+
+        /* Form Inputs */
+        .form-label-custom {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            border: 1.5px solid #e8eaed;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 0.92rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #333;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(42,193,188,0.12);
+            background: #fff;
+        }
+
+        /* Star Selector */
+        .star-selector { display: flex; gap: 6px; margin-bottom: 16px; }
+        .star-btn {
+            background: none; border: none; cursor: pointer;
+            font-size: 26px; color: #ddd;
+            transition: color 0.15s, transform 0.15s;
+            padding: 0;
+        }
+        .star-btn:hover, .star-btn.active { color: var(--star); }
+        .star-btn:hover { transform: scale(1.2); }
+
+        .file-upload-wrap {
+            border: 2px dashed #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            background: #fafbfc;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+        .file-upload-wrap:hover {
+            border-color: var(--teal);
+            background: var(--teal-light);
+        }
+        .file-upload-wrap input[type="file"] {
+            position: absolute; inset: 0; opacity: 0; cursor: pointer;
+        }
+        .file-upload-icon i { font-size: 28px; color: #ccc; margin-bottom: 8px; transition: color 0.2s; }
+        .file-upload-wrap:hover .file-upload-icon i { color: var(--teal); }
+        .file-upload-label { font-size: 0.85rem; color: #aaa; font-weight: 500; }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 14px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(42,193,188,0.3);
+            letter-spacing: -0.3px;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(42,193,188,0.4);
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        /* ===== REVIEW LIST PANEL ===== */
+        .review-panel { animation: fadeUp 0.5s 0.2s ease both; }
+        .review-panel-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        .review-panel-title { font-size: 1.05rem; font-weight: 900; letter-spacing: -0.5px; }
+        .count-pill {
+            background: var(--teal);
+            color: #fff;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        /* Review Card */
+        .review-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .review-card:hover {
+            box-shadow: var(--card-hover-shadow);
+            transform: translateY(-3px);
+        }
+        .card-top-strip {
+            height: 3px;
+            background: linear-gradient(90deg, var(--teal), #7ffffd);
+        }
+        .card-inner { padding: 20px 22px; }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .user-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f4f5f7;
+            border-radius: 20px;
+            padding: 5px 14px 5px 8px;
+        }
+        .user-avatar {
+            width: 26px; height: 26px;
+            background: linear-gradient(135deg, var(--teal), #1ca8a3);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .user-avatar i { color: #fff; font-size: 12px; }
+        .user-name { font-size: 0.84rem; font-weight: 700; color: #444; }
+        .date-label { font-size: 0.78rem; color: #b0b5c0; }
+
+        .stars-row { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; }
+        .stars { display: flex; gap: 2px; }
+        .s-icon { font-size: 14px; color: #e0e0e0; }
+        .s-icon.on { color: var(--star); }
+        .rating-text { font-size: 0.8rem; font-weight: 700; color: #aaa; }
+
+        .menu-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: var(--teal-light);
+            color: var(--teal);
+            font-size: 0.82rem; font-weight: 700;
+            padding: 4px 12px; border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .review-body {
+            background: #fafbfc;
+            border-left: 3px solid var(--teal);
+            border-radius: 0 10px 10px 0;
+            padding: 12px 16px;
+            font-size: 0.91rem;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 14px;
+        }
+        .img-chip {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #f4f5f7; border-radius: 8px;
+            padding: 5px 12px; font-size: 0.81rem; color: #666;
+            margin-bottom: 14px;
+        }
+        .img-chip i { color: var(--teal); }
+
+        .card-footer-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .btn-edit {
+            display: inline-flex; align-items: center; gap: 5px;
+            border: 1.5px solid #FFBE00; background: transparent;
+            color: #b07d00; font-size: 0.82rem; font-weight: 700;
+            padding: 7px 14px; border-radius: 9px; text-decoration: none;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .btn-edit:hover { background: #FFBE00; color: #333; transform: scale(1.04); }
+        .btn-del {
+            display: inline-flex; align-items: center; gap: 5px;
+            border: 1.5px solid #ff4d6d; background: transparent;
+            color: #c0384f; font-size: 0.82rem; font-weight: 700;
+            padding: 7px 14px; border-radius: 9px; cursor: pointer;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .btn-del:hover { background: #ff4d6d; color: #fff; transform: scale(1.04); }
+
+        /* Empty State */
+        .empty-box {
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 56px 20px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+        }
+        .empty-icon { width: 72px; height: 72px; background: #f4f5f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+        .empty-icon i { font-size: 28px; color: #ccc; }
+        .empty-t { font-size: 0.95rem; font-weight: 700; color: #666; margin-bottom: 6px; }
+        .empty-s { font-size: 0.83rem; color: #bbb; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes heroSlideIn {
+            from { opacity: 0; transform: translateY(-18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes iconBounce {
+            from { opacity: 0; transform: scale(0.5); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(1.4); }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .app-hero { padding: 24px 22px; }
+            .hero-title { font-size: 1.4rem; }
+            .hero-icon-wrap { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: gnbHeader}"></div>
+
+<div class="page-wrapper">
+
+    <div class="app-hero">
+        <div style="position:relative;z-index:1;">
+            <div class="hero-badge">
+                <span class="hero-dot"></span> LIVE
+            </div>
+            <h1 class="hero-title">실시간 고객 리뷰 관리</h1>
+            <p class="hero-sub">
+                현재 조회 중인 가게 번호(storeId):
+                <strong th:text="${currentStoreId}">1</strong>
+            </p>
+        </div>
+        <div class="hero-icon-wrap">
+            <i class="fa-solid fa-motorcycle" style="color:#fff;"></i>
+        </div>
+    </div>
+
+    <div class="two-col">
+
+        <div class="write-panel" th:if="${session.loginUserId != null}">
+            <div class="panel-header">
+                <div class="panel-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                <span class="panel-title">리뷰 작성하기</span>
+            </div>
+
+            <form th:action="@{/review/write}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="storeId" th:value="${currentStoreId}">
+
+                <div class="mb-3">
+                    <label class="form-label-custom">메뉴 번호</label>
+                    <input type="number" class="form-input" name="menuId" value="1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-custom">별점 선택</label>
+                    <select class="form-input" name="rating" required>
+                        <option value="5">★★★★★  5점</option>
+                        <option value="4">★★★★  4점</option>
+                        <option value="3">★★★  3점</option>
+                        <option value="2">★★  2점</option>
+                        <option value="1">★  1점</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-custom">리뷰 내용</label>
+                    <textarea class="form-input" name="content" rows="4"
+                              placeholder="음식의 맛, 양, 배달 상태를 솔직하게 적어주세요!" required
+                              style="resize:vertical; min-height:110px;"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-custom">리뷰 사진 첨부</label>
+                    <div class="file-upload-wrap">
+                        <input type="file" name="reviewImageFile" accept="image/*">
+                        <div class="file-upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                        <div class="file-upload-label">클릭하여 이미지 업로드</div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-check me-2"></i> 리뷰 등록 완료
+                </button>
+            </form>
+        </div>
+
+        <div class="write-panel text-center py-5" th:if="${session.loginUserId == null}">
+            <div class="panel-icon mx-auto mb-3" style="width:50px; height:50px;"><i class="fa-solid fa-lock" style="font-size:20px;"></i></div>
+            <span class="form-label-custom mb-2" style="font-size:0.9rem;">리뷰 작성 권한 없음</span>
+            <p class="text-muted small px-2">리뷰 작성은 회원 전용 서비스입니다. 로그인 후 이용해 주세요.</p>
+            <a href="/user/login" class="btn-submit d-inline-block text-decoration-none mt-2" style="padding:10px 20px; font-size:0.88rem; width:auto; box-shadow:none;">로그인 하러가기</a>
+        </div>
+
+        <div class="review-panel">
+            <div class="review-panel-header">
+                <i class="fa-solid fa-comments" style="color:var(--teal); font-size:18px;"></i>
+                <span class="review-panel-title">등록된 고객 리뷰</span>
+                <span class="count-pill" th:text="${reviewList.size()}">0</span>
+            </div>
+
+            <div th:if="${#lists.isEmpty(reviewList)}" class="empty-box">
+                <div class="empty-icon"><i class="fa-regular fa-comment-dots"></i></div>
+                <div class="empty-t">아직 등록된 리뷰가 없습니다</div>
+                <div class="empty-s">첫 번째 따끈따끈한 리뷰를 남겨보세요!</div>
+            </div>
+
+            <div th:each="review, iterStat : ${reviewList}" class="review-card"
+                 th:style="'animation: cardFadeUp 0.5s ' + ${iterStat.index * 80} + 'ms ease both;'">
+                <div class="card-top-strip"></div>
+                <div class="card-inner">
+
+                    <div class="card-head">
+                        <div class="user-pill">
+                            <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                            <span class="user-name" th:text="${review.userIdName}">user01</span>
+                        </div>
+                        <span class="date-label" th:text="${#temporals.format(review.createdData, 'yyyy.MM.dd HH:mm')}">2026.05.18</span>
+                    </div>
+
+                    <div class="stars-row">
+                        <div class="stars">
+                            <i th:each="i : ${#numbers.sequence(1,5)}"
+                               th:classappend="${i <= review.rating} ? 'on' : ''"
+                               class="fa-solid fa-star s-icon"></i>
+                        </div>
+                        <span class="rating-text" th:text="${review.rating} + '점'">5점</span>
+                    </div>
+
+                    <div class="menu-chip">
+                        <i class="fa-solid fa-utensils" style="font-size:11px;"></i>
+                        <span th:text="${review.menuName}">후라이드 치킨</span>
+                    </div>
+
+                    <div class="review-body" th:text="${review.content}">정말 맛있게 잘 먹었습니다! 배달도 빠르네요.</div>
+
+                    <div th:if="${review.picture != null and review.picture != ''}" class="img-chip">
+                        <i class="fa-solid fa-image"></i>
+                        <span>첨부 이미지:</span>
+                        <strong th:text="${review.picture}">sample.png</strong>
+                    </div>
+
+                    <div class="card-footer-btns" th:if="${session.loginUserId != null and session.loginUserId == review.userId}">
+                        <a th:href="@{/review/update/{id}(id=${review.reviewId})}" class="btn-edit">
+                            <i class="fa-solid fa-pen"></i> 수정
+                        </a>
+                        <form th:action="@{/review/delete/{id}(id=${review.reviewId})}" method="post"
+                              onsubmit="return confirm('정말 이 리뷰를 삭제하시겠습니까?');" class="m-0">
+                            <input type="hidden" name="storeId" th:value="${currentStoreId}">
+                            <button type="submit" class="btn-del">
+                                <i class="fa-solid fa-trash"></i> 삭제
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Scroll-reveal for review cards
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.review-card').forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = `opacity 0.45s ${i * 0.07}s ease, transform 0.45s ${i * 0.07}s ease, box-shadow 0.3s, transform 0.3s`;
+        observer.observe(card);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.review-card').forEach(c => {
+            if (c.getBoundingClientRect().top < window.innerHeight) {
+                c.style.opacity = '1';
+                c.style.transform = 'translateY(0)';
+            }
+        });
+    });
+
+    // File upload label update
+    const fileInput = document.querySelector('input[type="file"]');
+    const fileLabel = document.querySelector('.file-upload-label');
+    if (fileInput && fileLabel) {
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileLabel.textContent = fileInput.files[0].name;
+                fileLabel.style.color = 'var(--teal)';
+                fileLabel.style.fontWeight = '700';
+            }
+        });
+    }
+</script>
+</body>
+</html>

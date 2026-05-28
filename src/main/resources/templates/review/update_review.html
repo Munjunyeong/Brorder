@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리뷰 수정하기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --amber: #FFBE00;
+            --amber-dark: #e5a800;
+            --amber-light: rgba(255,190,0,0.1);
+            --primary: #D4183D;
+            --bg: #f4f5f7;
+            --radius: 18px;
+            --card-shadow: 0 6px 28px rgba(0,0,0,0.09);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--bg);
+            color: #222;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* ===== PAGE WRAP ===== */
+        .update-page {
+            width: 100%;
+            max-width: 600px;
+            padding: 56px 16px 80px;
+            animation: pageIn 0.55s cubic-bezier(0.16,1,0.3,1) both;
+        }
+
+        /* ===== BACK LINK ===== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 24px;
+            transition: color 0.2s, gap 0.2s;
+        }
+        .back-link:hover { color: var(--amber-dark); gap: 12px; }
+        .back-link i { transition: transform 0.2s; }
+        .back-link:hover i { transform: translateX(-3px); }
+
+        /* ===== HERO BANNER ===== */
+        .update-hero {
+            background: linear-gradient(135deg, var(--amber) 0%, #ffcf40 50%, #ffd966 100%);
+            border-radius: var(--radius);
+            padding: 30px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 28px rgba(255,190,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .update-hero::before {
+            content: '';
+            position: absolute;
+            top: -40px; right: 80px;
+            width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-left { z-index: 1; }
+        .hero-eyebrow {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(0,0,0,0.45);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .hero-h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #333;
+            letter-spacing: -0.8px;
+            margin: 0;
+        }
+        .hero-right {
+            width: 72px; height: 72px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1;
+            animation: iconPop 0.5s 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+        }
+        .hero-right i { font-size: 28px; color: rgba(0,0,0,0.55); }
+
+        /* ===== FORM CARD ===== */
+        .form-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 36px 32px;
+        }
+        @media (max-width: 480px) {
+            .form-card { padding: 24px 20px; }
+        }
+
+        /* Form Field */
+        .field-group { margin-bottom: 22px; }
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #777;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+        }
+        .field-label i { color: var(--amber-dark); font-size: 13px; }
+
+        .field-input {
+            width: 100%;
+            border: 1.5px solid #e8eaed;
+            border-radius: 11px;
+            padding: 12px 16px;
+            font-size: 0.93rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #333;
+            background: #fafbfc;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+        .field-input:focus {
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px rgba(255,190,0,0.15);
+            background: #fff;
+        }
+
+        /* Interactive Star Rating */
+        .star-field { margin-bottom: 22px; }
+        .star-field .field-label { margin-bottom: 10px; }
+        .star-interactive {
+            display: flex;
+            gap: 8px;
+            padding: 14px 18px;
+            background: #fafbfc;
+            border: 1.5px solid #e8eaed;
+            border-radius: 11px;
+            align-items: center;
+            cursor: pointer;
+        }
+        .star-btn-js {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ddd;
+            transition: color 0.15s, transform 0.15s;
+            line-height: 1;
+        }
+        .star-btn-js.lit { color: var(--amber); }
+        .star-btn-js:hover { transform: scale(1.25); }
+        .star-count-display {
+            margin-left: auto;
+            font-size: 0.88rem;
+            font-weight: 900;
+            color: var(--amber-dark);
+            min-width: 28px;
+            text-align: right;
+        }
+        .star-hidden-input { display: none; }
+
+        /* Textarea */
+        .field-input.textarea-field {
+            resize: vertical;
+            min-height: 140px;
+            line-height: 1.7;
+        }
+
+        /* File Input Hint */
+        .file-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--amber-light);
+            border: 1.5px solid rgba(255,190,0,0.3);
+            border-radius: 11px;
+            padding: 10px 14px;
+            font-size: 0.83rem;
+            color: #8a6500;
+            margin-top: 6px;
+        }
+        .file-hint i { color: var(--amber-dark); }
+
+        /* Divider */
+        .form-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e8eaed, transparent);
+            margin: 28px 0;
+        }
+
+        /* Action Buttons */
+        .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .btn-cancel-custom {
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            width: 100%;
+            border: 1.5px solid #d0d3d9;
+            background: #fff;
+            color: #666;
+            border-radius: 11px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 13px;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .btn-cancel-custom:hover {
+            background: #f4f5f7;
+            border-color: #bbb;
+            color: #444;
+            transform: scale(1.02);
+        }
+
+        .btn-submit-amber {
+            display: flex; align-items: center; justify-content: center; gap: 7px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--amber), var(--amber-dark));
+            border: none;
+            color: #333;
+            border-radius: 11px;
+            font-size: 0.95rem;
+            font-weight: 900;
+            padding: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(255,190,0,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+            letter-spacing: -0.3px;
+        }
+        .btn-submit-amber:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255,190,0,0.45);
+        }
+        .btn-submit-amber:active { transform: translateY(0); }
+
+        /* Progress indicator */
+        .form-progress {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+        .progress-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: background 0.3s, width 0.3s;
+        }
+        .progress-dot.active { background: var(--amber); width: 24px; border-radius: 4px; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes iconPop {
+            from { opacity: 0; transform: scale(0.5); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* Focus within card highlight */
+        .form-card .field-group:focus-within .field-label {
+            color: var(--amber-dark);
+        }
+        .form-card .field-group:focus-within .field-label i {
+            animation: iconBounce 0.3s ease;
+        }
+        @keyframes iconBounce {
+            0%,100% { transform: scale(1); }
+            50%      { transform: scale(1.3); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="update-page">
+
+    <!-- Back Link -->
+    <a th:href="@{/review/store/{id}(id=${review.storeId})}" class="back-link">
+        <i class="fa-solid fa-arrow-left"></i> 리뷰 목록으로 돌아가기
+    </a>
+
+    <!-- Hero Banner -->
+    <div class="update-hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">Review Edit</div>
+            <h1 class="hero-h1">나의 리뷰 수정하기</h1>
+        </div>
+        <div class="hero-right">
+            <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+
+        <!-- Progress Dots -->
+        <div class="form-progress">
+            <div class="progress-dot active"></div>
+            <div class="progress-dot" id="dot2"></div>
+            <div class="progress-dot" id="dot3"></div>
+        </div>
+
+        <form th:action="@{/review/update/{id}(id=${review.reviewId})}" method="post" id="updateForm">
+            <input type="hidden" name="storeId" th:value="${review.storeId}">
+
+            <!-- Star Rating - Interactive -->
+            <div class="star-field">
+                <div class="field-label">
+                    <i class="fa-solid fa-star"></i> 만족도 별점
+                </div>
+                <div class="star-interactive" id="starWidget">
+                    <button type="button" class="star-btn-js" data-val="1">&#9733;</button>
+                    <button type="button" class="star-btn-js" data-val="2">&#9733;</button>
+                    <button type="button" class="star-btn-js" data-val="3">&#9733;</button>
+                    <button type="button" class="star-btn-js" data-val="4">&#9733;</button>
+                    <button type="button" class="star-btn-js" data-val="5">&#9733;</button>
+                    <span class="star-count-display" id="starDisplay">5점</span>
+                </div>
+                <input type="hidden" name="rating" id="ratingInput" th:value="${review.rating}">
+                <!-- Thymeleaf sets initial value via data attr for JS init -->
+                <div id="ratingInitVal" th:data-rating="${review.rating}" style="display:none;"></div>
+            </div>
+
+            <!-- Review Content -->
+            <div class="field-group">
+                <div class="field-label">
+                    <i class="fa-solid fa-align-left"></i> 리뷰 내용 수정
+                </div>
+                <textarea class="field-input textarea-field"
+                          name="content"
+                          placeholder="작성하신 내용 중 수정하고 싶으신 부분을 자유롭게 변경해 주세요."
+                          th:text="${review.content}"
+                          required
+                          id="contentField"></textarea>
+            </div>
+
+            <!-- Picture Field -->
+            <div class="field-group">
+                <div class="field-label">
+                    <i class="fa-solid fa-image"></i> 첨부 사진 파일명
+                </div>
+                <input type="text" class="field-input" name="picture" th:value="${review.picture}"
+                       placeholder="파일명을 입력하세요 (예: photo.jpg)">
+                <div class="file-hint">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>현재 테스트용 파일명 직접 입력 방식입니다.</span>
+                </div>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <!-- Actions -->
+            <div class="action-row">
+                <a th:href="@{/review/store/{id}(id=${review.storeId})}" class="btn-cancel-custom">
+                    <i class="fa-solid fa-xmark"></i> 수정 취소
+                </a>
+                <button type="submit" class="btn-submit-amber">
+                    <i class="fa-solid fa-check"></i> 수정 완료
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // ===== Interactive Star Rating =====
+    const stars = document.querySelectorAll('.star-btn-js');
+    const ratingInput = document.getElementById('ratingInput');
+    const starDisplay = document.getElementById('starDisplay');
+    const initEl = document.getElementById('ratingInitVal');
+
+    let currentRating = parseInt(initEl ? initEl.dataset.rating : '5') || 5;
+
+    function applyRating(val) {
+        currentRating = val;
+        ratingInput.value = val;
+        starDisplay.textContent = val + '점';
+        stars.forEach(s => {
+            s.classList.toggle('lit', parseInt(s.dataset.val) <= val);
+        });
+    }
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => applyRating(parseInt(star.dataset.val)));
+        star.addEventListener('mouseenter', () => {
+            const hv = parseInt(star.dataset.val);
+            stars.forEach(s => s.classList.toggle('lit', parseInt(s.dataset.val) <= hv));
+        });
+    });
+    document.getElementById('starWidget').addEventListener('mouseleave', () => applyRating(currentRating));
+
+    // Init stars from Thymeleaf value
+    applyRating(currentRating);
+
+    // ===== Progress Dots =====
+    const contentField = document.getElementById('contentField');
+    const dot2 = document.getElementById('dot2');
+    const dot3 = document.getElementById('dot3');
+
+    if (contentField) {
+        contentField.addEventListener('input', () => {
+            const len = contentField.value.trim().length;
+            dot2.classList.toggle('active', len > 0);
+            dot3.classList.toggle('active', len >= 20);
+        });
+        // Init
+        const initLen = contentField.value.trim().length;
+        dot2.classList.toggle('active', initLen > 0);
+        dot3.classList.toggle('active', initLen >= 20);
+    }
+
+    // ===== Submit animation =====
+    document.getElementById('updateForm').addEventListener('submit', function(e) {
+        const btn = this.querySelector('.btn-submit-amber');
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> 저장 중...';
+        btn.disabled = true;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <title>주문 등록 - BRORDER</title>
+    <style>
+        .order-add-section { padding: 60px var(--side-pad); background: var(--light-gray); min-height: calc(100vh - 80px - 300px); }
+        .form-card { background: #fff; border-radius: 26px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); max-width: 800px; margin: 0 auto; }
+        .form-header { background: linear-gradient(135deg, var(--primary-mint), #1a9490); color: #fff; padding: 40px; text-align: center; }
+        .form-header h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+        .form-body { padding: 40px; }
+        .form-group { margin-bottom: 24px; }
+        .form-label { display: block; font-size: 13px; font-weight: 800; color: var(--dark-charcoal); margin-bottom: 10px; }
+        .form-input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1.5px solid var(--border-color); font-size: 14px; font-weight: 600; font-family: inherit; transition: all .2s; }
+        .form-input:focus { outline: none; border-color: var(--primary-mint); box-shadow: 0 0 0 4px rgba(42,193,188,0.1); }
+        .menu-item-box { background: var(--light-gray); padding: 24px; border-radius: 20px; margin-bottom: 20px; position: relative; border: 1px solid transparent; transition: all .2s; }
+        .menu-item-box:hover { border-color: var(--primary-mint); background: #fff; box-shadow: var(--shadow-sm); }
+        .menu-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .menu-item-title { font-weight: 900; font-size: 15px; color: var(--primary-mint); }
+        .btn-remove-menu { background: none; border: none; color: #ccc; cursor: pointer; font-size: 18px; transition: color .2s; }
+        .btn-remove-menu:hover { color: var(--primary-red); }
+        .form-actions { display: flex; gap: 12px; margin-top: 40px; }
+        .btn-form { flex: 1; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 15px; text-decoration: none; text-align: center; transition: all .2s; cursor: pointer; border: none; }
+        .btn-submit { background: var(--primary-red); color: #fff; box-shadow: 0 6px 20px rgba(212,24,61,0.3); }
+        .btn-submit:hover { background: #b01030; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,24,61,0.4); }
+        .btn-add-menu { background: #fff; color: var(--primary-mint); border: 1.5px solid var(--primary-mint); margin-bottom: 20px; width: 100%; }
+        .btn-add-menu:hover { background: rgba(42,193,188,0.05); }
+    </style>
+</head>
+<body>
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+
+<section class="order-add-section">
+    <div class="section-inner">
+        <div class="form-card reveal-scale">
+            <div class="form-header">
+                <h1>새 주문 등록</h1>
+                <p>맛있는 주문을 시작해보세요!</p>
+            </div>
+
+            <div class="form-body">
+                <form method="post" action="/orders">
+                    <div class="info-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-group">
+                                <label class="form-label">유저 ID</label>
+                                <input type="number" name="userId" class="form-input" placeholder="유저 번호를 입력하세요" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">가게 ID</label>
+                                <input type="number" name="storeId" class="form-input" placeholder="가게 번호를 입력하세요" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">결제 방식</label>
+                            <select name="paymentMethod" class="form-input" required>
+                                <option value="">결제 방식을 선택하세요</option>
+                                <option value="CARD">신용/체크카드</option>
+                                <option value="NAVER_PAY">네이버페이</option>
+                                <option value="KAKAO_PAY">카카오페이</option>
+                                <option value="CASH">현장결제</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">요청사항</label>
+                            <input type="text" name="requests" class="form-input" placeholder="사장님께 전할 말씀을 적어주세요">
+                        </div>
+                    </div>
+
+                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 30px 0;">
+
+                    <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 20px;"><i class="fa-solid fa-cart-shopping"></i> 주문 메뉴</h3>
+                    
+                    <div id="menu-area">
+                        <div class="menu-item-box">
+                            <div class="menu-item-header">
+                                <span class="menu-item-title">메뉴 #1</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <label class="form-label">메뉴 ID</label>
+                                    <input type="number" name="items[0].menuId" class="form-input" placeholder="메뉴 번호" required>
+                                </div>
+                                <div>
+                                    <label class="form-label">옵션 ID</label>
+                                    <input type="number" name="items[0].optionId" class="form-input" placeholder="옵션 번호" required>
+                                </div>
+                                <div>
+                                    <label class="form-label">가격</label>
+                                    <input type="number" name="items[0].price" class="form-input" placeholder="가격 입력" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" id="add-menu-btn" class="btn-form btn-add-menu">
+                        <i class="fa-solid fa-plus"></i> 메뉴 추가하기
+                    </button>
+
+                    <div class="form-actions">
+                        <a href="/orders" class="btn-form btn-list" style="background: var(--light-gray); color: var(--dark-charcoal); text-decoration: none; padding-top: 16px;">취소</a>
+                        <button type="submit" class="btn-form btn-submit">주문 완료하기</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<script>
+    let index = 1;
+
+    document.getElementById("add-menu-btn").addEventListener("click", function () {
+        const menuArea = document.getElementById("menu-area");
+        const html = `
+            <div class="menu-item-box">
+                <div class="menu-item-header">
+                    <span class="menu-item-title">메뉴 #${index + 1}</span>
+                    <button type="button" class="btn-remove-menu" onclick="this.closest('.menu-item-box').remove()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                    <div>
+                        <label class="form-label">메뉴 ID</label>
+                        <input type="number" name="items[${index}].menuId" class="form-input" placeholder="메뉴 번호" required>
+                    </div>
+                    <div>
+                        <label class="form-label">옵션 ID</label>
+                        <input type="number" name="items[${index}].optionId" class="form-input" placeholder="옵션 번호" required>
+                    </div>
+                    <div>
+                        <label class="form-label">가격</label>
+                        <input type="number" name="items[${index}].price" class="form-input" placeholder="가격 입력" required>
+                    </div>
+                </div>
+            </div>
+        `;
+        menuArea.insertAdjacentHTML("beforeend", html);
+        index++;
+    });
+
+    /* Scroll Reveal */
+    const revealEls = document.querySelectorAll('.reveal-scale');
+    const revealObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                revealObs.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    revealEls.forEach(el => revealObs.observe(el));
+</script>
+</body>
+</html>

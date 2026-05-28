@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.com.brorder.review.mapper.ReviewMapper">
+
+    <select id="findById" parameterType="int" resultType="kr.com.brorder.review.domain.Review">
+        SELECT
+        review_id    AS reviewId,
+        store_id     AS storeId,
+        user_id      AS userId,
+        menu_id      AS menuId,
+        rating       AS rating,
+        content      AS content,
+        picture      AS picture,
+        created_data AS createdData
+        FROM review
+        WHERE review_id = #{reviewId}
+    </select>
+
+    <select id="findByStoreId" parameterType="int" resultType="kr.com.brorder.review.domain.ReviewResponseDTO">
+        SELECT
+        r.review_id    AS reviewId,
+        r.store_id     AS storeId,
+        r.menu_id      AS menuId,
+        r.rating       AS rating,
+        r.content      AS content,
+        r.picture      AS picture,
+        r.created_data AS createdData,
+        u.id           AS userIdName,
+        m.name         AS menuName
+        FROM review r
+        JOIN users u ON r.user_id = u.user_id
+        JOIN menu m  ON r.menu_id = m.menu_id
+        WHERE r.store_id = #{storeId}
+        ORDER BY r.created_data DESC
+    </select>
+
+    <select id="findByUserId" parameterType="int" resultType="kr.com.brorder.review.domain.ReviewResponseDTO">
+        SELECT
+        r.review_id    AS reviewId,
+        r.store_id     AS storeId,
+        r.menu_id      AS menuId,
+        r.rating       AS rating,
+        r.content      AS content,
+        r.picture      AS picture,
+        r.created_data AS createdData,
+        u.id           AS userIdName,
+        m.name         AS menuName
+        FROM review r
+        JOIN users u ON r.user_id = u.user_id
+        JOIN menu m  ON r.menu_id = m.menu_id
+        WHERE r.user_id = #{userId}
+        ORDER BY r.created_data DESC
+    </select>
+
+    <insert id="save" parameterType="kr.com.brorder.review.domain.Review">
+        INSERT INTO review (
+        store_id,
+        user_id,
+        menu_id,
+        rating,
+        content,
+        picture,
+        created_data
+        ) VALUES (
+        #{storeId},
+        #{userId},
+        #{menuId},
+        #{rating},
+        #{content},
+        #{picture},
+        NOW()
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM review
+        WHERE review_id = #{reviewId}
+    </delete>
+
+    <update id="update" parameterType="kr.com.brorder.review.domain.Review">
+        UPDATE review
+        SET
+        rating  = #{rating},
+        content = #{content},
+        picture = #{picture}
+        WHERE
+        review_id = #{reviewId}
+    </update>
+
+</mapper>
