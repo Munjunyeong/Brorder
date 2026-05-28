@@ -6,7 +6,7 @@
 <mapper namespace="kr.com.brorder.store.Store">
 
     <!-- 1. 판매처 전체 목록 조회 -->
-    <select id="selectStoreList" resultType="kr.com.brorder.store.Store">
+    <select id="selectStoreList" parameterType="map" resultType="kr.com.brorder.store.Store">
         SELECT
             store_id     AS storeId,
             name,
@@ -21,6 +21,10 @@
         <where>
             <if test="category != null and category != ''">
                 category = #{category}
+            </if>
+            <!-- 검색어 조건 체크 (가게 이름에 검색어가 포함되어 있는지) -->
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND name LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
         </where>
         ORDER BY

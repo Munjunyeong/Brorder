@@ -30,6 +30,20 @@
     <a th:href="@{/store/list(category='양식')}" class="filter-btn" th:classappend="${selectedCategory == '양식'} ? 'active'">양식</a>
 </div>
 
+<!-- 검색창 영역 추가 -->
+<div style="margin-bottom: 20px;">
+    <form th:action="@{/store/list}" method="get">
+        <!-- 현재 선택된 카테고리가 있다면 검색할 때도 유지되도록 hidden으로 전송 -->
+        <input type="hidden" name="category" th:value="${selectedCategory}">
+
+        <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="가게 이름을 입력하세요" style="padding: 6px; width: 250px;">
+        <button type="submit" style="padding: 6px 12px;">검색</button>
+
+        <!-- 검색 조건 초기화 버튼 (전체보기 역할) -->
+        <a th:href="@{/store/list}" th:if="${searchKeyword != null and searchKeyword != ''}" style="margin-left: 10px; color: gray; text-decoration: none;">검색 취소</a>
+    </form>
+</div>
+
 <!-- 컨트롤러에서 보낸 "stores" 리스트가 비어있을 때 -->
 <div th:if="${#lists.isEmpty(stores)}">
     <p>등록된 판매처가 없습니다.</p>

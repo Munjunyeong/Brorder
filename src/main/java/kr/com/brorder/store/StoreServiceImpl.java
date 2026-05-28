@@ -3,7 +3,9 @@ package kr.com.brorder.store;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -12,9 +14,12 @@ public class StoreServiceImpl implements StoreService {
     private StoreDao storeDAO; // DAO 계층 주입
 
     @Override
-    public List<Store> getStoreList(String category) {
+    public List<Store> getStoreList(String category, String searchKeyword) {
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("category", category);
+        searchMap.put("searchKeyword", searchKeyword);
         // 비즈니스 로직 필요 시 추가 (예: 정렬, 상태 필터링 등)
-        return storeDAO.selectStoreList(category);
+        return storeDAO.selectStoreList(searchMap);
     }
 
     @Override
