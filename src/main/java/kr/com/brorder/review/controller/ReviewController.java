@@ -35,7 +35,6 @@ public class ReviewController {
      */
     @GetMapping("/store/{storeId}")
     public String showStoreReviews(@PathVariable("storeId") int storeId, Model model) {
-        // [오타 교정] List="ReviewResponseDTO" 구절을 정상 자바 다이아몬드 연산자 규격(<ReviewResponseDTO>)으로 정밀 수정 완료함
         List<ReviewResponseDTO> reviews = reviewService.getStoreReviews(storeId);
 
         model.addAttribute("reviewList", reviews);
@@ -54,6 +53,7 @@ public class ReviewController {
 
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
+        /* [교정 완] 조원들의 순정 로그인 주소인 /login 명세로 정밀 수정함 */
         if (loginUser == null) {
             return "redirect:/login";
         }
@@ -61,7 +61,7 @@ public class ReviewController {
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
@@ -82,18 +82,17 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
 
-        // [오타 교정] 생성자 및 반환 컬렉션의 다이아몬드 연산자 구문을 순정 자바 스펙으로 온전하게 교정 마감함
         List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(loginUserId);
         model.addAttribute("myReviewList", myReviews);
 
@@ -113,13 +112,13 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
@@ -153,14 +152,15 @@ public class ReviewController {
 
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
+        /* [오류 수리 마감] 멀티파트 파일 첨부 시 세션이 우회 튕김 처리되던 에러 주소를 순정 주소인 /login으로 전면 수정 완료함 */
         if (loginUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
