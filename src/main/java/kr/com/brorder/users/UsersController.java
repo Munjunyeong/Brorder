@@ -17,7 +17,6 @@ public class UsersController {
 
 	@GetMapping("/my")
 	String detail(Model model, HttpSession session) {
-		
 	    Users users = (Users) session.getAttribute("users");
 		
 		model.addAttribute("users", users);
