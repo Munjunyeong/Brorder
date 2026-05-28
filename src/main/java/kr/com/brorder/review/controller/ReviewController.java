@@ -45,24 +45,56 @@ public class ReviewController {
 
     /**
      * [신규 리뷰 등록 처리]
-     * 사용자가 작성한 데이터(DTO)를 받아 로그인 세션을 검증한 후 안전하게 데이터베이스에 저장함
+     * [교정 완료] 종민님의 Users 소스코드 규격에 맞춰 Long 타입을 Integer로 안전하게 다운캐스팅(intValue)하여 서비스 단에 적재 마감함
      */
     @PostMapping("/write")
-    public void writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
+    public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer loginUserId = (Integer) session.getAttribute("loginUserId");
+
+        // 1. 세션에서 users 가방을 열어 종민님의 진짜 Users 클래스 타입으로 형변환하여 추출함
+        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        // 2. [완벽 동기화] Users.java에 설계된 순정 getUserid() 메소드를 직격 호출함
+        Long dbUserid = loginUser.getUserid();
+
+        // [근본 에러 방어벽] 로그인 시점에 번호가 빠져서 null이 들어왔다면 500 예외를 터트리지 않고 로그인창으로 후방 격리함
+        if (dbUserid == null) {
+            return "redirect:/login";
+        }
+
+        // 3. 기존의 reviewService.writeReview 파라미터 규격(Integer)에 맞게 Long 값을 안전하게 int형으로 변환하여 주입함
+        Integer loginUserId = dbUserid.intValue();
 
         reviewService.writeReview(requestDTO, loginUserId);
+
+        return "redirect:/review/store/" + requestDTO.getStoreId();
     }
 
     /**
      * [내가 쓴 리뷰 목록 조회 화면]
-     * 마이페이지 등에서 사용되며, 주소창에 유저 번호를 노출하지 않고 로그인 세션 정보만으로 본인의 리뷰 내역을 가져옴
+     * [교정 완료] 정공법 Users 캐스팅 문법 및 Long 타입 변환 필터를 완벽하게 이식함
      */
     @GetMapping("/my")
     public String showMyReviews(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer loginUserId = (Integer) session.getAttribute("loginUserId");
+
+        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        Long dbUserid = loginUser.getUserid();
+
+        if (dbUserid == null) {
+            return "redirect:/login";
+        }
+
+        Integer loginUserId = dbUserid.intValue();
 
         List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(loginUserId);
         model.addAttribute("myReviewList", myReviews);
@@ -72,16 +104,31 @@ public class ReviewController {
 
     /**
      * [리뷰 삭제 처리]
-     * 삭제 후 원래 보던 화면으로 자연스럽게 돌아가도록 분기 처리(마이페이지 또는 해당 가게 화면)를 수행함
+     * [교정 완료] 정석 캐스팅 필터를 통해 안전하게 본인 식별 번호를 비교 검증하여 삭제 유도함
      */
     @PostMapping("/delete/{reviewId}")
-    public void deleteReview(@PathVariable("reviewId") int reviewId,
-                             @RequestParam("storeId") int storeId,
-                             HttpServletRequest request) {
+    public String deleteReview(@PathVariable("reviewId") int reviewId,
+                               @RequestParam("storeId") int storeId,
+                               HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer loginUserId = (Integer) session.getAttribute("loginUserId");
+
+        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        Long dbUserid = loginUser.getUserid();
+
+        if (dbUserid == null) {
+            return "redirect:/login";
+        }
+
+        Integer loginUserId = dbUserid.intValue();
 
         reviewService.removeReview(reviewId, loginUserId);
+
+        return "redirect:/review/store/" + storeId;
     }
 
     /**
@@ -97,15 +144,31 @@ public class ReviewController {
 
     /**
      * [리뷰 수정 처리]
-     * 사용자가 새로 수정한 평점, 내용, 사진 정보를 반영하고 본인 확인 세션 검증 후 업데이트를 완료함
+     * [교정 완료] 수정 메소드 내부의 구버전 잔재 로직을 싹 제거하고 순정 Users 데이터 연동 규격으로 깔끔하게 매칭 마감함
      */
     @PostMapping("/update/{reviewId}")
-    public void updateReview(@PathVariable("reviewId") int reviewId,
-                             @ModelAttribute ReviewRequestDTO requestDTO,
-                             HttpServletRequest request) {
+    public String updateReview(@PathVariable("reviewId") int reviewId,
+                               @ModelAttribute ReviewRequestDTO requestDTO,
+                               @RequestParam("storeId") int storeId,
+                               HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer loginUserId = (Integer) session.getAttribute("loginUserId");
+
+        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        Long dbUserid = loginUser.getUserid();
+
+        if (dbUserid == null) {
+            return "redirect:/login";
+        }
+
+        Integer loginUserId = dbUserid.intValue();
 
         reviewService.modifyReview(reviewId, requestDTO, loginUserId);
+
+        return "redirect:/review/store/" + storeId;
     }
 }
