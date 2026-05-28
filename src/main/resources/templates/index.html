@@ -43,6 +43,30 @@
     </style>
 </head>
 <body>
+	<div>
+		<div>
+			<h3>Brorder</h3>
+		</div>
+		
+		<div th:if="${session.users == null}">
+			<a href="login">로그인</a>
+			<a href="register">회원가입</a>
+		</div>
+		<div th:if="${session.users != null}">
+			<a href="logout">로그아웃</a>
+			<a th:href="@{|/users/${session.users.userid}/address|}">주소관리</a>
+			<a th:href="@{/users/my}">유저정보</a>
+		</div>
+		
+		<div>
+			<div>
+				<a href="">스토어</a>
+				<a href="">주문</a>
+				<a href="">메뉴</a>
+				<a href="">리뷰</a>
+			</div>
+		</div>
+	</div>
 
 <th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
 
@@ -267,6 +291,8 @@
             <th:block th:if="${session.users == null}">
                 <a th:href="@{/login}" class="rct-btn-main"><i class="fa-solid fa-right-to-bracket"></i> 로그인 하러가기</a>
             </th:block>
+            <a th:href="@{/review/store/1}" class="rct-btn-main"><i class="fa-solid fa-pen-to-square"></i> 리뷰 작성하기</a>
+            <a th:href="@{/review/store/1}" class="rct-btn-sub"><i class="fa-solid fa-list"></i> 내 리뷰 관리</a>
         </div>
     </div>
 </section>
@@ -336,7 +362,7 @@
 <button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
     <i class="fa-solid fa-chevron-up"></i>
 </button>
-<!--dkdkdkdkdk-->
+
 <script>
     /* ── HEADER SCROLL ── */
     const headerEl = document.getElementById('mainHeader');
@@ -361,6 +387,8 @@
         tick();
         setInterval(tick, 1000);
     }
+
+    /* [교정 완료] 삭제된 countdown2 요소를 제외하고 히어로 카드 카운트다운만 매핑 처리함 */
     startTimer(10800, [
         document.getElementById('countdown')
     ]);
