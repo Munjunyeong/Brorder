@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class StoreDaoImpl implements StoreDao {
@@ -16,9 +17,9 @@ public class StoreDaoImpl implements StoreDao {
     private static final String NAMESPACE = "kr.com.brorder.store.Store.";
 
     @Override
-    public List<Store> selectStoreList() {
+    public List<Store> selectStoreList(Map<String, Object> searchMap) {
         // XML의 <select id="selectStoreList"> 호출
-        return sqlSession.selectList(NAMESPACE + "selectStoreList");
+        return sqlSession.selectList(NAMESPACE + "selectStoreList", searchMap);
     }
 
     @Override

@@ -5,9 +5,10 @@
     <title>음식 주문 사이트 - 판매처 목록</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
+        .filter-container { margin-bottom: 20px; }
+        .filter-btn { padding: 8px 15px; margin-right: 5px; text-decoration: none; background: #eee; color: #333; border-radius: 3px; border: 1px solid #ccc; }
+        .filter-btn.active { background: #333; color: #fff; font-weight: bold; }
         .store-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .status-open { color: green; font-weight: bold; }
-        .status-close { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -15,6 +16,33 @@
 <h1>배달 가능한 판매처 목록</h1>
 <a th:href="@{/store/add}">[신규 판매처 등록하기]</a>
 <hr>
+
+<!-- 카테고리 필터 버튼 영역 추가 -->
+<div class="filter-container">
+    <!-- 전체보기 버튼: category 파라미터 없이 요청 -->
+    <a th:href="@{/store/list}" class="filter-btn" th:classappend="${selectedCategory == null} ? 'active'">전체보기</a>
+
+    <!-- 각 카테고리별 버튼: 클릭 시 쿼리 스트링으로 카테고리 전달 -->
+    <a th:href="@{/store/list(category='치킨')}" class="filter-btn" th:classappend="${selectedCategory == '치킨'} ? 'active'">치킨</a>
+    <a th:href="@{/store/list(category='한식')}" class="filter-btn" th:classappend="${selectedCategory == '한식'} ? 'active'">한식</a>
+    <a th:href="@{/store/list(category='중식')}" class="filter-btn" th:classappend="${selectedCategory == '중식'} ? 'active'">중식</a>
+    <a th:href="@{/store/list(category='일식')}" class="filter-btn" th:classappend="${selectedCategory == '일식'} ? 'active'">일식</a>
+    <a th:href="@{/store/list(category='양식')}" class="filter-btn" th:classappend="${selectedCategory == '양식'} ? 'active'">양식</a>
+</div>
+
+<!-- 검색창 영역 추가 -->
+<div style="margin-bottom: 20px;">
+    <form th:action="@{/store/list}" method="get">
+        <!-- 현재 선택된 카테고리가 있다면 검색할 때도 유지되도록 hidden으로 전송 -->
+        <input type="hidden" name="category" th:value="${selectedCategory}">
+
+        <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="가게 이름을 입력하세요" style="padding: 6px; width: 250px;">
+        <button type="submit" style="padding: 6px 12px;">검색</button>
+
+        <!-- 검색 조건 초기화 버튼 (전체보기 역할) -->
+        <a th:href="@{/store/list}" th:if="${searchKeyword != null and searchKeyword != ''}" style="margin-left: 10px; color: gray; text-decoration: none;">검색 취소</a>
+    </form>
+</div>
 
 <!-- 컨트롤러에서 보낸 "stores" 리스트가 비어있을 때 -->
 <div th:if="${#lists.isEmpty(stores)}">

@@ -15,11 +15,18 @@ public class StoreController {
     private StoreService storeService;
 
     // 테스트
-    // 1. 판매처 전체 목록 화면 (GET /store/list)
+    // 1. 판매처 목록 조회 (카테고리 필터 + 이름 검색창) (GET /store/list)
     @GetMapping("/list")
-    public String storeList(Model model) {
-        List<Store> list = storeService.getStoreList();
+    public String storeList(@RequestParam(value = "category", required = false) String category,
+                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                            Model model) {
+        // 카테고리와 검색어를 모두 서비스로 전달
+        List<Store> list = storeService.getStoreList(category, searchKeyword);
+
         model.addAttribute("stores", list);
+        model.addAttribute("selectedCategory", category); // 선택된 카테고리 강조용
+        model.addAttribute("searchKeyword", searchKeyword); // 검색 창에 입력한 단어 유지용
+
         return "store/list"; // src/main/resources/templates/store/list.html
     }
 
