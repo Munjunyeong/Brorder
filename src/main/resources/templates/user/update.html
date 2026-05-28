@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<div>
+			<h3>회원 정보 변경</h3>
+		</div>
+		
+		<div>
+			<form method="post">
+				<div>
+					<div><label>사용자 아이디:</label></div>
+					<div th:text="${users.id}"></div>
+				</div>
+				
+				<div>
+					<div><label>닉네임:</label></div>
+					<div><input name="name" type="text" th:value="${users.name}"></div>
+				</div>
+				
+				<div>
+					<div><label>전화번호:</label></div>
+					<div><input name="phone" type="text" th:value="${users.phone}"></div>
+				</div>
+				
+				<div>
+					<div><button>변경</button></div>
+					<div><a href="../my">취소</a></div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
