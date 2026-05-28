@@ -431,7 +431,7 @@
 
     <div class="two-col">
 
-        <div class="write-panel" th:if="${session.users != null}">
+        <div class="write-panel" th:if="${session.loginUserId != null}">
             <div class="panel-header">
                 <div class="panel-icon"><i class="fa-solid fa-pen-to-square"></i></div>
                 <span class="panel-title">리뷰 작성하기</span>
@@ -478,7 +478,7 @@
             </form>
         </div>
 
-        <div class="write-panel text-center py-5" th:if="${session.users == null}">
+        <div class="write-panel text-center py-5" th:if="${session.loginUserId == null}">
             <div class="panel-icon mx-auto mb-3" style="width:50px; height:50px;"><i class="fa-solid fa-lock" style="font-size:20px;"></i></div>
             <span class="form-label-custom mb-2" style="font-size:0.9rem;">리뷰 작성 권한 없음</span>
             <p class="text-muted small px-2">리뷰 작성은 회원 전용 서비스입니다. 로그인 후 이용해 주세요.</p>
@@ -533,7 +533,7 @@
                         <strong th:text="${review.picture}">sample.png</strong>
                     </div>
 
-                    <div class="card-footer-btns" th:if="${session.users != null and session.users.userId == review.userId}">
+                    <div class="card-footer-btns" th:if="${session.loginUserId != null and session.loginUserId == review.userId}">
                         <a th:href="@{/review/update/{id}(id=${review.reviewId})}" class="btn-edit">
                             <i class="fa-solid fa-pen"></i> 수정
                         </a>
