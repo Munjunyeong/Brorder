@@ -55,7 +55,7 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/user/login";
+            return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
