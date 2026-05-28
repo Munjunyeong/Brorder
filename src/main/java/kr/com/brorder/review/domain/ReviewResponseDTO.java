@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public class ReviewResponseDTO {
 
     private int reviewId;       // 화면에 렌더링하고 수정/삭제 시 식별자로 활용할 리뷰 고유 번호임
+    private int storeId;        // 마이바티스 매퍼 결과 조립 시 매장 구별 및 조건 분기를 위해 유입되는 점포 일련번호임
+    private int menuId;         // 마이바티스 매퍼 결과 조립 시 개별 음식 구별을 위해 유입되는 메뉴 일련번호임
     private int rating;         // 타임리프 화면에서 별점(★) 아이콘 개수를 출력할 평점 데이터임
     private String content;     // 사용자가 등록한 리뷰 본문 텍스트 내용임
     private String picture;     // 화면에 리뷰 이미지를 띄우기 위한 첨부 파일명 또는 경로 문자열임
@@ -25,9 +27,12 @@ public class ReviewResponseDTO {
 
     /**
      * 데이터베이스 JOIN 쿼리 조회 결과를 한 번에 주입하여 객체를 생성하는 생성자임
+     * 새로 추가된 storeId와 menuId 필드를 포함하여 모든 조회 필드값들을 파라미터로 수용하고 매핑하는 기능
      */
-    public ReviewResponseDTO(int reviewId, int rating, String content, String picture, LocalDateTime createdData, String userIdName, String menuName) {
+    public ReviewResponseDTO(int reviewId, int storeId, int menuId, int rating, String content, String picture, LocalDateTime createdData, String userIdName, String menuName) {
         this.reviewId = reviewId;
+        this.storeId = storeId;
+        this.menuId = menuId;
         this.rating = rating;
         this.content = content;
         this.picture = picture;
@@ -38,6 +43,12 @@ public class ReviewResponseDTO {
 
     public int getReviewId() { return reviewId; }
     public void setReviewId(int reviewId) { this.reviewId = reviewId; }
+
+    public int getStoreId() { return storeId; }
+    public void setStoreId(int storeId) { this.storeId = storeId; }
+
+    public int getMenuId() { return menuId; }
+    public void setMenuId(int menuId) { this.menuId = menuId; }
 
     public int getRating() { return rating; }
     public void setRating(int rating) { this.rating = rating; }

@@ -3,6 +3,19 @@
 
 <mapper namespace="kr.com.brorder.review.mapper.ReviewMapper">
 
+    <!-- 조인 결과물이 첫 번째 데이터로 강제 복제되던 현상을 구별해 줄 고유 식별 단추(<id>) resultMap 추가 지정 -->
+    <resultMap id="ReviewResponseMap" type="kr.com.brorder.review.domain.ReviewResponseDTO">
+        <id property="reviewId" column="reviewId"/>
+        <result property="storeId" column="storeId"/>
+        <result property="menuId" column="menuId"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="picture" column="picture"/>
+        <result property="createdData" column="createdData"/>
+        <result property="userIdName" column="userIdName"/>
+        <result property="menuName" column="menuName"/>
+    </resultMap>
+
     <select id="findById" parameterType="int" resultType="kr.com.brorder.review.domain.Review">
         SELECT
         review_id    AS reviewId,
@@ -17,7 +30,8 @@
         WHERE review_id = #{reviewId}
     </select>
 
-    <select id="findByStoreId" parameterType="int" resultType="kr.com.brorder.review.domain.ReviewResponseDTO">
+    <!-- 기존의 resultType 스펙을 걷어내고 resultMap="ReviewResponseMap" 구조로 변환 매핑 통로 교체 -->
+    <select id="findByStoreId" parameterType="int" resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
         r.store_id     AS storeId,
@@ -35,7 +49,8 @@
         ORDER BY r.created_data DESC
     </select>
 
-    <select id="findByUserId" parameterType="int" resultType="kr.com.brorder.review.domain.ReviewResponseDTO">
+    <!-- 마이페이지 내역 조회 쿼리 영역도 똑같이 뭉개지지 않도록 resultMap 구조로 완벽 동기화 처리 -->
+    <select id="findByUserId" parameterType="int" resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
         r.store_id     AS storeId,

@@ -31,10 +31,11 @@ public class ReviewController {
 
     /**
      * [가게별 리뷰 목록 조회 화면]
-     * URL 경로에서 가게 번호(storeId)를 받아 해당 매장에 등록된 전체 리뷰를 타임리프 화면에 바인딩함
+     * 세션 로그인 여부와 상관없이 비회원에게도 데이터베이스에 저장된 해당 매장의 전체 리뷰 리스트 데이터를 추출하여 타임리프 화면에 송신함
      */
     @GetMapping("/store/{storeId}")
     public String showStoreReviews(@PathVariable("storeId") int storeId, Model model) {
+        // [오타 교정] List="ReviewResponseDTO" 구절을 정상 자바 다이아몬드 연산자 규격(<ReviewResponseDTO>)으로 정밀 수정 완료함
         List<ReviewResponseDTO> reviews = reviewService.getStoreReviews(storeId);
 
         model.addAttribute("reviewList", reviews);
@@ -45,28 +46,24 @@ public class ReviewController {
 
     /**
      * [신규 리뷰 등록 처리]
-     * [교정 완료] 종민님의 Users 소스코드 규격에 맞춰 Long 타입을 Integer로 안전하게 다운캐스팅(intValue)하여 서비스 단에 적재 마감함
+     * 세션 가방 내부의 고유 번호를 확인하여 수용하고 매장 주소로 새로고침 리다이렉트를 강제 수행함
      */
     @PostMapping("/write")
     public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
 
-        // 1. 세션에서 users 가방을 열어 종민님의 진짜 Users 클래스 타입으로 형변환하여 추출함
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
-        // 2. [완벽 동기화] Users.java에 설계된 순정 getUserid() 메소드를 직격 호출함
         Long dbUserid = loginUser.getUserid();
 
-        // [근본 에러 방어벽] 로그인 시점에 번호가 빠져서 null이 들어왔다면 500 예외를 터트리지 않고 로그인창으로 후방 격리함
         if (dbUserid == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
-        // 3. 기존의 reviewService.writeReview 파라미터 규격(Integer)에 맞게 Long 값을 안전하게 int형으로 변환하여 주입함
         Integer loginUserId = dbUserid.intValue();
 
         reviewService.writeReview(requestDTO, loginUserId);
@@ -76,7 +73,7 @@ public class ReviewController {
 
     /**
      * [내가 쓴 리뷰 목록 조회 화면]
-     * [교정 완료] 정공법 Users 캐스팅 문법 및 Long 타입 변환 필터를 완벽하게 이식함
+     * 마이페이지 필터링을 가동하기 위해 인증 객체 식별 번호를 빌드하여 모델 가방에 담아 송신함
      */
     @GetMapping("/my")
     public String showMyReviews(Model model, HttpServletRequest request) {
@@ -85,17 +82,18 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
 
+        // [오타 교정] 생성자 및 반환 컬렉션의 다이아몬드 연산자 구문을 순정 자바 스펙으로 온전하게 교정 마감함
         List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(loginUserId);
         model.addAttribute("myReviewList", myReviews);
 
@@ -104,7 +102,7 @@ public class ReviewController {
 
     /**
      * [리뷰 삭제 처리]
-     * [교정 완료] 정석 캐스팅 필터를 통해 안전하게 본인 식별 번호를 비교 검증하여 삭제 유도함
+     * 권한 일치 여부를 검증하고 삭제 트랜잭션을 구동한 뒤 기존 매장 상세 정보창으로 동기화 복귀함
      */
     @PostMapping("/delete/{reviewId}")
     public String deleteReview(@PathVariable("reviewId") int reviewId,
@@ -115,13 +113,13 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
@@ -144,7 +142,7 @@ public class ReviewController {
 
     /**
      * [리뷰 수정 처리]
-     * [교정 완료] 수정 메소드 내부의 구버전 잔재 로직을 싹 제거하고 순정 Users 데이터 연동 규격으로 깔끔하게 매칭 마감함
+     * 변경된 입력 파라미터 세트를 받아 영속성 레이어에 병합 연산을 지시하고 원래 보던 화면으로 다이렉트 복귀함
      */
     @PostMapping("/update/{reviewId}")
     public String updateReview(@PathVariable("reviewId") int reviewId,
@@ -156,13 +154,13 @@ public class ReviewController {
         kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
 
         if (loginUser == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Long dbUserid = loginUser.getUserid();
 
         if (dbUserid == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
