@@ -3,7 +3,7 @@ package kr.com.brorder.store;
 import java.util.List;
 
 public interface StoreDao {
-    List<Store> selectStoreList();
+    List<Store> selectStoreList(String category);
     Store selectStoreById(Integer store_id);
 
     int insertStore(Store store);

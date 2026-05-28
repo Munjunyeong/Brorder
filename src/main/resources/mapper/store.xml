@@ -13,11 +13,16 @@
             category,
             address,
             phone,
-            rating,
             created_data AS createdData,
             status
         FROM
             store
+        <!-- category 파라미터가 null이 아니고 비어있지 않을 때만 WHERE 조건 추가 -->
+        <where>
+            <if test="category != null and category != ''">
+                category = #{category}
+            </if>
+        </where>
         ORDER BY
             store_id DESC
     </select>
@@ -30,7 +35,6 @@
             category,
             address,
             phone,
-            rating,
             created_data AS createdData,
             status
         FROM
@@ -41,8 +45,8 @@
 
     <!-- 3. 가게 등록 -->
     <insert id="insertStore" parameterType="kr.com.brorder.store.Store">
-        INSERT INTO store (name, category, address, phone, rating, created_data, status)
-        VALUES (#{name}, #{category}, #{address}, #{phone}, 5, NOW(), 'OPEN')
+        INSERT INTO store (name, category, address, phone, created_data, status)
+        VALUES (#{name}, #{category}, #{address}, #{phone}, NOW(), 'OPEN')
     </insert>
 
     <!-- 4. 가게 수정 -->

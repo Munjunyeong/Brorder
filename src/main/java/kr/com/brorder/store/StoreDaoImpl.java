@@ -16,9 +16,9 @@ public class StoreDaoImpl implements StoreDao {
     private static final String NAMESPACE = "kr.com.brorder.store.Store.";
 
     @Override
-    public List<Store> selectStoreList() {
+    public List<Store> selectStoreList(String category) {
         // XML의 <select id="selectStoreList"> 호출
-        return sqlSession.selectList(NAMESPACE + "selectStoreList");
+        return sqlSession.selectList(NAMESPACE + "selectStoreList", category);
     }
 
     @Override

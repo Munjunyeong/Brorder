@@ -12,9 +12,9 @@ public class StoreServiceImpl implements StoreService {
     private StoreDao storeDAO; // DAO 계층 주입
 
     @Override
-    public List<Store> getStoreList() {
+    public List<Store> getStoreList(String category) {
         // 비즈니스 로직 필요 시 추가 (예: 정렬, 상태 필터링 등)
-        return storeDAO.selectStoreList();
+        return storeDAO.selectStoreList(category);
     }
 
     @Override
