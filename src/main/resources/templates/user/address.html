@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-
+	<div>
+		<div>
+			<h3>주소 관리</h3>
+		</div>
+		
+		<div>
+			<table border="1">
+				<thead>
+					<tr>
+						<th>별칭</th>
+						<th>주소</th>
+						<th>배달요청사항</th>
+						<th>공동현관비밀번호</th>	
+						<th>관리</th>		
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:if="${list.isEmpty()}">
+						<td colspan="5">등록된 주소가 없습니다</td>
+					</tr>
+					
+					<tr th:each="item : ${list}">
+						<td th:text="${item.addressname}"></td>
+						<td th:text="${item.address + ' ' + item.addressdetail}"></td>
+						<td th:text="${item.addresscomment}"></td>
+						<td th:text="${item.entrance}"></td>
+						<td>
+							<a th:href="@{|update/${item.addressid}|}">수정</a>
+							<a th:href="@{|delete/${item.addressid}|}">삭제</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		
+		<div>
+			<div><a href="../my">이전</a></div>
+		</div>
+	</div>
 </body>
 </html>

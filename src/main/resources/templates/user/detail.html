@@ -13,7 +13,7 @@
 		<div>
 			<div>
 			<div>
-				<div><label>유저번호:</label></div>
+				<div><label>회원번호:</label></div>
 				<div th:text="${users.userid}"></div>
 			</div>
 			
@@ -36,8 +36,10 @@
 				<div><label>생성일:</label></div>
 				<div th:text="${users.created_data}"></div>
 			</div>
+			<a href="/users/update">회원정보 수정</a>
 			<a href="/users/my/address">주소관리</a>
 			<a href="/users/my/review">내가 쓴 리뷰</a>
+			<a href="/users/delete">회원 탈퇴</a>
 		</div>
 		</div>
 	</div>

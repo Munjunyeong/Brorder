@@ -24,5 +24,16 @@
 		SELECT password FROM users
 		WHERE id=#{id} AND phone=#{phone}
 	</select>
+	
+	<update id="update">
+		UPDATE users
+		SET name=#{name}, phone=#{phone}
+		WHERE id=#{id}
+	</update>
+	
+	<select id="address" resultType="kr.com.brorder.users.Address">
+		SELECT * FROM user_address
+		WHERE user_id=#{userid}
+	</select>
 
 </mapper>

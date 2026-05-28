@@ -1,5 +1,7 @@
 package kr.com.brorder.users;
 
+import java.util.List;
+
 public interface UsersDao {
 
 	void register(Users item);
@@ -10,5 +12,8 @@ public interface UsersDao {
 
 	Users findpw(Users item);
 
+	void update(Users item);
+
+	List<Address> list(Long userid);
 
 }

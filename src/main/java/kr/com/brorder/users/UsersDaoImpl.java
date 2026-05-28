@@ -1,5 +1,7 @@
 package kr.com.brorder.users;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,16 @@ public class UsersDaoImpl implements UsersDao {
 	@Override
 	public Users findpw(Users item) {
 		return sql.selectOne("users.findpw", item);
+	}
+
+	@Override
+	public void update(Users item) {
+		sql.update("users.update", item);
+	}
+
+	@Override
+	public List<Address> list(Long userid) {
+		return sql.selectList("users.address", userid);
 	}
 
 
