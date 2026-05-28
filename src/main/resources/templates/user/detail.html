@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<div>
+			<h3>유저정보</h3>
+		</div>
+		
+		<div>
+			<div>
+			<div>
+				<div><label>유저번호:</label></div>
+				<div th:text="${users.userid}"></div>
+			</div>
+			
+			<div>
+				<div><label>아이디:</label></div>
+				<div th:text="${users.id}"></div>
+			</div>
+			
+			<div>
+				<div><label>닉네임:</label></div>
+				<div th:text="${users.name}"></div>
+			</div>
+			
+			<div>
+				<div><label>전화번호:</label></div>
+				<div th:text="${users.phone}"></div>
+			</div>
+			
+			<div>
+				<div><label>생성일:</label></div>
+				<div th:text="${users.created_data}"></div>
+			</div>
+			<a href="/users/my/address">주소관리</a>
+			<a href="/users/my/review">내가 쓴 리뷰</a>
+		</div>
+		</div>
+	</div>
+</body>
+</html>
