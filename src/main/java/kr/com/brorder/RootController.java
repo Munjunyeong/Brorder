@@ -80,6 +80,6 @@ public class RootController {
 		model.addAttribute("findpw", findpw);
 		
 		return "user/resultpw";
-	} //테스트용 주석 추가
+	}
 
 }

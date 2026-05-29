@@ -1,5 +1,7 @@
 package kr.com.brorder.users;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,16 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public Users findpw(Users item) {
 		return usersDao.findpw(item);
+	}
+
+	@Override
+	public void update(Users item) {
+		usersDao.update(item);
+	}
+
+	@Override
+	public List<Address> list(Long userid) {
+		return usersDao.list(userid);
 	}
 
 }
