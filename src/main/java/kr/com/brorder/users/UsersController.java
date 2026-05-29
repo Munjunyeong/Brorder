@@ -58,6 +58,7 @@ public class UsersController {
 		model.addAttribute("list", list);
 		
 		return "user/address";
+		
 	}
 
 }
