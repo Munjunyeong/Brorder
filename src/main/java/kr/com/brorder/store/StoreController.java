@@ -12,6 +12,7 @@ import java.util.List;
 public class StoreController {
 
     @Autowired
+    /**내 서비스 안에서만 안전하게 DB에 접근**/
     private StoreService storeService;
 
     // 테스트
