@@ -2,92 +2,104 @@ package kr.com.brorder.review.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
 import kr.com.brorder.review.service.ReviewService;
+import kr.com.brorder.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
-/**
- * [리뷰 도메인 메인 컨트롤러]
- * 사용자의 리뷰 관련 모든 요청(조회, 작성, 수정, 삭제)을 받아 처리하고 해당하는 HTML 화면을 띄워주는 클래스임
- */
+// 리뷰 관련 모든 요청 처리 및 화면 매핑 컨트롤러
 @Controller
 @RequestMapping("/review")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    /**
-     * 생성자 주입을 통해 비즈니스 로직을 처리하는 ReviewService 객체를 연결함
-     */
+    // 생성자 주입으로 리뷰 서비스 객체 연결
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
-    /**
-     * [가게별 리뷰 목록 조회 화면]
-     * 세션 로그인 여부와 상관없이 비회원에게도 데이터베이스에 저장된 해당 매장의 전체 리뷰 리스트 데이터를 추출하여 타임리프 화면에 송신함
-     */
+    // 가게별 전체 리뷰 목록 조회 및 화면 송신
     @GetMapping("/store/{storeId}")
     public String showStoreReviews(@PathVariable("storeId") int storeId, Model model) {
         List<ReviewResponseDTO> reviews = reviewService.getStoreReviews(storeId);
-
         model.addAttribute("reviewList", reviews);
         model.addAttribute("currentStoreId", storeId);
-
         return "review/store_reviews";
     }
 
-    /**
-     * [신규 리뷰 등록 처리]
-     * 세션 가방 내부의 고유 번호를 확인하여 수용하고 매장 주소로 새로고침 리다이렉트를 강제 수행함
-     */
+    // 신규 리뷰 정보 및 첨부 파일 서버 저장 등록 처리
     @PostMapping("/write")
     public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
         HttpSession session = request.getSession();
+        Users loginUser = (Users) session.getAttribute("users");
 
-        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
-
-        /* [교정 완] 조원들의 순정 로그인 주소인 /login 명세로 정밀 수정함 */
+        // 비회원인 경우 로그인 페이지로 리다이렉트
         if (loginUser == null) {
             return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
-
         if (dbUserid == null) {
             return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
 
-        reviewService.writeReview(requestDTO, loginUserId);
+        // 폼 양식에서 전송된 멀티파트 이미지 파일 추출
+        MultipartFile imageFile = requestDTO.getReviewImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                // 물리 파일 보관용 외부 폴더 경로 설정 및 생성
+                String uploadDir = "C:/upload/images/";
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
 
+                // 파일 이름 중복 방지용 UUID 랜덤 키 결합
+                String originalFileName = imageFile.getOriginalFilename();
+                String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+
+                // 서버 실제 디스크 경로에 바이너리 파일 저장 실행
+                File serverFile = new File(uploadDir + savedFileName);
+                imageFile.transferTo(serverFile);
+
+                // 업로드 완료된 고유 파일명을 DTO 가방에 저장
+                requestDTO.setPicture(savedFileName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        reviewService.writeReview(requestDTO, loginUserId);
         return "redirect:/review/store/" + requestDTO.getStoreId();
     }
 
-    /**
-     * [내가 쓴 리뷰 목록 조회 화면]
-     * 마이페이지 필터링을 가동하기 위해 인증 객체 식별 번호를 빌드하여 모델 가방에 담아 송신함
-     */
+    // 로그인 세션 유저가 작성한 마이페이지 리뷰 리스트 조회
     @GetMapping("/my")
     public String showMyReviews(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+        Users loginUser = (Users) session.getAttribute("users");
 
         if (loginUser == null) {
             return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
-
         if (dbUserid == null) {
             return "redirect:/login";
         }
@@ -100,24 +112,19 @@ public class ReviewController {
         return "review/my_reviews";
     }
 
-    /**
-     * [리뷰 삭제 처리]
-     * 권한 일치 여부를 검증하고 삭제 트랜잭션을 구동한 뒤 기존 매장 상세 정보창으로 동기화 복귀함
-     */
+    // 특정 리뷰 식별 번호 삭제 트랜잭션 호출
     @PostMapping("/delete/{reviewId}")
     public String deleteReview(@PathVariable("reviewId") int reviewId,
                                @RequestParam("storeId") int storeId,
                                HttpServletRequest request) {
         HttpSession session = request.getSession();
-
-        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
+        Users loginUser = (Users) session.getAttribute("users");
 
         if (loginUser == null) {
             return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
-
         if (dbUserid == null) {
             return "redirect:/login";
         }
@@ -125,49 +132,58 @@ public class ReviewController {
         Integer loginUserId = dbUserid.intValue();
 
         reviewService.removeReview(reviewId, loginUserId);
-
         return "redirect:/review/store/" + storeId;
     }
 
-    /**
-     * [리뷰 수정 팝업/화면 호출]
-     * 수정하려는 기존 리뷰의 데이터를 찾아와 폼 양식에 채워준 뒤 수정 페이지를 첢
-     */
+    // 수정 대상 리뷰의 원본 데이터를 담아 수정 폼 화면 호출
     @GetMapping("/update/{reviewId}")
     public String showUpdateForm(@PathVariable("reviewId") int reviewId, Model model) {
-        kr.com.brorder.review.domain.Review review = reviewService.getReviewById(reviewId);
+        Review review = reviewService.getReviewById(reviewId);
         model.addAttribute("review", review);
         return "review/update_review";
     }
 
-    /**
-     * [리뷰 수정 처리]
-     * 변경된 입력 파라미터 세트를 받아 영속성 레이어에 병합 연산을 지시하고 원래 보던 화면으로 다이렉트 복귀함
-     */
+    // 수정한 리뷰 데이터 및 새로 첨부한 이미지 파일 반영 수정 처리
     @PostMapping("/update/{reviewId}")
     public String updateReview(@PathVariable("reviewId") int reviewId,
                                @ModelAttribute ReviewRequestDTO requestDTO,
                                @RequestParam("storeId") int storeId,
                                HttpServletRequest request) {
         HttpSession session = request.getSession();
+        Users loginUser = (Users) session.getAttribute("users");
 
-        kr.com.brorder.users.Users loginUser = (kr.com.brorder.users.Users) session.getAttribute("users");
-
-        /* [오류 수리 마감] 멀티파트 파일 첨부 시 세션이 우회 튕김 처리되던 에러 주소를 순정 주소인 /login으로 전면 수정 완료함 */
         if (loginUser == null) {
             return "redirect:/login";
         }
 
         Long dbUserid = loginUser.getUserid();
-
         if (dbUserid == null) {
             return "redirect:/login";
         }
 
         Integer loginUserId = dbUserid.intValue();
 
-        reviewService.modifyReview(reviewId, requestDTO, loginUserId);
+        // 수정 폼에서 새로 첨부한 이미지 파일 존재 여부 확인
+        MultipartFile imageFile = requestDTO.getReviewImageFile();
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                String uploadDir = "C:/upload/images/";
+                File dir = new File(uploadDir);
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String originalFileName = imageFile.getOriginalFilename();
+                String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+                File serverFile = new File(uploadDir + savedFileName);
+                imageFile.transferTo(serverFile);
 
+                requestDTO.setPicture(savedFileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        reviewService.modifyReview(reviewId, requestDTO, loginUserId);
         return "redirect:/review/store/" + storeId;
     }
 }
