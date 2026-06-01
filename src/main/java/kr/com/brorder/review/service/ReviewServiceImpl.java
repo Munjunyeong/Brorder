@@ -1,9 +1,9 @@
 package kr.com.brorder.review.service;
 
+import kr.com.brorder.review.dao.ReviewDao; // [수정점] 새롭게 생성한 ReviewDao 임포트
 import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
-import kr.com.brorder.review.mapper.ReviewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -15,14 +15,15 @@ import java.util.List;
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    private final ReviewMapper reviewMapper;
+    // [수정점] 기존 ReviewMapper reviewMapper를 ReviewDao로 전면 교체함
+    private final ReviewDao reviewDao;
 
     /**
-     * 생성자 주입을 통해 데이터베이스 제어를 담당하는 ReviewMapper 빈(Bean)을 주입받음
+     * 생성자 주입을 통해 데이터베이스 제어를 담당하는 ReviewDao 빈(Bean)을 주입받음
      */
     @Autowired
-    public ReviewServiceImpl(ReviewMapper reviewMapper) {
-        this.reviewMapper = reviewMapper;
+    public ReviewServiceImpl(ReviewDao reviewDao) {
+        this.reviewDao = reviewDao;
     }
 
     /**
@@ -40,7 +41,8 @@ public class ReviewServiceImpl implements ReviewService {
         review.setContent(requestDTO.getContent());
         review.setPicture(requestDTO.getPicture());
 
-        reviewMapper.save(review);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        reviewDao.save(review);
     }
 
     /**
@@ -49,7 +51,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<ReviewResponseDTO> getStoreReviews(int storeId) {
-        return reviewMapper.findByStoreId(storeId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        return reviewDao.findByStoreId(storeId);
     }
 
     /**
@@ -58,7 +61,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public List<ReviewResponseDTO> getMyReviews(int loginUserId) {
-        return reviewMapper.findByUserId(loginUserId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        return reviewDao.findByUserId(loginUserId);
     }
 
     /**
@@ -68,7 +72,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public void removeReview(int reviewId, int loginUserId) {
-        Review targetReview = reviewMapper.findById(reviewId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        Review targetReview = reviewDao.findById(reviewId);
 
         if (targetReview == null) {
             throw new IllegalArgumentException("존재하지 않는 리뷰입니다.");
@@ -78,7 +83,8 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("본인이 작성한 리뷰만 삭제할 수 있습니다.");
         }
 
-        reviewMapper.deleteById(reviewId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        reviewDao.deleteById(reviewId);
     }
 
     /**
@@ -87,7 +93,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public Review getReviewById(int reviewId) {
-        return reviewMapper.findById(reviewId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        return reviewDao.findById(reviewId);
     }
 
     /**
@@ -97,7 +104,8 @@ public class ReviewServiceImpl implements ReviewService {
      */
     @Override
     public void modifyReview(int reviewId, ReviewRequestDTO requestDTO, int loginUserId) {
-        Review targetReview = reviewMapper.findById(reviewId);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        Review targetReview = reviewDao.findById(reviewId);
 
         if (targetReview == null) {
             throw new IllegalArgumentException("존재하지 않는 리뷰입니다.");
@@ -113,6 +121,7 @@ public class ReviewServiceImpl implements ReviewService {
         updateReview.setContent(requestDTO.getContent());
         updateReview.setPicture(requestDTO.getPicture());
 
-        reviewMapper.update(updateReview);
+        // [수정점] 매퍼 호출에서 DAO 호출로 변경됨
+        reviewDao.update(updateReview);
     }
 }
