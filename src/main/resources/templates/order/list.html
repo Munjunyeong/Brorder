@@ -4,20 +4,32 @@
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
     <title>주문 목록 - BRORDER</title>
     <style>
-        .order-list-section { padding: 60px var(--side-pad); background: var(--light-gray); min-height: calc(100vh - 80px - 300px); }
-        .order-card { background: #fff; border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); margin-bottom: 20px; transition: transform .2s, box-shadow .2s; text-decoration: none; color: inherit; display: block; }
-        .order-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--primary-mint); }
-        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--border-color); }
-        .order-id { font-weight: 900; color: var(--primary-red); font-size: 14px; }
-        .order-date { font-size: 13px; color: #999; }
-        .order-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; }
-        .info-item { display: flex; flex-direction: column; gap: 4px; }
-        .info-label { font-size: 11px; color: #aaa; font-weight: 700; text-transform: uppercase; }
-        .info-value { font-size: 15px; font-weight: 800; }
-        .price-value { color: var(--primary-red); }
-        .requests-box { margin-top: 12px; padding: 10px 14px; background: var(--light-gray); border-radius: 10px; font-size: 13px; color: #666; }
-        .add-order-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--primary-mint); color: #fff; padding: 12px 24px; border-radius: 30px; text-decoration: none; font-weight: 800; font-size: 14px; margin-bottom: 30px; transition: all .2s; box-shadow: 0 4px 14px rgba(42,193,188,0.3); }
-        .add-order-btn:hover { background: #1fa09c; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(42,193,188,0.4); }
+        .order-list-section { padding: 40px var(--side-pad); background: #f8f8f8; min-height: calc(100vh - 80px - 300px); }
+        .section-inner { max-width: 600px; margin: 0 auto; }
+        .section-head { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .section-head h2 { font-size: 22px; font-weight: 800; color: #333; }
+        
+        .order-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 16px; border: 1px solid #eee; }
+        .order-date-status { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .order-date { font-size: 14px; color: #888; }
+        .order-status { font-size: 14px; color: #2ac1bc; font-weight: 700; }
+        
+        .order-main-info { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+        .store-name { font-size: 18px; font-weight: 800; color: #333; margin-bottom: 4px; display: block; }
+        .menu-summary { font-size: 15px; color: #666; margin-bottom: 8px; }
+        .order-price { font-size: 15px; font-weight: 700; color: #333; }
+        
+        .order-actions { display: flex; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #f4f4f4; }
+        .btn-detail { flex: 1; padding: 10px; text-align: center; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; font-size: 14px; font-weight: 600; transition: background 0.2s; }
+        .btn-detail:hover { background: #f9f9f9; }
+        
+        .add-order-btn { background: #2ac1bc; color: #fff; padding: 8px 16px; border-radius: 4px; text-decoration: none; font-weight: 700; font-size: 14px; transition: background 0.2s; }
+        .add-order-btn:hover { background: #1fa09c; }
+
+        /* 배민 스타일 가게 이름 옆 화살표 버튼 */
+        .store-header { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .store-link { text-decoration: none; color: inherit; display: flex; align-items: center; gap: 4px; }
+        .store-link:hover .store-name { color: #2ac1bc; }
     </style>
 </head>
 <body>
@@ -26,39 +38,39 @@
 <section class="order-list-section">
     <div class="section-inner">
         <div class="section-head">
-            <h2><i class="fa-solid fa-list-ul"></i> 주문 내역</h2>
-            <a href="/orders/add" class="add-order-btn"><i class="fa-solid fa-plus"></i> 새 주문 등록</a>
+            <h2>주문 내역</h2>
+            <a href="/orders/add" class="add-order-btn">새 주문 등록</a>
         </div>
 
-        <div th:if="${#lists.isEmpty(list)}" style="text-align: center; padding: 100px 0;">
-            <i class="fa-solid fa-box-open" style="font-size: 48px; color: #ddd; margin-bottom: 20px;"></i>
-            <p style="color: #999; font-weight: 700;">주문 내역이 없습니다.</p>
+        <div th:if="${#lists.isEmpty(list)}" style="text-align: center; padding: 80px 0;">
+            <p style="color: #999; font-size: 16px;">주문 내역이 없어요.</p>
         </div>
 
-        <div th:each="item : ${list}">
-            <a th:href="@{/orders/{id}(id=${item.orderId})}" class="order-card reveal">
-                <div class="order-header">
-                    <span class="order-id">ORDER #<span th:text="${item.orderId}"></span></span>
-                    <span class="order-date" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy-MM-dd HH:mm') : ''}"></span>
-                </div>
-                <div class="order-info-grid">
-                    <div class="info-item">
-                        <span class="info-label">가게 번호</span>
-                        <span class="info-value"><i class="fa-solid fa-store" style="color: var(--primary-mint);"></i> Store <span th:text="${item.storeId}"></span></span>
+        <div th:each="item : ${list}" class="order-card">
+            <div class="order-date-status">
+                <span class="order-date" th:text="${item.createdAt != null ? #dates.format(item.createdAt, 'yyyy-MM-dd HH:mm') : ''}"></span>
+                <span class="order-status">배달 완료</span>
+            </div>
+            
+            <div class="order-main-info">
+                <div>
+                    <div class="store-header">
+                        <a th:href="@{/orders/{id}(id=${item.orderId})}" class="store-link">
+                            <span class="store-name" th:text="${item.storeName}"></span>
+                            <i class="fa-solid fa-chevron-right" style="font-size: 12px; color: #ccc;"></i>
+                        </a>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">총 결제금액</span>
-                        <span class="info-value price-value" th:text="${#numbers.formatInteger(item.totalPrice, 3, 'COMMA') + '원'}"></span>
+                    <div class="menu-summary">
+                        <span th:text="${item.firstMenuName}"></span>
+                        <span th:if="${item.extraCount > 0}" th:text="' 외 ' + ${item.extraCount} + '개'"></span>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">결제수단</span>
-                        <span class="info-value" th:text="${item.paymentMethod}"></span>
-                    </div>
+                    <div class="order-price" th:text="${#numbers.formatInteger(item.totalPrice, 0, 'COMMA') + '원'}"></div>
                 </div>
-                <div class="requests-box" th:if="${item.requests != null && !item.requests.empty}">
-                    <i class="fa-solid fa-comment-dots"></i> <span th:text="${item.requests}"></span>
-                </div>
-            </a>
+            </div>
+
+            <div class="order-actions">
+                <a th:href="@{/orders/{id}(id=${item.orderId})}" class="btn-detail">주문 상세</a>
+            </div>
         </div>
     </div>
 </section>
