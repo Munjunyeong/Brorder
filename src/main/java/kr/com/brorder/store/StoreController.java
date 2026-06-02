@@ -1,5 +1,7 @@
 package kr.com.brorder.store;
 
+import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +15,9 @@ public class StoreController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private MenuService menuService;
 
     // 테스트
     // 1. 판매처 목록 조회 (카테고리 필터 + 이름 검색창) (GET /store/list)
@@ -44,7 +49,10 @@ public class StoreController {
             return "error/404";
         }
 
+        List<Menu> menuList = menuService.selectMenuListByStoreId(store_id);
+
         model.addAttribute("store", store);
+        model.addAttribute("menuList", menuList);
         return "store/detail"; // src/main/resources/templates/store/detail.html
     }
 
