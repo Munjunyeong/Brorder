@@ -12,6 +12,9 @@ public class ReviewRequestDTO {
     private String content; // 사용자가 입력창에 직접 작성한 리뷰 텍스트 내용임
     private String picture; // 사용자가 첨부하여 업로드된 사진 파일의 경로 또는 파일명임
 
+    // HTML 화면의 <input type="file" name="reviewImageFile"> 과 매핑되는 멀티파트 파일 객체 그릇임
+    private org.springframework.web.multipart.MultipartFile reviewImageFile;
+
     /**
      * 스프링 커맨드 객체 바인딩 및 JSON 파싱을 위해 사용하는 기본 생성자임
      */
@@ -43,4 +46,13 @@ public class ReviewRequestDTO {
 
     public String getPicture() { return picture; }
     public void setPicture(String picture) { this.picture = picture; }
+
+    //파일 업로드 객체를 주입받고 추출하기 위한 필수 Getter / Setter 메서드 구역임
+    public org.springframework.web.multipart.MultipartFile getReviewImageFile() {
+        return reviewImageFile;
+    }
+
+    public void setReviewImageFile(org.springframework.web.multipart.MultipartFile reviewImageFile) {
+        this.reviewImageFile = reviewImageFile;
+    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public class ReviewDaoImpl implements ReviewDao {
 
-    private static final String NAMESPACE = "kr.com.brorder.review.mapper.ReviewMapper.";
+    private static final String NAMESPACE = "kr.com.brorder.review.dao.ReviewDao.";
 
     @Autowired
     SqlSession sqlSession;
