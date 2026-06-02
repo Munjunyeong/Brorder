@@ -8,6 +8,8 @@ public class OrderMenu {
     private Long optionId;
     private int price;
 
+    private String menuName;
+
     public Long getOrderMenuId() {
         return orderMenuId;
     }
@@ -46,5 +48,13 @@ public class OrderMenu {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
     }
 }

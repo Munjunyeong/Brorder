@@ -4,7 +4,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import kr.com.brorder.order.dto.request.OrderCreateRequest;
+import kr.com.brorder.order.model.Order;
 import kr.com.brorder.order.service.OrderService;
 
 @Controller
@@ -44,9 +44,9 @@ public class OrderController {
 
     // 주문 생성
     @PostMapping
-    public String insert(OrderCreateRequest request) {
+    public String insert(Order order) {
 
-        orderService.insert(request);
+        orderService.insert(order);
 
         return "redirect:/orders";
     }

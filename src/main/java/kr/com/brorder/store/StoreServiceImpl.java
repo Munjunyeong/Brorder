@@ -11,6 +11,7 @@ import java.util.Map;
 public class StoreServiceImpl implements StoreService {
 
     @Autowired
+    /**내 서비스 안에서만 안전하게 DB에 접근**/
     private StoreDao storeDAO; // DAO 계층 주입
 
     @Override

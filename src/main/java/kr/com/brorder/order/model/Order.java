@@ -1,6 +1,7 @@
 package kr.com.brorder.order.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Order {
 
@@ -11,6 +12,21 @@ public class Order {
     private int totalPrice;
     private String requests;
     private Timestamp createdAt;
+
+    // 추가 필드
+    private String storeName;
+    private String firstMenuName;
+    private int extraCount;
+
+    private List<OrderMenu> items;
+
+    public List<OrderMenu> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderMenu> items) {
+        this.items = items;
+    }
 
     public int getOrderId() {
         return orderId;
@@ -66,5 +82,29 @@ public class Order {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getFirstMenuName() {
+        return firstMenuName;
+    }
+
+    public void setFirstMenuName(String firstMenuName) {
+        this.firstMenuName = firstMenuName;
+    }
+
+    public int getExtraCount() {
+        return extraCount;
+    }
+
+    public void setExtraCount(int extraCount) {
+        this.extraCount = extraCount;
     }
 }
