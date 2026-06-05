@@ -1,5 +1,7 @@
 package kr.com.brorder.review.service;
 
+import kr.com.brorder.review.domain.MenuOptionDTO;
+import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
 import java.util.List;
@@ -24,7 +26,7 @@ public interface ReviewService {
 
     /**
      * [내가 작성한 전체 리뷰 목록 조회]
-     * 안전하게 세션에서 인증된 유저 번호(loginUserId)를 조건으로 본인이 작성한 리뷰 목록만 필터링하여 가져옴
+     * 안전하게 세션에서 인증된 유저 번(loginUserId)를 조건으로 본인이 작성한 리뷰 목록만 필터링하여 가져옴
      */
     List<ReviewResponseDTO> getMyReviews(int loginUserId);
 
@@ -38,11 +40,17 @@ public interface ReviewService {
      * [리뷰 단건 상세 조회]
      * 리뷰 수정 화면 등을 열 때 기존에 작성했던 평점, 내용 등의 데이터를 그대로 채워주기 위해 식별자 번호로 데이터를 찾아옴
      */
-    kr.com.brorder.review.domain.Review getReviewById(int reviewId);
+    Review getReviewById(int reviewId);
 
     /**
      * [기존 리뷰 데이터 수정 반영]
      * 사용자가 새로 수정한 데이터와 수정 권한(본인 여부)을 검증한 뒤 데이터베이스 레코드를 최신 정보로 변경함
      */
     void modifyReview(int reviewId, ReviewRequestDTO requestDTO, int loginUserId);
+
+    /**
+     * [특정 가게의 전체 메뉴 목록 조회]
+     * 지정된 가게 번호(storeId)를 기반으로 해당 매장에 등록된 메뉴 옵션 리스트 조회
+     */
+    List<MenuOptionDTO> getMenusByStoreId(int storeId);
 }

@@ -1,5 +1,6 @@
 package kr.com.brorder.review.dao;
 
+import kr.com.brorder.review.domain.MenuOptionDTO;
 import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
 import org.apache.ibatis.session.SqlSession;
@@ -44,5 +45,11 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public void update(Review updateReview) {
         sqlSession.update(NAMESPACE + "update", updateReview);
+    }
+
+    // 가게 고유 번호로 해당 매장의 메뉴 옵션 리스트 조회
+    @Override
+    public List<MenuOptionDTO> findMenusByStoreId(int storeId) {
+        return sqlSession.selectList(NAMESPACE + "findMenusByStoreId", storeId);
     }
 }

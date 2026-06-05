@@ -3,7 +3,6 @@
 <head>
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
     <link rel="stylesheet" th:href="@{/css/review.css}">
-    <!-- 이미지 여백 배치 및 확대 팝업(모달)을 위한 CSS 스타일 세트 -->
     <style>
         /* 리뷰 카드 본체 내부 정렬 및 사방 여백 기틀 마련 */
         .myreview-card-inner {
@@ -13,7 +12,7 @@
             padding: 20px;
         }
 
-        /* [교정 레이아웃] 테두리에 붙지 않고 이쁘게 여유가 남도록 마진과 패딩 조정 */
+        /* 테두리에 붙지 않고 이쁘게 여유가 남도록 마진과 패딩 조정 */
         .mrc-img {
             width: 160px;
             height: 160px;
@@ -42,7 +41,7 @@
             filter: brightness(0.95);
         }
 
-        /* 🚨 [대폭 수정] 이미지 전체화면 확대 팝업(모달) 배경 스타일 */
+        /* 이미지 전체화면 확대 팝업(모달) 배경 스타일 */
         .img-modal-overlay {
             position: fixed;
             top: 0;
@@ -62,13 +61,13 @@
             opacity: 1;
         }
 
-        /* 🚨 [핵심 교정] 팝업 상자 크기를 화면 너비와 높이 기준 훨씬 널찍하게 키움 */
+        /* 팝업 상자 크기를 화면 너비와 높이 기준 훨씬 널찍하게 키움 */
         .img-modal-box {
             position: relative;
             width: auto;
             height: auto;
-            max-width: 90vw;   /* ⭕ 모니터 화면 가로 너비의 최대 90%까지 시원하게 확장 */
-            max-height: 85vh;  /* ⭕ 모니터 화면 세로 높이의 최대 85%까지 시원하게 확장 */
+            max-width: 90vw;   /* 모니터 화면 가로 너비의 최대 90%까지 시원하게 확장 */
+            max-height: 85vh;  /* 모니터 화면 세로 높이의 최대 85%까지 시원하게 확장 */
             box-shadow: 0 12px 40px rgba(0,0,0,0.6);
             border-radius: 12px;
             overflow: visible; /* 닫기 버튼이 바깥으로 삐져나와도 잘 보이기 위해 수정 */
@@ -77,13 +76,13 @@
             align-items: center;
         }
 
-        /* 🚨 [핵심 교정] 팝업 안의 이미지가 원본 화질을 유지하면서 상자 크기에 꽉 차도록 세팅 */
+        /* 팝업 안의 이미지가 원본 화질을 유지하면서 상자 크기에 꽉 차도록 세팅 */
         .img-modal-box img {
             display: block;
             width: auto;
             height: auto;
-            max-width: 90vw;   /* ⭕ 이미지 가로가 찌그러지지 않고 크게 열리도록 조정 */
-            max-height: 85vh;  /* ⭕ 이미지 세로가 화면 높이를 넘지 않고 최대 크기로 채워지게 세팅 */
+            max-width: 90vw;   /* 이미지 가로가 찌그러지지 않고 크게 열리도록 조정 */
+            max-height: 85vh;  /* 이미지 세로가 화면 높이를 넘지 않고 최대 크기로 채워지게 세팅 */
             object-fit: contain;
             border-radius: 12px;
         }
@@ -147,8 +146,13 @@
                 <input type="hidden" name="storeId" th:value="${currentStoreId}">
 
                 <div class="mb-3">
-                    <label class="form-label-custom">메뉴 번호</label>
-                    <input type="number" class="form-input" name="menuId" value="1" required>
+                    <label class="form-label-custom">메뉴 선택</label>
+                    <select class="form-input" name="menuId" required>
+                        <option value="" disabled selected>주문하신 메뉴를 선택해 주세요</option>
+                        <option th:each="menu : ${menuOptions}"
+                                th:value="${menu.menuId}"
+                                th:text="${menu.menuId + '번 - ' + menu.menuName}">1번 - 짬뽕</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
@@ -215,7 +219,6 @@
                      th:data-review-dom-id="${review.reviewId}">
 
                     <div class="myreview-card-inner">
-                        <!-- 왼쪽 및 주변 테두리로부터 둥글게 여유 공간이 남도록 배치 수정본 -->
                         <div class="mrc-img">
                             <img th:src="${(review.picture != null and review.picture != '') ? '/images/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}"
                                  th:alt="${review.menuName}"
@@ -291,7 +294,6 @@
     </div>
 </div>
 
-<!-- 기존 삭제 모달 창 (정상 보존) -->
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
         <div class="modal-warn-icon"><i class="fa-solid fa-trash-can"></i></div>
@@ -304,7 +306,6 @@
     </div>
 </div>
 
-<!-- 이미지 전체 화면 확대 모달 레이어 (정상 보존) -->
 <div class="img-modal-overlay" id="imageLargeModal" onclick="closeImageModal()">
     <div class="img-modal-box" onclick="event.stopPropagation()">
         <button class="img-modal-close" onclick="closeImageModal()">&times;</button>
@@ -320,7 +321,6 @@
 
 <script th:src="@{/js/review.js}"></script>
 
-<!-- 동적 팝업 렌더링 자바스크립트 (정상 보존) -->
 <script>
     function openImageModal(imgSrc) {
         const modal = document.getElementById('imageLargeModal');
