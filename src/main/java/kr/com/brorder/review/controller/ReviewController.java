@@ -2,6 +2,7 @@ package kr.com.brorder.review.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import kr.com.brorder.review.domain.MenuOptionDTO;
 import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +39,17 @@ public class ReviewController {
         List<ReviewResponseDTO> reviews = reviewService.getStoreReviews(storeId);
         model.addAttribute("reviewList", reviews);
         model.addAttribute("currentStoreId", storeId);
+
+        // 가게 고유 번호(storeId)에 해당하는 메뉴 옵션 리스트 조회
+        List<MenuOptionDTO> menuOptions = reviewService.getMenusByStoreId(storeId);
+
+        // [방어 코드 추가] DB에 메뉴가 없어서 null이 넘어오면 화면이 깨지는 현상을 막기 위해 빈 가방 세팅
+        if (menuOptions == null) {
+            menuOptions = new ArrayList<>();
+        }
+
+        model.addAttribute("menuOptions", menuOptions);
+
         return "review/store_reviews";
     }
 

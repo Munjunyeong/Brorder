@@ -100,4 +100,14 @@
         review_id = #{reviewId}
     </update>
 
+    <select id="findMenusByStoreId" parameterType="int" resultType="kr.com.brorder.review.domain.MenuOptionDTO">
+        SELECT
+        m.menu_id AS menuId,
+        m.name    AS menuName
+        FROM menu m
+        WHERE m.store_id = #{storeId}
+        ORDER BY m.menu_id
+    </select>
+
 </mapper>
+

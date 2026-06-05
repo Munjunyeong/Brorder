@@ -1,5 +1,6 @@
 package kr.com.brorder.review.dao;
 
+import kr.com.brorder.review.domain.MenuOptionDTO;
 import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
 
@@ -18,4 +19,6 @@ public interface ReviewDao {
     void deleteById(int reviewId);
 
     void update(Review updateReview);
+
+    List<MenuOptionDTO> findMenusByStoreId(int storeId);
 }
