@@ -14,16 +14,6 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-body {
-    background: var(--bg);
-    color: #222;
-    min-height: 100vh;
-}
-
 /* 리뷰 공통 페이지 배경 */
 .store-review-page,
 .myreview-page {

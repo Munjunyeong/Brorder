@@ -1,24 +1,49 @@
 /* ── 리뷰 카드 순차 노출 처리 ── */
-const reviewCards = document.querySelectorAll('.myreview-card, .review-card');
-if (reviewCards.length > 0) {
-    const cardObs = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const delay = entry.target.dataset.delay || 0;
-                setTimeout(() => entry.target.classList.add('card-visible'), parseInt(delay));
-                cardObs.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.08 });
+// const reviewCards = document.querySelectorAll('.myreview-card, .review-card');
+// if (reviewCards.length > 0) {
+//     const cardObs = new IntersectionObserver(entries => {
+//         entries.forEach(entry => {
+//             if (entry.isIntersecting) {
+//                 const delay = entry.target.dataset.delay || 0;
+//                 setTimeout(() => entry.target.classList.add('card-visible'), parseInt(delay));
+//                 cardObs.unobserve(entry.target);
+//             }
+//         });
+//     }, { threshold: 0.08 });
+//
+//     reviewCards.forEach(card => cardObs.observe(card));
+// }
 
-    reviewCards.forEach(card => cardObs.observe(card));
-}
-
-/* ── 스크롤 탑 및 헤더 상태 처리 ── */
+/* ── 스크롤 탑 및 헤더 상태 처리 ── *//* ── 스크롤 탑 및 헤더 상태 처리 ── */
 const reviewScrollBtn = document.getElementById('scrollTopBtn');
+const mainHeader = document.getElementById('mainHeader');
+
+let lastHeaderScrolled = false;
+let lastScrollButtonShown = false;
+let ticking = false;
+
 window.addEventListener('scroll', () => {
-    if (reviewScrollBtn) reviewScrollBtn.classList.toggle('show', window.scrollY > 300);
-    document.getElementById('mainHeader')?.classList.toggle('scrolled', window.scrollY > 60);
+    if (ticking) return;
+
+    ticking = true;
+
+    requestAnimationFrame(() => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+        const shouldShowScrollButton = scrollY > 300;
+        if (reviewScrollBtn && shouldShowScrollButton !== lastScrollButtonShown) {
+            reviewScrollBtn.classList.toggle('show', shouldShowScrollButton);
+            lastScrollButtonShown = shouldShowScrollButton;
+        }
+
+        const shouldHeaderScrolled = scrollY > 80;
+        if (mainHeader && shouldHeaderScrolled !== lastHeaderScrolled) {
+            mainHeader.classList.toggle('scrolled', shouldHeaderScrolled);
+            lastHeaderScrolled = shouldHeaderScrolled;
+        }
+
+        ticking = false;
+    });
 }, { passive: true });
 
 /* ── 필터 탭 활성 처리 ── */
@@ -109,3 +134,24 @@ if (modalConfirmBtn) {
             });
     });
 }
+
+/* ── 도움돼요 버튼 토글 처리 ── */
+document.querySelectorAll('.help-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        const countElement = this.querySelector('.help-count');
+        const currentCount = parseInt(this.dataset.count || countElement.textContent, 10);
+        const isActive = this.classList.contains('active');
+
+        if (isActive) {
+            this.classList.remove('active');
+            this.dataset.count = String(currentCount - 1);
+            countElement.textContent = currentCount - 1;
+            this.setAttribute('aria-pressed', 'false');
+        } else {
+            this.classList.add('active');
+            this.dataset.count = String(currentCount + 1);
+            countElement.textContent = currentCount + 1;
+            this.setAttribute('aria-pressed', 'true');
+        }
+    });
+});
