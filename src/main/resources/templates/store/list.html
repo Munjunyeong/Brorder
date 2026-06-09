@@ -1,43 +1,107 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>음식 주문 사이트 - 판매처 목록</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .store-card { border: 1px solid #ddd; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
-        .status-open { color: green; font-weight: bold; }
-        .status-close { color: red; font-weight: bold; }
-    </style>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/store.css}">
 </head>
 <body>
 
-<h1>배달 가능한 판매처 목록</h1>
-<a th:href="@{/store/add}">[신규 판매처 등록하기]</a>
-<hr>
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
 
-<!-- 컨트롤러에서 보낸 "stores" 리스트가 비어있을 때 -->
-<div th:if="${#lists.isEmpty(stores)}">
-    <p>등록된 판매처가 없습니다.</p>
+<!-- ══ 타이틀 + 카테고리 한 줄 (무조건 출력되는 하드코딩 8대 카테고리 패치) ══ -->
+<div class="sl-header">
+    <div class="sl-header__inner">
+        <h1 class="sl-header__title">음식 배달</h1>
+        <div class="sl-header__cats">
+            <!-- 전체 보기 -->
+            <a th:href="@{/store/list}"
+               th:class="${selectedCategory == null or selectedCategory == '' ? 'sl-chip sl-chip--active' : 'sl-chip'}">
+                전체
+            </a>
+            <!-- 📲 [교정 완료] 컨트롤러 데이터 누락에 영향받지 않도록 고정된 8대 카테고리 버튼 생성 및 활성화 조건 매칭 -->
+            <a th:href="@{/store/list(category='치킨')}"
+               th:class="${selectedCategory == '치킨' ? 'sl-chip sl-chip--active' : 'sl-chip'}">치킨</a>
+
+            <a th:href="@{/store/list(category='피자')}"
+               th:class="${selectedCategory == '피자' ? 'sl-chip sl-chip--active' : 'sl-chip'}">피자</a>
+
+            <a th:href="@{/store/list(category='한식')}"
+               th:class="${selectedCategory == '한식' ? 'sl-chip sl-chip--active' : 'sl-chip'}">한식</a>
+
+            <a th:href="@{/store/list(category='중식')}"
+               th:class="${selectedCategory == '중식' ? 'sl-chip sl-chip--active' : 'sl-chip'}">중식</a>
+
+            <a th:href="@{/store/list(category='일식')}"
+               th:class="${selectedCategory == '일식' ? 'sl-chip sl-chip--active' : 'sl-chip'}">일식</a>
+
+            <a th:href="@{/store/list(category='분식')}"
+               th:class="${selectedCategory == '분식' ? 'sl-chip sl-chip--active' : 'sl-chip'}">분식</a>
+
+            <a th:href="@{/store/list(category='패스트푸드')}"
+               th:class="${selectedCategory == '패스트푸드' ? 'sl-chip sl-chip--active' : 'sl-chip'}">패스트푸드</a>
+
+            <a th:href="@{/store/list(category='카페/디저트')}"
+               th:class="${selectedCategory == '카페/디저트' ? 'sl-chip sl-chip--active' : 'sl-chip'}">카페/디저트</a>
+        </div>
+    </div>
 </div>
 
-<!-- 컨트롤러에서 보낸 "stores" 리스트 반복문 실행 -->
-<div th:unless="${#lists.isEmpty(stores)}" th:each="store : ${stores}" class="store-card">
-    <h3 th:text="${store.name}">가게 이름</h3>
-    <p>카테고리: <span th:text="${store.category}">한식</span></p>
-    <p>주소: <span th:text="${store.address}">가게 주소</span></p>
-<!--    <p>별점: <span th:text="${'★ ' + store.rating}">★ 5</span></p>-->
-    <p>상태:
-        <!-- 조건문으로 영업 상태별 클래스 적용 -->
-        <span th:text="${store.status}"
-              th:class="${store.status == 'OPEN' ? 'status-open' : 'status-close'}">OPEN</span>
-    </p>
+<main class="sl-main">
+    <div class="sl-grid">
+        <a th:each="store, stat : ${stores}"
+           th:href="@{/store/{id}(id=${store.storeId})}"
+           class="sl-card"
+           th:style="'--i:' + ${stat.index}"
+           th:classappend="${store.status == 'CLOSE' ? ' sl-card--closed' : ''}">
 
-    <!-- 상세페이지 이동 버튼 (restful 방식으로 id 전달) -->
-    <a th:href="@{/store/{id}(id=${store.storeId})}">가게 보기</a>
+            <div class="sl-thumb">
+                <div class="sl-thumb__placeholder">
+                    <span class="sl-thumb__brand">BRORDER</span>
+                </div>
 
-</div>
+                <span class="sl-thumb__tag-chip" th:text="${store.category}">치킨</span>
 
+                <span class="sl-badge">
+                    <span class="sl-badge__dot"></span>
+                    <span th:text="${store.status == 'OPEN' ? '영업중' : '준비중'}">영업중</span>
+                </span>
+
+                <div th:if="${store.status == 'CLOSE'}" class="sl-thumb__dim"></div>
+            </div>
+
+            <div class="sl-info">
+                <span class="sl-info__name" th:text="${store.name}">가게명</span>
+                <span class="sl-info__rating">
+                    <span>4.8</span>
+                </span>
+            </div>
+        </a>
+    </div>
+
+    <div class="sl-empty" th:if="${#lists.isEmpty(stores)}">
+        <i class="fa-solid fa-store-slash sl-empty__icon"></i>
+        <p class="sl-empty__msg">등록된 매장이 없습니다</p>
+    </div>
+
+    <div class="sl-paging" th:if="${totalPages > 1}">
+        <a th:if="${currentPage > 0}"
+           th:href="@{/store/list(page=${currentPage - 1}, category=${selectedCategory})}"
+           class="sl-paging__btn">
+            <i class="fa-solid fa-chevron-left"></i>
+        </a>
+        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+           th:href="@{/store/list(page=${i}, category=${selectedCategory})}"
+           th:class="${i == currentPage ? 'sl-paging__num sl-paging__num--active' : 'sl-paging__num'}"
+           th:text="${i + 1}">1</a>
+        <a th:if="${currentPage < totalPages - 1}"
+           th:href="@{/store/list(page=${currentPage + 1}, category=${selectedCategory})}"
+           class="sl-paging__btn">
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
 
 </body>
 </html>
