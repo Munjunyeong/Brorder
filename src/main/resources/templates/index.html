@@ -10,7 +10,7 @@
 
 <section class="hero snap-section">
     <div class="hero-left">
-        <div class="hero-eyebrow"><span class="live-dot"></span>지금 실시간 배달 중</div>
+
         <h1 class="hero-title">맛있는 음식을<br><span class="accent">30분</span> 안에 받아보세요</h1>
         <p class="hero-subtitle">치킨, 피자, 중식, 일식, 분식까지<br>내 주변 최고의 맛집을 브로더에서 만나세요</p>
         <div class="hero-search-bar">
@@ -195,28 +195,123 @@
 
 <section class="store-section snap-section">
     <div class="section-head">
-        <h2><i class="fa-solid fa-location-dot section-head-location-icon"></i>내 주변 BRORDER 매장</h2>
-        <a th:href="@{/review/store/1}" class="see-all">전체 매장 보기 <i class="fa-solid fa-chevron-right"></i></a>
+        <h2><i class="fa-solid fa-location-dot section-head-location-icon"></i>내 주변 배달 가능 매장</h2>
+        <a th:href="@{/store/list}" class="see-all">전체 매장 보기 <i class="fa-solid fa-chevron-right"></i></a>
     </div>
+
     <div class="store-grid">
-        <div th:each="store, stat : ${stores}"
-             th:class="${'store-card reveal' + (store.revealDelayClass != null ? ' ' + store.revealDelayClass : '')}">
+
+        <!-- 카드 1 -->
+        <div class="store-card reveal">
             <div class="store-img-wrap">
-                <img th:src="${store.imageUrl}" th:alt="${store.imageAlt}">
-                <div class="store-overlay"></div><span class="store-overlay-tag" th:text="${store.overlayTag}">서울 강남점</span>
-                <span th:class="${'store-status-badge ' + store.statusClass}"><span class="status-dot"></span><span th:text="${store.statusText}">영업중</span></span>
+                <img src="https://placehold.co/600x400?text=BRORDER" alt="황금올리브 치킨">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">치킨</span>
+                <span class="store-status-badge open">
+                    <span class="status-dot"></span>
+                    <span>영업중</span>
+                </span>
             </div>
             <div class="store-body">
-                <div class="store-name" th:text="${store.name}">BRORDER 강남점</div>
+                <div class="store-name">황금올리브 치킨 강남점</div>
                 <div class="store-meta-row">
-                    <span class="store-meta-item"><i class="fa-solid fa-truck-fast"></i><span th:text="${store.deliveryTime}">배달 20-30분</span></span>
-                    <span class="store-meta-item"><i class="fa-solid fa-star"></i><span th:text="${store.ratingText}">4.8 (1,024)</span></span>
-                    <span class="store-meta-item"><i class="fa-solid fa-won-sign"></i><span th:text="${store.deliveryFeeText}">배달비 무료</span></span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>배달 20-30분</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.9</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-won-sign"></i>
+                        <span>배달비 무료</span>
+                    </span>
                 </div>
-                <div class="store-addr"><i class="fa-solid fa-location-dot"></i><span th:text="${store.address}">서울특별시 강남구 테헤란로 123</span></div>
-                <a th:href="@{${store.detailUrl}}" class="store-action-btn"><i class="fa-solid fa-store"></i> 매장 상세보기</a>
+                <div class="store-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>서울 강남구 테헤란로 123</span>
+                </div>
+                <a th:href="@{/store/list}" class="store-action-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
             </div>
         </div>
+
+        <!-- 카드 2 -->
+        <div class="store-card reveal reveal-d2">
+            <div class="store-img-wrap">
+                <img src="https://placehold.co/600x400?text=BRORDER" alt="도미노피자 서초점">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">피자</span>
+                <span class="store-status-badge open">
+                    <span class="status-dot"></span>
+                    <span>영업중</span>
+                </span>
+            </div>
+            <div class="store-body">
+                <div class="store-name">도미노피자 서초점</div>
+                <div class="store-meta-row">
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>배달 25-35분</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.7</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-won-sign"></i>
+                        <span>배달비 1,000원</span>
+                    </span>
+                </div>
+                <div class="store-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>서울 서초구 서초대로 456</span>
+                </div>
+                <a th:href="@{/store/list}" class="store-action-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
+            </div>
+        </div>
+
+        <!-- 카드 3 -->
+        <div class="store-card reveal reveal-d4">
+            <div class="store-img-wrap">
+                <img src="https://placehold.co/600x400?text=BRORDER" alt="맛있는 중화요리">
+                <div class="store-overlay"></div>
+                <span class="store-overlay-tag">중식</span>
+                <span class="store-status-badge close">
+                    <span class="status-dot"></span>
+                    <span>준비중</span>
+                </span>
+            </div>
+            <div class="store-body">
+                <div class="store-name">맛있는 중화요리 송파점</div>
+                <div class="store-meta-row">
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>배달 30-40분</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-star"></i>
+                        <span>4.8</span>
+                    </span>
+                    <span class="store-meta-item">
+                        <i class="fa-solid fa-won-sign"></i>
+                        <span>배달비 무료</span>
+                    </span>
+                </div>
+                <div class="store-addr">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>서울 송파구 올림픽로 789</span>
+                </div>
+                <a th:href="@{/store/list}" class="store-action-btn">
+                    <i class="fa-solid fa-store"></i> 매장 상세보기
+                </a>
+            </div>
+        </div>
+
     </div>
 </section>
 
