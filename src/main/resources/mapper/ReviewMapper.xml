@@ -41,8 +41,8 @@
         u.id           AS userIdName,
         m.name         AS menuName
         FROM review r
-        JOIN users u ON r.user_id = u.user_id
-        JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN users u ON r.user_id = u.user_id
+        LEFT JOIN menu m  ON r.menu_id = m.menu_id
         WHERE r.store_id = #{storeId}
         ORDER BY r.created_data DESC
     </select>
@@ -59,8 +59,8 @@
         u.id           AS userIdName,
         m.name         AS menuName
         FROM review r
-        JOIN users u ON r.user_id = u.user_id
-        JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN users u ON r.user_id = u.user_id
+        LEFT JOIN menu m  ON r.menu_id = m.menu_id
         WHERE r.user_id = #{userId}
         ORDER BY r.created_data DESC
     </select>
