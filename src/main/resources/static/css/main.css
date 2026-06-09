@@ -94,3 +94,8 @@ html {
         opacity: 0;
     }
 }
+
+/* 📲 [추가 완료] 메인 인덱스 히어로 영역 배경 동기화 */
+.hero {
+    background: linear-gradient(135deg, #1A1F2E 0%, #2D364D 100%);
+}
