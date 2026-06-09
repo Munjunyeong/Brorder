@@ -33,6 +33,31 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    // 📲 [추가 완료] 주문내역 등에서 파라미터를 들고 들어오는 리뷰 작성 폼 GET 매핑 핸들러
+    // 호출 주소: http://localhost:9090/review/write?storeId=1&storeName=홍콩반점&menuName=짜장면
+    @GetMapping("/write")
+    public String showReviewWriteForm(@RequestParam(value = "storeId", required = false, defaultValue = "1") int storeId,
+                                      @RequestParam(value = "storeName", required = false, defaultValue = "홍콩반점") String storeName,
+                                      @RequestParam(value = "menuName", required = false, defaultValue = "짜장면") String menuName,
+                                      Model model, HttpServletRequest request) {
+
+        HttpSession session = request.getSession();
+        Users loginUser = (Users) session.getAttribute("users");
+
+        // 비회원인 경우 접근을 제한하고 로그인 페이지로 리다이렉트 처리
+        if (loginUser == null) {
+            return "redirect:/login";
+        }
+
+        // 폼 화면 내 텍스트 출력을 위해 타임리프 가방(Model)에 데이터 적재
+        model.addAttribute("storeId", storeId);
+        model.addAttribute("storeName", storeName);
+        model.addAttribute("menuName", menuName);
+
+        // templates/review/write.html 파일 반환
+        return "review/write";
+    }
+
     // 가게별 전체 리뷰 목록 조회 및 화면 송신
     @GetMapping("/store/{storeId}")
     public String showStoreReviews(@PathVariable("storeId") int storeId, Model model) {

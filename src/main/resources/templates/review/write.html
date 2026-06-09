@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/review-write.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+
+<main class="rw-container">
+    <div class="rw-card">
+        <div class="rw-header">
+            <h1 class="rw-header__title">리뷰 작성하기</h1>
+            <p class="rw-header__info">
+                <span class="rw-header__store" th:text="${storeName != null ? storeName : '홍콩반점'}">가게명</span>에서 주문하신
+                <strong class="rw-header__menu" th:text="${menuName != null ? menuName : '짜장면'}">짜장면</strong> 메뉴의 솔직한 리뷰를 남겨주세요.
+            </p>
+        </div>
+
+        <form th:action="@{/review/write}" method="post" enctype="multipart/form-data" class="rw-form">
+            <input type="hidden" name="storeId" th:value="${storeId != null ? storeId : 1}">
+            <input type="hidden" name="menuName" th:value="${menuName != null ? menuName : '짜장면'}">
+
+            <div class="rw-section">
+                <label class="rw-label">만족도 별점</label>
+                <div class="rw-stars">
+                    <input type="radio" id="star5" name="rating" value="5" checked><label for="star5"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2"><i class="fa-solid fa-star"></i></label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1"><i class="fa-solid fa-star"></i></label>
+                </div>
+            </div>
+
+            <div class="rw-section">
+                <label class="rw-label">사진 첨부 (선택)</label>
+                <div class="rw-upload-box">
+                    <input type="file" id="reviewImageFile" name="reviewImageFile" accept="image/*" class="rw-file-input" onchange="previewImage(this)">
+                    <label for="reviewImageFile" class="rw-upload-label">
+                        <i class="fa-solid fa-camera rw-upload-icon"></i>
+                        <span class="rw-upload-text">맛있는 음식 사진을 추가해 주세요!</span>
+                    </label>
+                    <div id="imagePreviewContainer" class="rw-preview-container" style="display: none;">
+                        <img id="imagePreview" src="" alt="리뷰 이미지 미리보기" class="rw-preview-img">
+                        <button type="button" class="rw-preview-remove" onclick="removeSelectedImage()"><i class="fa-solid fa-circle-xmark"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rw-section">
+                <label for="reviewContent" class="rw-label">리뷰 내용</label>
+                <textarea id="reviewContent" name="content" class="rw-textarea" placeholder="음식의 맛, 양, 배달 상태 등 솔직한 후기를 최소 10자 이상 작성해 주세요!"></textarea>
+            </div>
+
+            <div class="rw-actions">
+                <button type="button" class="rw-btn rw-btn--cancel" onclick="history.back();">취소</button>
+                <button type="submit" class="rw-btn rw-btn--submit">리뷰 등록하기</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<script>
+    function previewImage(input) {
+        const container = document.getElementById('imagePreviewContainer');
+        const preview = document.getElementById('imagePreview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+                container.style.display = 'block'; // 이미지 로드 완료 시 미리보기 틀 활성화
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function removeSelectedImage() {
+        const input = document.getElementById('reviewImageFile');
+        const container = document.getElementById('imagePreviewContainer');
+        const preview = document.getElementById('imagePreview');
+
+        input.value = ""; // 파일 선택값 초기화
+        preview.src = "";
+        container.style.display = 'none'; // 미리보기 창 숨김
+    }
+</script>
+</body>
+</html>
