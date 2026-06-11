@@ -25,7 +25,9 @@ public class OrderServiceImpl implements OrderService {
         int totalPrice = 0;
         if (order.getItems() != null) {
             for (OrderMenu item : order.getItems()) {
-                totalPrice += item.getPrice();
+                if (item.getPrice() != null) {
+                    totalPrice += item.getPrice();
+                }
             }
         }
         order.setTotalPrice(totalPrice);

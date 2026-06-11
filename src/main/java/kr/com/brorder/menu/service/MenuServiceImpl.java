@@ -21,4 +21,9 @@ public class MenuServiceImpl implements MenuService {
 
         return menuDao.selectMenuListByStoreId(storeId);
     }
+
+    @Override
+    public Menu selectMenuById(Integer menuId) {
+        return menuDao.selectMenuById(menuId);
+    }
 }

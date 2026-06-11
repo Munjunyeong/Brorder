@@ -11,7 +11,14 @@
         SELECT *
         FROM menu
         WHERE store_id = #{storeId}
+    </select>
 
+    <select id="selectMenuById"
+            parameterType="int"
+            resultType="kr.com.brorder.menu.model.Menu">
+        SELECT *
+        FROM menu
+        WHERE menu_id = #{menuId}
     </select>
 
 </mapper>
