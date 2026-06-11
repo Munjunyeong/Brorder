@@ -27,6 +27,11 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
+    public Menu selectMenuById(Integer menuId) {
+        return sqlSession.selectOne(NAMESPACE + "selectMenuById", menuId);
+    }
+
+    @Override
     public List<Menu> list(Integer storeId) {
         return List.of();
     }

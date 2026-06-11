@@ -19,14 +19,16 @@
             store_id,
             payment_method,
             total_price,
-            requests
+            requests,
+            created_data
         )
         VALUES(
                   #{userId},
                   #{storeId},
                   #{paymentMethod},
                   #{totalPrice},
-                  #{requests}
+                  #{requests},
+                  NOW()
               )
 
     </insert>
@@ -42,7 +44,7 @@
         VALUES(
                   #{orderId},
                   #{menuId},
-                  #{optionId},
+                  #{optionId, jdbcType=BIGINT},
                   #{price}
               )
     </insert>
@@ -108,10 +110,11 @@
             om.order_id      AS orderId,
             om.menu_id       AS menuId,
             m.name           AS menuName,
+            m.picture        AS menuPicture,
             om.option_id     AS optionId,
             om.price         AS price
         FROM order_menu om
-        JOIN menu m ON om.menu_id = m.menu_id
+                 JOIN menu m ON om.menu_id = m.menu_id
         WHERE om.order_id = #{orderId}
 
     </select>
