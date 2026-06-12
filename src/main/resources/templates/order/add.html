@@ -151,7 +151,10 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn-option-change">옵션 변경</button>
+                    <button type="button" class="btn-option-change" 
+                            th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]], [[${stat.index}]])">
+                        옵션 변경
+                    </button>
 
                     <!-- hidden 데이터 (실제 전송용) -->
                     <div class="hidden-inputs">
@@ -203,9 +206,135 @@
     </div>
 </section>
 
+<!-- 옵션 변경 모달 (detail.html과 동일한 디자인) -->
+<div id="optionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden; text-align: left;">
+        <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="modalMenuName" style="margin: 0; font-size: 18px; color: #333;">메뉴 이름</h3>
+            <button onclick="closeOptionModal()" style="border: none; background: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">기본 옵션</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #2ac1bc; border-radius: 8px; background: #f0fdfc;">
+                    <span style="color: #333;">기본 선택</span>
+                    <span style="color: #2ac1bc; font-weight: bold;">+0원</span>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">추가 옵션</p>
+                <label style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="menuOption" value="2000" data-name="사이즈 업" onchange="updateModalTotalPrice()">
+                        <span style="color: #333;">사이즈 업</span>
+                    </div>
+                    <span style="color: #666;">+2,000원</span>
+                </label>
+                <label style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="menuOption" value="3000" data-name="사이드 추가" onchange="updateModalTotalPrice()">
+                        <span style="color: #333;">사이드 추가</span>
+                    </div>
+                    <span style="color: #666;">+3,000원</span>
+                </label>
+            </div>
+        </div>
+        <div style="padding: 20px; border-top: 1px solid #eee;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: #333;">총 주문금액</span>
+                <span id="modalTotalPrice" style="font-size: 20px; font-weight: 900; color: #2ac1bc;">0원</span>
+            </div>
+            <button onclick="applyOptionChange()" style="width: 100%; padding: 15px; background: #2ac1bc; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">적용하기</button>
+        </div>
+    </div>
+</div>
+
 <th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
 
 <script th:inline="javascript">
+    let currentItem = {
+        index: null,
+        menuId: null,
+        name: '',
+        basePrice: 0
+    };
+
+    function openOptionModal(id, name, price, index) {
+        currentItem.index = index;
+        currentItem.menuId = id;
+        currentItem.name = name;
+        currentItem.basePrice = price;
+        
+        document.getElementById('modalMenuName').innerText = name;
+        document.querySelectorAll('input[name="menuOption"]').forEach(cb => cb.checked = false);
+        updateModalTotalPrice();
+        
+        document.getElementById('optionModal').style.display = 'flex';
+    }
+
+    function closeOptionModal() {
+        document.getElementById('optionModal').style.display = 'none';
+    }
+
+    function updateModalTotalPrice() {
+        let total = currentItem.basePrice;
+        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            total += parseInt(cb.value);
+        });
+        document.getElementById('modalTotalPrice').innerText = total.toLocaleString() + '원';
+    }
+
+    function applyOptionChange() {
+        let selectedOptions = [];
+        let totalOptionPrice = 0;
+        
+        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            selectedOptions.push({
+                name: cb.getAttribute('data-name'),
+                price: parseInt(cb.value)
+            });
+            totalOptionPrice += parseInt(cb.value);
+        });
+
+        const menuItems = document.querySelectorAll('.menu-item');
+        const targetItem = menuItems[currentItem.index];
+        
+        // 1. 화면 UI 업데이트 (옵션 박스)
+        const optionBox = targetItem.querySelector('.option-box');
+        let optionHtml = `
+            <div class="option-row">
+                <div class="option-name">
+                    <i class="fa-regular fa-square-check"></i>
+                    <span>기본 옵션</span>
+                </div>
+                <div class="option-price-label">무료</div>
+            </div>
+        `;
+        
+        selectedOptions.forEach(opt => {
+            optionHtml += `
+                <div class="option-row">
+                    <div class="option-name">
+                        <i class="fa-regular fa-square-check"></i>
+                        <span>${opt.name}</span>
+                    </div>
+                    <div class="option-price-label">+${opt.price.toLocaleString()}원</div>
+                </div>
+            `;
+        });
+        optionBox.innerHTML = optionHtml;
+
+        // 2. hidden input 업데이트 (서버 전송용)
+        const priceInput = targetItem.querySelector('.item-total-price');
+        const totalPrice = currentItem.basePrice + totalOptionPrice;
+        priceInput.value = totalPrice;
+
+        // 3. 전체 결제 금액 재계산
+        calculateTotal();
+        
+        closeOptionModal();
+    }
+
     function calculateTotal() {
         let subtotal = 0;
         document.querySelectorAll('.item-total-price').forEach(input => {
@@ -228,13 +357,6 @@
             submitBtn.style.background = '#2ac1bc';
         }
     }
-
-    // 옵션 변경 버튼 클릭 시 동작 (실제 기능은 팝업 등이 필요하겠지만, 요구사항에 맞춰 버튼만 동작하도록 함)
-    document.querySelectorAll('.btn-option-change').forEach(btn => {
-        btn.addEventListener('click', function() {
-            alert('옵션 변경 기능은 준비 중입니다.');
-        });
-    });
 
     // 초기 계산 실행
     window.addEventListener('DOMContentLoaded', calculateTotal);
