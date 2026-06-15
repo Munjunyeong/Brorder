@@ -39,12 +39,16 @@
             order_id,
             menu_id,
             option_id,
+            option_name,
+            option_price,
             price
         )
         VALUES(
                   #{orderId},
                   #{menuId},
                   #{optionId, jdbcType=BIGINT},
+                  #{optionName},
+                  #{optionPrice},
                   #{price}
               )
     </insert>
@@ -112,6 +116,8 @@
             m.name           AS menuName,
             m.picture        AS menuPicture,
             om.option_id     AS optionId,
+            om.option_name   AS optionName,
+            om.option_price  AS optionPrice,
             om.price         AS price
         FROM order_menu om
                  JOIN menu m ON om.menu_id = m.menu_id

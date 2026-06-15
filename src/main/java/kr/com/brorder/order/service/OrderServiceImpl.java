@@ -30,6 +30,12 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
+        
+        // 기본 배달팁 3,000원 추가 (메뉴가 1개 이상일 때)
+        if (totalPrice > 0) {
+            totalPrice += 3000;
+        }
+        
         order.setTotalPrice(totalPrice);
 
         orderDao.insertOrder(order);

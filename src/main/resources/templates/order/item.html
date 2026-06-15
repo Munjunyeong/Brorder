@@ -59,7 +59,15 @@
                 <div th:unless="${item.menuPicture != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
                     <i class="fa-solid fa-utensils" style="color: #ccc; font-size: 14px;"></i>
                 </div>
-                <span class="menu-name" th:text="${item.menuName}"></span>
+                <div class="menu-name">
+                    <span th:text="${item.menuName}"></span>
+                    <div th:if="${item.optionName != null && !item.optionName.empty}" 
+                         style="font-size: 13px; color: #888; margin-top: 4px; font-weight: normal;">
+                        [옵션] <span th:text="${item.optionName}"></span>
+                        <span th:if="${item.optionPrice != null && item.optionPrice > 0}" 
+                              th:text="'(+' + ${#numbers.formatInteger(item.optionPrice, 0, 'COMMA')} + '원)'"></span>
+                    </div>
+                </div>
                 <span class="menu-price" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}"></span>
             </div>
         </div>
@@ -68,7 +76,11 @@
             <span class="section-title">결제 금액</span>
             <div class="payment-row">
                 <span>주문금액</span>
-                <span th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA') + '원'}"></span>
+                <span th:text="${#numbers.formatInteger((order.totalPrice ?: 3000) - 3000, 0, 'COMMA') + '원'}"></span>
+            </div>
+            <div class="payment-row">
+                <span>배달팁</span>
+                <span>3,000원</span>
             </div>
             <div class="payment-total">
                 <span class="total-label">총 결제금액</span>

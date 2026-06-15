@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     
-                    <!-- 옵션 영역 (더미 옵션으로 배민 느낌 구현) -->
+                    <!-- 옵션 영역 (초기에는 기본 옵션만 표시) -->
                     <div class="option-box">
                         <div class="option-row">
                             <div class="option-name">
@@ -142,18 +142,11 @@
                             </div>
                             <div class="option-price-label">무료</div>
                         </div>
-                        <div class="option-row">
-                            <div class="option-name">
-                                <i class="fa-regular fa-square-check"></i>
-                                <span>사이즈 업</span>
-                            </div>
-                            <div class="option-price-label">+2,000원</div>
-                        </div>
                     </div>
 
                     <button type="button" class="btn-option-change" 
                             th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]], [[${stat.index}]])">
-                        옵션 변경
+                        옵션 추가/변경
                     </button>
 
                     <!-- hidden 데이터 (실제 전송용) -->
@@ -328,6 +321,28 @@
         const priceInput = targetItem.querySelector('.item-total-price');
         const totalPrice = currentItem.basePrice + totalOptionPrice;
         priceInput.value = totalPrice;
+
+        // 옵션 정보 전송을 위한 처리
+        let hiddenInputsContainer = targetItem.querySelector('.hidden-inputs');
+        // 기존 옵션 input 삭제 (초기화)
+        hiddenInputsContainer.querySelectorAll('.option-input').forEach(el => el.remove());
+        
+        if (selectedOptions.length > 0) {
+            const nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = `items[${currentItem.index}].optionName`;
+            nameInput.value = selectedOptions.map(o => o.name).join(', ');
+            nameInput.className = 'option-input';
+            
+            const priceValInput = document.createElement('input');
+            priceValInput.type = 'hidden';
+            priceValInput.name = `items[${currentItem.index}].optionPrice`;
+            priceValInput.value = totalOptionPrice;
+            priceValInput.className = 'option-input';
+            
+            hiddenInputsContainer.appendChild(nameInput);
+            hiddenInputsContainer.appendChild(priceValInput);
+        }
 
         // 3. 전체 결제 금액 재계산
         calculateTotal();
