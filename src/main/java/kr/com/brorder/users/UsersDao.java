@@ -16,4 +16,12 @@ public interface UsersDao {
 
 	List<Address> list(Long userid);
 
+	void addaddress(Address item);
+
+	void deleteaddress(Long addressid);
+
+	Address addressitem(Long addressid);
+
+	void updateaddress(Address item);
+
 }

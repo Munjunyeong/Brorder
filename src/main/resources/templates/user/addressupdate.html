@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div>
+		<div>
+			<h3>주소 추가</h3>
+		</div>
+		
+		<div>
+			<form method="post">
+				<div>
+					<div><label>주소 번호:</label></div>
+					<div th:text="${item.addressid}"></div>
+				</div>
+				
+				<div>
+					<div><label>주소:</label></div>
+					<div><input name="address" type="text" th:value="${item.address}"></div>
+				</div>
+			
+				<div>
+					<div><label>상세주소:</label></div>
+					<div><input name="addressdetail" type="text" th:value="${item.addressdetail}"></div>
+				</div>
+				
+				<div>
+					<div><label>배달요청사항:</label></div>
+					<div><input name="addresscomment" type="text" th:value="${item.addresscomment}"></div>
+				</div>
+				
+				<div>
+					<div><label>공동현관 비밀번호:</label></div>
+					<div><input name="entrance" type="text" th:value="${item.entrance}"></div>
+				</div>
+				
+				<div>
+					<div><label>별칭:</label></div>
+					<div><input name="addressname" type="text" th:value="${item.addressname}"></div>
+				</div>
+				
+				<div>
+					<div><button>등록</button></div>
+					<div><a href="/users/my/address">취소</a></div>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>
