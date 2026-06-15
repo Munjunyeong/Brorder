@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.com.brorder.order.OrderMapper">
+
+    <!-- =========================
+         ORDER INSERT
+         ========================= -->
+    <insert id="insertOrder"
+            parameterType="kr.com.brorder.order.model.Order"
+            useGeneratedKeys="true"
+            keyProperty="orderId">
+
+        INSERT INTO orders(
+            user_id,
+            store_id,
+            payment_method,
+            total_price,
+            requests,
+            created_data
+        )
+        VALUES(
+                  #{userId},
+                  #{storeId},
+                  #{paymentMethod},
+                  #{totalPrice},
+                  #{requests},
+                  NOW()
+              )
+
+    </insert>
+
+    <insert id="insertOrderMenu"
+            parameterType="kr.com.brorder.order.model.OrderMenu">
+        INSERT INTO order_menu(
+            order_id,
+            menu_id,
+            option_id,
+            option_name,
+            option_price,
+            price
+        )
+        VALUES(
+                  #{orderId},
+                  #{menuId},
+                  #{optionId, jdbcType=BIGINT},
+                  #{optionName},
+                  #{optionPrice},
+                  #{price}
+              )
+    </insert>
+
+    <!-- =========================
+         ORDER LIST
+         ========================= -->
+    <select id="selectOrderList"
+            resultType="kr.com.brorder.order.model.Order">
+
+        SELECT
+            o.order_id       AS orderId,
+            o.user_id        AS userId,
+            o.store_id       AS storeId,
+            s.name           AS storeName,
+            o.payment_method AS paymentMethod,
+            o.total_price    AS totalPrice,
+            o.requests       AS requests,
+            o.created_data   AS createdAt,
+            m.name           AS firstMenuName,
+            (SELECT COUNT(*) - 1 FROM order_menu WHERE order_id = o.order_id) AS extraCount
+        FROM orders o
+        JOIN store s ON o.store_id = s.store_id
+        LEFT JOIN (
+            SELECT order_id, MIN(order_menu_id) as min_id
+            FROM order_menu
+            GROUP BY order_id
+        ) first_item ON o.order_id = first_item.order_id
+        LEFT JOIN order_menu om ON first_item.min_id = om.order_menu_id
+        LEFT JOIN menu m ON om.menu_id = m.menu_id
+        ORDER BY o.order_id DESC
+
+    </select>
+
+    <!-- =========================
+         ORDER DETAIL
+         ========================= -->
+    <select id="selectOrderById"
+            parameterType="long"
+            resultType="kr.com.brorder.order.model.Order">
+
+        SELECT
+            o.order_id       AS orderId,
+            o.user_id        AS userId,
+            o.store_id       AS storeId,
+            s.name           AS storeName,
+            o.payment_method AS paymentMethod,
+            o.total_price    AS totalPrice,
+            o.requests       AS requests,
+            o.created_data   AS createdAt
+        FROM orders o
+        JOIN store s ON o.store_id = s.store_id
+        WHERE o.order_id = #{orderId}
+
+    </select>
+
+    <select id="selectOrderMenuListByOrderId"
+            parameterType="long"
+            resultType="kr.com.brorder.order.model.OrderMenu">
+
+        SELECT
+            om.order_menu_id AS orderMenuId,
+            om.order_id      AS orderId,
+            om.menu_id       AS menuId,
+            m.name           AS menuName,
+            m.picture        AS menuPicture,
+            om.option_id     AS optionId,
+            om.option_name   AS optionName,
+            om.option_price  AS optionPrice,
+            om.price         AS price
+        FROM order_menu om
+                 JOIN menu m ON om.menu_id = m.menu_id
+        WHERE om.order_id = #{orderId}
+
+    </select>
+
+    <delete id="deleteOrder" parameterType="long">
+
+        DELETE FROM orders
+        WHERE order_id = #{orderId}
+
+    </delete>
+
+    <delete id="deleteOrderMenuByOrderId" parameterType="long">
+        DELETE FROM order_menu
+        WHERE order_id = #{orderId}
+    </delete>
+</mapper>

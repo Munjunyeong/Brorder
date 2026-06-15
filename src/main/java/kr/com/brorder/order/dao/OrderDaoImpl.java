@@ -27,8 +27,8 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<Order> selectOrderList(Long userId) {
-        return sqlSession.selectList(NAMESPACE + "selectOrderList", userId);
+    public List<Order> selectOrderList() {
+        return sqlSession.selectList(NAMESPACE + "selectOrderList");
     }
 
     @Override
