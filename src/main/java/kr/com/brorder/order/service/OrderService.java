@@ -8,7 +8,7 @@ public interface OrderService {
 
     void insert(Order order);
 
-    List<Order> list();
+    List<Order> list(Long userId);
 
     Order item(Long orderId);
 

@@ -57,6 +57,7 @@
          ORDER LIST
          ========================= -->
     <select id="selectOrderList"
+            parameterType="long"
             resultType="kr.com.brorder.order.model.Order">
 
         SELECT
@@ -79,6 +80,7 @@
         ) first_item ON o.order_id = first_item.order_id
         LEFT JOIN order_menu om ON first_item.min_id = om.order_menu_id
         LEFT JOIN menu m ON om.menu_id = m.menu_id
+        WHERE o.user_id = #{userId}
         ORDER BY o.order_id DESC
 
     </select>

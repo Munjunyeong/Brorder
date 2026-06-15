@@ -116,7 +116,7 @@
             <div class="store-info-section">
                 <div class="store-name" th:text="${store?.name ?: '가게 정보 없음'}">가게이름</div>
                 <input type="hidden" name="storeId" th:value="${store?.storeId}">
-                <input type="hidden" name="userId" th:value="${user?.userid ?: 1}">
+                <input type="hidden" name="userId" th:value="${user?.userid}">
             </div>
 
             <!-- 주문 메뉴 리스트 -->
