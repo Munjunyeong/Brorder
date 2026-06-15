@@ -1,6 +1,6 @@
 package kr.com.brorder.order.model;
 
-public class OrderMenu {
+public class OrderMenu { //오더 메뉴
 
     private Long orderMenuId;
     private Long orderId;
