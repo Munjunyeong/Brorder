@@ -3,7 +3,7 @@ package kr.com.brorder.store;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+//테스트
 @Service
 public interface StoreService {
 

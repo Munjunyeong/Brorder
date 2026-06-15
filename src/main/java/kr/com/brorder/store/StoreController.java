@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+//테스트
 @Controller
 @RequestMapping("/store") // 주소창에 localhost:9090/store/... 로 접근
 public class StoreController {

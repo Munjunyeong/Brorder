@@ -5,6 +5,7 @@
 <h1>가게 정보 수정</h1>
 <hr>
 <form th:action="@{/store/update}" method="post">
+<!--    테스트-->
     <!-- 반드시 변경 대상 Id를 hidden으로 같이 전송해야 쿼리가 성립합니다 -->
     <input type="hidden" name="storeId" th:value="${store.storeId}">
 

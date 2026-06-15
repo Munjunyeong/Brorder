@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//테스트
 @Service
 public class StoreServiceImpl implements StoreService {
 

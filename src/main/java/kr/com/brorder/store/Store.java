@@ -1,7 +1,7 @@
 package kr.com.brorder.store;
 
 import java.time.LocalDateTime;
-
+//테스트
 public class Store {
     private Integer storeId;
     private String name;

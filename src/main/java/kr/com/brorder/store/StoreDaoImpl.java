@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Repository
 public class StoreDaoImpl implements StoreDao {
-
+//테스트
     @Autowired
     SqlSession sqlSession; // MyBatis의 핵심 객체 주입
 
