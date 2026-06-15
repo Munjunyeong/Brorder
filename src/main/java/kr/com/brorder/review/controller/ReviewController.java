@@ -38,6 +38,7 @@ public class ReviewController {
     @GetMapping("/write")
     public String showReviewWriteForm(@RequestParam(value = "storeId", required = false, defaultValue = "1") int storeId,
                                       @RequestParam(value = "storeName", required = false, defaultValue = "홍콩반점") String storeName,
+                                      @RequestParam(value = "menuId", required = false, defaultValue = "1") int menuId,
                                       @RequestParam(value = "menuName", required = false, defaultValue = "짜장면") String menuName,
                                       Model model, HttpServletRequest request) {
 
@@ -52,6 +53,7 @@ public class ReviewController {
         // 폼 화면 내 텍스트 출력을 위해 타임리프 가방(Model)에 데이터 적재
         model.addAttribute("storeId", storeId);
         model.addAttribute("storeName", storeName);
+        model.addAttribute("menuId", menuId);
         model.addAttribute("menuName", menuName);
 
         // templates/review/write.html 파일 반환
@@ -98,11 +100,18 @@ public class ReviewController {
 
         // 폼 양식에서 전송된 멀티파트 이미지 파일 추출
         MultipartFile imageFile = requestDTO.getReviewImageFile();
+
+        System.out.println("파일 객체: " + imageFile);
+
         if (imageFile != null && !imageFile.isEmpty()) {
+
+            System.out.println("파일 이름: " + imageFile.getOriginalFilename());
+            System.out.println("파일 크기: " + imageFile.getSize());
+
             try {
-                // 물리 파일 보관용 외부 폴더 경로 설정 및 생성
                 String uploadDir = "C:/upload/images/";
                 File dir = new File(uploadDir);
+
                 if (!dir.exists()) {
                     dir.mkdirs();
                 }
