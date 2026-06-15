@@ -54,3 +54,4 @@ public interface ReviewService {
      */
     List<MenuOptionDTO> getMenusByStoreId(int storeId);
 }
+// 06/15 커밋 테스트

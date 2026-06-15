@@ -22,3 +22,4 @@ public interface ReviewDao {
 
     List<MenuOptionDTO> findMenusByStoreId(int storeId);
 }
+// 06/15 커밋 테스트

@@ -68,3 +68,4 @@ public class ReviewResponseDTO {
     public String getMenuName() { return menuName; }
     public void setMenuName(String menuName) { this.menuName = menuName; }
 }
+// 06/15 커밋 테스트

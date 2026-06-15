@@ -53,3 +53,4 @@ public class ReviewDaoImpl implements ReviewDao {
         return sqlSession.selectList(NAMESPACE + "findMenusByStoreId", storeId);
     }
 }
+// 06/15 커밋 테스트
