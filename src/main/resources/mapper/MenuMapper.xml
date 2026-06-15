@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?> <!-- 테스트용 주석 -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.com.brorder.menu.MenuMapper">
+
+    <select id="selectMenuListByStoreId"
+            parameterType="int"
+            resultType="kr.com.brorder.menu.model.Menu">
+
+        SELECT *
+        FROM menu
+        WHERE store_id = #{storeId}
+    </select>
+
+    <select id="selectMenuById"
+            parameterType="int"
+            resultType="kr.com.brorder.menu.model.Menu">
+        SELECT *
+        FROM menu
+        WHERE menu_id = #{menuId}
+    </select>
+
+</mapper>

@@ -4,141 +4,377 @@
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
     <title>주문 등록 - BRORDER</title>
     <style>
-        .order-add-section { padding: 60px var(--side-pad); background: var(--light-gray); min-height: calc(100vh - 80px - 300px); }
-        .form-card { background: #fff; border-radius: 26px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid var(--border-color); max-width: 800px; margin: 0 auto; }
-        .form-header { background: linear-gradient(135deg, var(--primary-mint), #1a9490); color: #fff; padding: 40px; text-align: center; }
-        .form-header h1 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
-        .form-body { padding: 40px; }
-        .form-group { margin-bottom: 24px; }
-        .form-label { display: block; font-size: 13px; font-weight: 800; color: var(--dark-charcoal); margin-bottom: 10px; }
-        .form-input { width: 100%; padding: 14px 18px; border-radius: 12px; border: 1.5px solid var(--border-color); font-size: 14px; font-weight: 600; font-family: inherit; transition: all .2s; }
-        .form-input:focus { outline: none; border-color: var(--primary-mint); box-shadow: 0 0 0 4px rgba(42,193,188,0.1); }
-        .menu-item-box { background: var(--light-gray); padding: 24px; border-radius: 20px; margin-bottom: 20px; position: relative; border: 1px solid transparent; transition: all .2s; }
-        .menu-item-box:hover { border-color: var(--primary-mint); background: #fff; box-shadow: var(--shadow-sm); }
-        .menu-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .menu-item-title { font-weight: 900; font-size: 15px; color: var(--primary-mint); }
-        .btn-remove-menu { background: none; border: none; color: #ccc; cursor: pointer; font-size: 18px; transition: color .2s; }
-        .btn-remove-menu:hover { color: var(--primary-red); }
-        .form-actions { display: flex; gap: 12px; margin-top: 40px; }
-        .btn-form { flex: 1; padding: 16px; border-radius: 15px; font-weight: 800; font-size: 15px; text-decoration: none; text-align: center; transition: all .2s; cursor: pointer; border: none; }
-        .btn-submit { background: var(--primary-red); color: #fff; box-shadow: 0 6px 20px rgba(212,24,61,0.3); }
-        .btn-submit:hover { background: #b01030; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,24,61,0.4); }
-        .btn-add-menu { background: #fff; color: var(--primary-mint); border: 1.5px solid var(--primary-mint); margin-bottom: 20px; width: 100%; }
-        .btn-add-menu:hover { background: rgba(42,193,188,0.05); }
+        .order-add-section { padding: 40px var(--side-pad); background: #f5f5f5; min-height: calc(100vh - 80px); }
+        .order-container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        
+        /* 배민 스타일 헤더 */
+        .order-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: center; position: relative; }
+        .order-header h1 { font-size: 18px; font-weight: 700; color: #333; }
+        .btn-back { position: absolute; left: 20px; font-size: 20px; color: #333; text-decoration: none; }
+
+        /* 배달 주소 섹션 */
+        .address-section { padding: 24px 20px; border-bottom: 8px solid #f5f5f5; }
+        .address-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .address-title { font-size: 14px; color: #888; font-weight: 500; }
+        .btn-change-address { font-size: 13px; color: #2ac1bc; text-decoration: none; font-weight: 600; }
+        .address-info { font-size: 17px; font-weight: 700; color: #333; line-height: 1.4; }
+        .address-detail { font-size: 15px; color: #666; margin-top: 4px; }
+        .user-phone { font-size: 14px; color: #888; margin-top: 8px; }
+
+        /* 요청사항 섹션 */
+        .request-section { padding: 24px 20px; border-bottom: 8px solid #f5f5f5; }
+        .request-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .request-item { margin-bottom: 20px; }
+        .request-item:last-child { margin-bottom: 0; }
+        .request-label { font-size: 14px; font-weight: 600; color: #666; margin-bottom: 8px; display: block; }
+        .request-input-wrapper { position: relative; }
+        .request-input { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 4px; font-size: 15px; outline: none; transition: border-color 0.2s; }
+        .request-input:focus { border-color: #2ac1bc; }
+        .request-placeholder { color: #ccc; }
+
+        /* 가게 이름 섹션 */
+        .store-info-section { padding: 24px 20px; border-bottom: 8px solid #f5f5f5; }
+        .store-name { font-size: 22px; font-weight: 800; color: #000; margin-bottom: 4px; }
+        
+        /* 메뉴 섹션 */
+        .menu-list-section { padding: 0; }
+        .menu-item { padding: 20px; border-bottom: 1px solid #f5f5f5; min-height: 100px; display: block; }
+        .menu-main { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; width: 100%; gap: 12px; }
+        .menu-img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; background: #f0f0f0; flex-shrink: 0; }
+        .menu-info { flex: 1; }
+        .menu-name { font-size: 17px; font-weight: 700; color: #333; margin-bottom: 4px; }
+        .menu-price { font-size: 16px; font-weight: 500; color: #333; }
+        
+        /* 옵션 스타일 */
+        .option-box { background: #f8f8f8; border-radius: 8px; padding: 12px 15px; margin-top: 10px; }
+        .option-row { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: #666; margin-bottom: 6px; }
+        .option-row:last-child { margin-bottom: 0; }
+        .option-name { display: flex; align-items: center; gap: 6px; }
+        .option-price-label { color: #888; }
+        
+        /* 버튼 스타일 */
+        .btn-option-change { display: inline-block; padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; font-weight: 600; color: #666; background: #fff; cursor: pointer; margin-top: 12px; }
+        .btn-option-change:hover { background: #f9f9f9; }
+
+        /* 결제 정보 섹션 */
+        .payment-section { padding: 24px 20px; border-top: 8px solid #f5f5f5; }
+        .payment-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .payment-label { font-size: 16px; color: #333; }
+        .payment-value { font-size: 16px; font-weight: 600; color: #333; }
+        .total-row { margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; }
+        .total-label { font-size: 18px; font-weight: 800; color: #000; }
+        .total-price { font-size: 20px; font-weight: 900; color: #2ac1bc; }
+
+        /* 하단 고정 버튼 */
+        .bottom-actions { padding: 20px; position: sticky; bottom: 0; background: #fff; border-top: 1px solid #eee; }
+        .btn-order-submit { width: 100%; padding: 16px; background: #2ac1bc; color: #fff; border: none; border-radius: 4px; font-size: 17px; font-weight: 800; cursor: pointer; }
+        .btn-order-submit:disabled { background: #ccc; }
+
+        .hidden-inputs { display: none; }
     </style>
 </head>
 <body>
 <th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
 
 <section class="order-add-section">
-    <div class="section-inner">
-        <div class="form-card reveal-scale">
-            <div class="form-header">
-                <h1>새 주문 등록</h1>
-                <p>맛있는 주문을 시작해보세요!</p>
+    <div class="order-container reveal-scale">
+        <header class="order-header">
+            <a href="javascript:history.back()" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+            <h1>주문 확인</h1>
+        </header>
+
+        <form method="post" action="/orders" id="order-form">
+            <!-- 배달 주소 -->
+            <div class="address-section">
+                <div class="address-header">
+                    <span class="address-title">배달 주소</span>
+                    <a href="/users/my/address" class="btn-change-address">변경</a>
+                </div>
+                <div th:if="${not #lists.isEmpty(addressList)}" th:with="addr=${addressList[0]}">
+                    <div class="address-info" th:text="${addr.address}">서울특별시 강남구 테헤란로 123</div>
+                    <div class="address-detail" th:text="${addr.addressdetail}">OO빌딩 101호</div>
+                </div>
+                <div th:unless="${not #lists.isEmpty(addressList)}">
+                    <div class="address-info">등록된 주소가 없습니다.</div>
+                    <div class="address-detail">주소를 등록해주세요.</div>
+                </div>
+                <div class="user-phone" th:text="${user?.phone ?: '전화번호 정보 없음'}">010-1234-5678</div>
             </div>
 
-            <div class="form-body">
-                <form method="post" action="/orders">
-                    <div class="info-group">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-group">
-                                <label class="form-label">유저 ID</label>
-                                <input type="number" name="userId" class="form-input" placeholder="유저 번호를 입력하세요" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">가게 ID</label>
-                                <input type="number" name="storeId" class="form-input" placeholder="가게 번호를 입력하세요" required>
-                            </div>
+            <!-- 요청사항 -->
+            <div class="request-section">
+                <div class="request-title">요청사항</div>
+                <div class="request-item">
+                    <label class="request-label">가게에 요청사항</label>
+                    <div class="request-input-wrapper">
+                        <input type="text" name="requests" class="request-input" placeholder="예) 견과류는 빼주세요, 덜 맵게 해주세요">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 가게 정보 -->
+            <div class="store-info-section">
+                <div class="store-name" th:text="${store?.name ?: '가게 정보 없음'}">가게이름</div>
+                <input type="hidden" name="storeId" th:value="${store?.storeId}">
+                <input type="hidden" name="userId" th:value="${user?.userid}">
+            </div>
+
+            <!-- 주문 메뉴 리스트 -->
+            <div class="menu-list-section" id="menu-area">
+                <div th:each="menu, stat : ${menuList}" class="menu-item">
+                    <div class="menu-main">
+                        <img th:if="${menu.picture != null}" th:src="${menu.picture}" class="menu-img" alt="메뉴 이미지">
+                        <div th:unless="${menu.picture != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
+                            <i class="fa-solid fa-utensils" style="color: #ccc;"></i>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">결제 방식</label>
-                            <select name="paymentMethod" class="form-input" required>
-                                <option value="">결제 방식을 선택하세요</option>
-                                <option value="CARD">신용/체크카드</option>
-                                <option value="NAVER_PAY">네이버페이</option>
-                                <option value="KAKAO_PAY">카카오페이</option>
-                                <option value="CASH">현장결제</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">요청사항</label>
-                            <input type="text" name="requests" class="form-input" placeholder="사장님께 전할 말씀을 적어주세요">
+                        <div class="menu-info">
+                            <div class="menu-name" th:text="${menu.name}">메뉴이름</div>
+                            <div class="menu-price" th:text="${#numbers.formatInteger(menu.price, 0, 'COMMA') + '원'}">0원</div>
                         </div>
                     </div>
-
-                    <hr style="border: none; border-top: 1px solid var(--border-color); margin: 30px 0;">
-
-                    <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 20px;"><i class="fa-solid fa-cart-shopping"></i> 주문 메뉴</h3>
                     
-                    <div id="menu-area">
-                        <div class="menu-item-box">
-                            <div class="menu-item-header">
-                                <span class="menu-item-title">메뉴 #1</span>
+                    <!-- 옵션 영역 (초기에는 기본 옵션만 표시) -->
+                    <div class="option-box">
+                        <div class="option-row">
+                            <div class="option-name">
+                                <i class="fa-regular fa-square-check"></i>
+                                <span>기본 옵션</span>
                             </div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                                <div>
-                                    <label class="form-label">메뉴 ID</label>
-                                    <input type="number" name="items[0].menuId" class="form-input" placeholder="메뉴 번호" required>
-                                </div>
-                                <div>
-                                    <label class="form-label">옵션 ID</label>
-                                    <input type="number" name="items[0].optionId" class="form-input" placeholder="옵션 번호" required>
-                                </div>
-                                <div>
-                                    <label class="form-label">가격</label>
-                                    <input type="number" name="items[0].price" class="form-input" placeholder="가격 입력" required>
-                                </div>
-                            </div>
+                            <div class="option-price-label">무료</div>
                         </div>
                     </div>
 
-                    <button type="button" id="add-menu-btn" class="btn-form btn-add-menu">
-                        <i class="fa-solid fa-plus"></i> 메뉴 추가하기
+                    <button type="button" class="btn-option-change" 
+                            th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]], [[${stat.index}]])">
+                        옵션 추가/변경
                     </button>
 
-                    <div class="form-actions">
-                        <a href="/orders" class="btn-form btn-list" style="background: var(--light-gray); color: var(--dark-charcoal); text-decoration: none; padding-top: 16px;">취소</a>
-                        <button type="submit" class="btn-form btn-submit">주문 완료하기</button>
+                    <!-- hidden 데이터 (실제 전송용) -->
+                    <div class="hidden-inputs">
+                        <input type="hidden" th:name="'items[' + ${stat.index} + '].menuId'" th:value="${menu.menuId}">
+                        <input type="hidden" th:name="'items[' + ${stat.index} + '].menuName'" th:value="${menu.name}">
+                        <input type="hidden" th:name="'items[' + ${stat.index} + '].price'" th:value="${menu.price}" class="item-total-price">
                     </div>
-                </form>
+                </div>
+                
+                <!-- 메뉴가 없을 경우 -->
+                <div th:if="${#lists.isEmpty(menuList)}" style="padding: 40px; text-align: center; color: #999;">
+                    담긴 메뉴가 없습니다.
+                </div>
             </div>
-        </div>
+
+            <!-- 결제 정보 -->
+            <div class="payment-section">
+                <div class="payment-row">
+                    <div class="payment-label">주문금액</div>
+                    <div class="payment-value" id="subtotal-price">0원</div>
+                </div>
+                <div class="payment-row">
+                    <div class="payment-label">배달팁</div>
+                    <div class="payment-value">3,000원</div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label" style="font-size: 14px; color: #333; margin-bottom: 8px; display: block;">결제 수단</label>
+                    <select name="paymentMethod" class="form-input" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px;" required>
+                        <option value="CARD">신용/체크카드</option>
+                        <option value="NAVER_PAY">네이버페이</option>
+                        <option value="KAKAO_PAY">카카오페이</option>
+                        <option value="CASH">현장결제</option>
+                    </select>
+                </div>
+
+                <div class="total-row payment-row">
+                    <div class="total-label">총 결제금액</div>
+                    <div class="total-price" id="final-total-price">0원</div>
+                </div>
+            </div>
+
+            <div class="bottom-actions">
+                <button type="submit" class="btn-order-submit" id="submit-btn">
+                    <span id="final-total-btn-text">0원</span> 배달 주문하기
+                </button>
+            </div>
+        </form>
     </div>
 </section>
 
-<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
-
-<script>
-    let index = 1;
-
-    document.getElementById("add-menu-btn").addEventListener("click", function () {
-        const menuArea = document.getElementById("menu-area");
-        const html = `
-            <div class="menu-item-box">
-                <div class="menu-item-header">
-                    <span class="menu-item-title">메뉴 #${index + 1}</span>
-                    <button type="button" class="btn-remove-menu" onclick="this.closest('.menu-item-box').remove()"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                    <div>
-                        <label class="form-label">메뉴 ID</label>
-                        <input type="number" name="items[${index}].menuId" class="form-input" placeholder="메뉴 번호" required>
-                    </div>
-                    <div>
-                        <label class="form-label">옵션 ID</label>
-                        <input type="number" name="items[${index}].optionId" class="form-input" placeholder="옵션 번호" required>
-                    </div>
-                    <div>
-                        <label class="form-label">가격</label>
-                        <input type="number" name="items[${index}].price" class="form-input" placeholder="가격 입력" required>
-                    </div>
+<!-- 옵션 변경 모달 (detail.html과 동일한 디자인) -->
+<div id="optionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden; text-align: left;">
+        <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="modalMenuName" style="margin: 0; font-size: 18px; color: #333;">메뉴 이름</h3>
+            <button onclick="closeOptionModal()" style="border: none; background: none; font-size: 24px; cursor: pointer; color: #999;">&times;</button>
+        </div>
+        <div style="padding: 20px;">
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">기본 옵션</p>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #2ac1bc; border-radius: 8px; background: #f0fdfc;">
+                    <span style="color: #333;">기본 선택</span>
+                    <span style="color: #2ac1bc; font-weight: bold;">+0원</span>
                 </div>
             </div>
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px; color: #333;">추가 옵션</p>
+                <label style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="menuOption" value="2000" data-name="사이즈 업" onchange="updateModalTotalPrice()">
+                        <span style="color: #333;">사이즈 업</span>
+                    </div>
+                    <span style="color: #666;">+2,000원</span>
+                </label>
+                <label style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border: 1px solid #eee; border-radius: 8px; cursor: pointer;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <input type="checkbox" name="menuOption" value="3000" data-name="사이드 추가" onchange="updateModalTotalPrice()">
+                        <span style="color: #333;">사이드 추가</span>
+                    </div>
+                    <span style="color: #666;">+3,000원</span>
+                </label>
+            </div>
+        </div>
+        <div style="padding: 20px; border-top: 1px solid #eee;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: bold; color: #333;">총 주문금액</span>
+                <span id="modalTotalPrice" style="font-size: 20px; font-weight: 900; color: #2ac1bc;">0원</span>
+            </div>
+            <button onclick="applyOptionChange()" style="width: 100%; padding: 15px; background: #2ac1bc; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">적용하기</button>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<script th:inline="javascript">
+    let currentItem = {
+        index: null,
+        menuId: null,
+        name: '',
+        basePrice: 0
+    };
+
+    function openOptionModal(id, name, price, index) {
+        currentItem.index = index;
+        currentItem.menuId = id;
+        currentItem.name = name;
+        currentItem.basePrice = price;
+        
+        document.getElementById('modalMenuName').innerText = name;
+        document.querySelectorAll('input[name="menuOption"]').forEach(cb => cb.checked = false);
+        updateModalTotalPrice();
+        
+        document.getElementById('optionModal').style.display = 'flex';
+    }
+
+    function closeOptionModal() {
+        document.getElementById('optionModal').style.display = 'none';
+    }
+
+    function updateModalTotalPrice() {
+        let total = currentItem.basePrice;
+        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            total += parseInt(cb.value);
+        });
+        document.getElementById('modalTotalPrice').innerText = total.toLocaleString() + '원';
+    }
+
+    function applyOptionChange() {
+        let selectedOptions = [];
+        let totalOptionPrice = 0;
+        
+        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            selectedOptions.push({
+                name: cb.getAttribute('data-name'),
+                price: parseInt(cb.value)
+            });
+            totalOptionPrice += parseInt(cb.value);
+        });
+
+        const menuItems = document.querySelectorAll('.menu-item');
+        const targetItem = menuItems[currentItem.index];
+        
+        // 1. 화면 UI 업데이트 (옵션 박스)
+        const optionBox = targetItem.querySelector('.option-box');
+        let optionHtml = `
+            <div class="option-row">
+                <div class="option-name">
+                    <i class="fa-regular fa-square-check"></i>
+                    <span>기본 옵션</span>
+                </div>
+                <div class="option-price-label">무료</div>
+            </div>
         `;
-        menuArea.insertAdjacentHTML("beforeend", html);
-        index++;
-    });
+        
+        selectedOptions.forEach(opt => {
+            optionHtml += `
+                <div class="option-row">
+                    <div class="option-name">
+                        <i class="fa-regular fa-square-check"></i>
+                        <span>${opt.name}</span>
+                    </div>
+                    <div class="option-price-label">+${opt.price.toLocaleString()}원</div>
+                </div>
+            `;
+        });
+        optionBox.innerHTML = optionHtml;
+
+        // 2. hidden input 업데이트 (서버 전송용)
+        const priceInput = targetItem.querySelector('.item-total-price');
+        const totalPrice = currentItem.basePrice + totalOptionPrice;
+        priceInput.value = totalPrice;
+
+        // 옵션 정보 전송을 위한 처리
+        let hiddenInputsContainer = targetItem.querySelector('.hidden-inputs');
+        // 기존 옵션 input 삭제 (초기화)
+        hiddenInputsContainer.querySelectorAll('.option-input').forEach(el => el.remove());
+        
+        if (selectedOptions.length > 0) {
+            const nameInput = document.createElement('input');
+            nameInput.type = 'hidden';
+            nameInput.name = `items[${currentItem.index}].optionName`;
+            nameInput.value = selectedOptions.map(o => o.name).join(', ');
+            nameInput.className = 'option-input';
+            
+            const priceValInput = document.createElement('input');
+            priceValInput.type = 'hidden';
+            priceValInput.name = `items[${currentItem.index}].optionPrice`;
+            priceValInput.value = totalOptionPrice;
+            priceValInput.className = 'option-input';
+            
+            hiddenInputsContainer.appendChild(nameInput);
+            hiddenInputsContainer.appendChild(priceValInput);
+        }
+
+        // 3. 전체 결제 금액 재계산
+        calculateTotal();
+        
+        closeOptionModal();
+    }
+
+    function calculateTotal() {
+        let subtotal = 0;
+        document.querySelectorAll('.item-total-price').forEach(input => {
+            subtotal += parseInt(input.value) || 0;
+        });
+        
+        const deliveryFee = 3000;
+        const total = subtotal + (subtotal > 0 ? deliveryFee : 0);
+        
+        document.getElementById('subtotal-price').innerText = subtotal.toLocaleString() + '원';
+        document.getElementById('final-total-price').innerText = (subtotal > 0 ? total.toLocaleString() : "0") + '원';
+        document.getElementById('final-total-btn-text').innerText = (subtotal > 0 ? total.toLocaleString() : "0") + '원';
+        
+        const submitBtn = document.getElementById('submit-btn');
+        if (subtotal === 0) {
+            submitBtn.disabled = true;
+            submitBtn.style.background = '#ccc';
+        } else {
+            submitBtn.disabled = false;
+            submitBtn.style.background = '#2ac1bc';
+        }
+    }
+
+    // 초기 계산 실행
+    window.addEventListener('DOMContentLoaded', calculateTotal);
 
     /* Scroll Reveal */
     const revealEls = document.querySelectorAll('.reveal-scale');

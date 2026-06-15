@@ -1,0 +1,165 @@
+/* ══════════════════════════
+   review-write.css
+   BRORDER 리뷰 작성 페이지 (업로드 모듈 포함)
+   ══════════════════════════ */
+
+:root {
+    --rw-primary:     #E8213A;
+    --rw-bg:          #F4F5F7;
+    --rw-dark:        #1A1F2E;
+    --rw-star:        #FF9F1C;
+    --rw-border:      #E5E7EB;
+    --rw-text:        #374151;
+}
+
+body {
+    background-color: var(--rw-bg);
+    margin: 0;
+}
+
+.rw-container {
+    max-width: 768px;
+    margin: 60px auto 100px;
+    padding: 0 20px;
+}
+
+.rw-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+}
+
+.rw-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--rw-border);
+}
+
+.rw-header__title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--rw-dark);
+    margin: 0 0 12px 0;
+}
+
+.rw-header__info {
+    font-size: 1rem;
+    color: var(--rw-text);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.rw-header__store { font-weight: 800; color: var(--rw-primary); }
+.rw-header__menu { font-weight: 800; color: var(--rw-dark); text-decoration: underline; }
+
+.rw-form { display: flex; flex-direction: column; gap: 24px; }
+.rw-section { display: flex; flex-direction: column; gap: 8px; }
+.rw-label { font-size: 0.95rem; font-weight: 700; color: var(--rw-dark); }
+
+.rw-stars { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
+.rw-stars input[type="radio"] { display: none; }
+.rw-stars label { font-size: 1.75rem; color: #E5E7EB; cursor: pointer; transition: color 0.15s; }
+.rw-stars input[type="radio"]:checked ~ label, .rw-stars label:hover, .rw-stars label:hover ~ label { color: var(--rw-star); }
+
+/* 📸 [추가 완료] 세련된 카메라 업로드 박스 드롭존 디자인 */
+.rw-upload-box {
+    position: relative;
+    border: 2px dashed #D1D5DB; /* 모던한 점선 테두리 */
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+    background-color: #FAFAFA;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.rw-upload-box:hover {
+    border-color: var(--rw-primary);
+    background-color: #FFF5F6;
+}
+
+.rw-file-input {
+    display: none; /* 못생긴 순정 파일 버튼은 가차 없이 숨김 */
+}
+
+.rw-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.rw-upload-icon {
+    font-size: 2rem;
+    color: #9CA3AF;
+    transition: color 0.2s;
+}
+
+.rw-upload-box:hover .rw-upload-icon {
+    color: var(--rw-primary);
+}
+
+.rw-upload-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+/* 📸 실시간 미리보기 사진 홀더 */
+.rw-preview-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 16px auto 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.rw-preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 우측 상단 엑스버튼 삭제 아이콘 */
+.rw-preview-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: none;
+    border: none;
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    cursor: pointer;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+    padding: 0;
+    line-height: 1;
+}
+
+.rw-preview-remove:hover {
+    color: var(--rw-primary);
+}
+
+/* ── 후기 텍스트 에어리어 ── */
+.rw-textarea {
+    width: 100%; min-height: 160px; padding: 16px; border: 1.5px solid var(--rw-border); border-radius: 8px; font-size: 0.95rem; color: var(--rw-dark); background-color: #FAFAFA; outline: none; resize: vertical; box-sizing: border-box; transition: border-color 0.2s, background-color 0.2s;
+}
+.rw-textarea:focus { border-color: var(--rw-primary); background-color: #ffffff; }
+
+/* ── 하단 제어 버튼 컴포넌트 ── */
+.rw-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 16px; }
+.rw-btn { font-size: 0.95rem; font-weight: 700; padding: 14px 28px; border-radius: 8px; cursor: pointer; border: none; transition: all 0.2s; }
+.rw-btn--cancel { background-color: #F3F4F6; color: #6B7280; }
+.rw-btn--cancel:hover { background-color: #E5E7EB; color: #374151; }
+.rw-btn--submit { background-color: var(--rw-primary); color: #ffffff; }
+.rw-btn--submit:hover { background-color: #b01030; transform: translateY(-1px); }
+
+@media (max-width: 640px) {
+    .rw-container { margin: 20px auto 60px; }
+    .rw-card { padding: 24px; }
+    .rw-actions { flex-direction: column-reverse; }
+    .rw-btn { width: 100%; }
+}

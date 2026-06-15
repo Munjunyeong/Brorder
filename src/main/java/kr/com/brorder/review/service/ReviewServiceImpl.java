@@ -1,34 +1,33 @@
 package kr.com.brorder.review.service;
 
+import kr.com.brorder.review.dao.ReviewDao;
+import kr.com.brorder.review.domain.MenuOptionDTO;
 import kr.com.brorder.review.domain.Review;
 import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
-import kr.com.brorder.review.mapper.ReviewMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * [리뷰 도메인 서비스 구현체]
- * 리뷰 관련 핵심 비즈니스 로직을 실제로 수행하며 데이터의 가공 및 보안 검증을 담당하는 클래스임
+ * 리뷰 핵심 비즈니스 로직 구현 및 데이터 검증 담당 클래스
  */
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
-    private final ReviewMapper reviewMapper;
+    private final ReviewDao reviewDao;
 
     /**
-     * 생성자 주입을 통해 데이터베이스 제어를 담당하는 ReviewMapper 빈(Bean)을 주입받음
+     * 의존성 주입(DI)을 통해 데이터 액세스 객체인 ReviewDao 연결
      */
     @Autowired
-    public ReviewServiceImpl(ReviewMapper reviewMapper) {
-        this.reviewMapper = reviewMapper;
+    public ReviewServiceImpl(ReviewDao reviewDao) {
+        this.reviewDao = reviewDao;
     }
 
     /**
-     * [신규 리뷰 등록 로직]
-     * 화면에서 입력된 DTO 데이터를 DB 테이블 구조에 맞는 순수 엔티티(Review) 객체로 변환하여 저장함
-     * 이 과정에서 변조 불가능한 서버 세션의 사용자 번호를 작성자 정보로 안전하게 세팅함
+     * 신규 리뷰 등록 및 저장
+     * 화면에서 가공된 리뷰 입력 데이터(DTO)를 엔티티로 변환하고 세션의 작성자 식별 번호를 매핑하여 저장
      */
     @Override
     public void writeReview(ReviewRequestDTO requestDTO, int loginUserId) {
@@ -40,35 +39,34 @@ public class ReviewServiceImpl implements ReviewService {
         review.setContent(requestDTO.getContent());
         review.setPicture(requestDTO.getPicture());
 
-        reviewMapper.save(review);
+        reviewDao.save(review);
     }
 
     /**
-     * [특정 가게의 리뷰 목록 조회]
-     * 매장 고유 번호를 매퍼로 넘겨 연동된 조인(JOIN) 결과 리스트를 가져와 컨트롤러로 전달함
+     * 특정 가게의 전체 리뷰 목록 조회
+     * 매장 고유 번호(storeId)를 조건으로 매핑된 회원의 이름과 메뉴명이 포함된 리뷰 리스트 조회
      */
     @Override
     public List<ReviewResponseDTO> getStoreReviews(int storeId) {
-        return reviewMapper.findByStoreId(storeId);
+        return reviewDao.findByStoreId(storeId);
     }
 
     /**
-     * [로그인한 유저 본인의 리뷰 목록 조회]
-     * 세션에서 인증 완료된 유저 고유 식별 번호를 기반으로 본인이 작성한 리뷰 내역만 필터링하여 가져옴
+     * 로그인한 유저 본인의 리뷰 목록 조회
+     * 마이페이지 노출용으로 현재 세션 유저 식별 번호(loginUserId)와 일치하는 리뷰 데이터만 필터링하여 조회
      */
     @Override
     public List<ReviewResponseDTO> getMyReviews(int loginUserId) {
-        return reviewMapper.findByUserId(loginUserId);
+        return reviewDao.findByUserId(loginUserId);
     }
 
     /**
-     * [리뷰 삭제 처리 및 권한 검증]
-     * 삭제 대상 글의 존재 여부를 먼저 영속성 확인용으로 조회함
-     * 글을 작성한 회원의 식별 번호와 현재 삭제 요청을 보낸 유저의 세션 번호가 다를 경우 예외를 발생시켜 차단함
+     * 특정 리뷰 삭제 및 권한 검증
+     * 리뷰 고유 식별 번호로 글을 파악한 뒤 세션의 유저 번호와 일치하는 본인 글일 경우에만 완전 삭제 수행
      */
     @Override
     public void removeReview(int reviewId, int loginUserId) {
-        Review targetReview = reviewMapper.findById(reviewId);
+        Review targetReview = reviewDao.findById(reviewId);
 
         if (targetReview == null) {
             throw new IllegalArgumentException("존재하지 않는 리뷰입니다.");
@@ -78,26 +76,25 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("본인이 작성한 리뷰만 삭제할 수 있습니다.");
         }
 
-        reviewMapper.deleteById(reviewId);
+        reviewDao.deleteById(reviewId);
     }
 
     /**
-     * [리뷰 단건 상세 조회]
-     * 수정 폼 양식 태그 내부에 기존 텍스트와 평점 데이터를 기본값으로 채워주기 위해 단건 데이터를 찾아옴
+     * 리뷰 단건 상세 조회
+     * 리뷰 수정 화면을 호출할 때 기존에 기입했던 평점, 내용, 이미지 데이터를 폼 태그에 채워주기 위해 단건 조회
      */
     @Override
     public Review getReviewById(int reviewId) {
-        return reviewMapper.findById(reviewId);
+        return reviewDao.findById(reviewId);
     }
 
     /**
-     * [기존 리뷰 수정 처리 및 권한 검증]
-     * 주소창 조작을 통한 비정상적 접근을 원천 차단하기 위해 수정 전 영속성 조회와 작성자 ID 일치 여부를 철저하게 검증함
-     * 검증 통과 시 새로 바뀐 평점, 글 내용, 첨부 이미지 명칭을 갱신용 객체에 담아 데이터베이스를 최신화함
+     * 기존 리뷰 수정 및 권한 검증
+     * 데이터 오염이나 주소창 조작을 막기 위해 작성자 본인 여부를 검증하고 최신 평점, 내용, 이미지 파일명을 반영하여 수정
      */
     @Override
     public void modifyReview(int reviewId, ReviewRequestDTO requestDTO, int loginUserId) {
-        Review targetReview = reviewMapper.findById(reviewId);
+        Review targetReview = reviewDao.findById(reviewId);
 
         if (targetReview == null) {
             throw new IllegalArgumentException("존재하지 않는 리뷰입니다.");
@@ -113,6 +110,15 @@ public class ReviewServiceImpl implements ReviewService {
         updateReview.setContent(requestDTO.getContent());
         updateReview.setPicture(requestDTO.getPicture());
 
-        reviewMapper.update(updateReview);
+        reviewDao.update(updateReview);
+    }
+
+    /**
+     * 특정 가게의 전체 메뉴 목록 조회
+     * 리뷰 작성 폼 등에서 선택 가능한 항목을 보여주기 위해 가게 고유 번호(storeId)에 귀속된 메뉴 옵션 리스트 조회
+     */
+    @Override
+    public List<MenuOptionDTO> getMenusByStoreId(int storeId) {
+        return reviewDao.findMenusByStoreId(storeId);
     }
 }

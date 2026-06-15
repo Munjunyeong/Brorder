@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.com.brorder.review.mapper.ReviewMapper">
+<mapper namespace="kr.com.brorder.review.dao.ReviewDao">
 
-    <!-- 조인 결과물이 첫 번째 데이터로 강제 복제되던 현상을 구별해 줄 고유 식별 단추(<id>) resultMap 추가 지정 -->
     <resultMap id="ReviewResponseMap" type="kr.com.brorder.review.domain.ReviewResponseDTO">
         <id property="reviewId" column="reviewId"/>
         <result property="storeId" column="storeId"/>
@@ -30,7 +29,6 @@
         WHERE review_id = #{reviewId}
     </select>
 
-    <!-- 기존의 resultType 스펙을 걷어내고 resultMap="ReviewResponseMap" 구조로 변환 매핑 통로 교체 -->
     <select id="findByStoreId" parameterType="int" resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
@@ -43,13 +41,12 @@
         u.id           AS userIdName,
         m.name         AS menuName
         FROM review r
-        JOIN users u ON r.user_id = u.user_id
-        JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN users u ON r.user_id = u.user_id
+        LEFT JOIN menu m  ON r.menu_id = m.menu_id
         WHERE r.store_id = #{storeId}
         ORDER BY r.created_data DESC
     </select>
 
-    <!-- 마이페이지 내역 조회 쿼리 영역도 똑같이 뭉개지지 않도록 resultMap 구조로 완벽 동기화 처리 -->
     <select id="findByUserId" parameterType="int" resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
@@ -62,8 +59,8 @@
         u.id           AS userIdName,
         m.name         AS menuName
         FROM review r
-        JOIN users u ON r.user_id = u.user_id
-        JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN users u ON r.user_id = u.user_id
+        LEFT JOIN menu m  ON r.menu_id = m.menu_id
         WHERE r.user_id = #{userId}
         ORDER BY r.created_data DESC
     </select>
@@ -103,4 +100,14 @@
         review_id = #{reviewId}
     </update>
 
+    <select id="findMenusByStoreId" parameterType="int" resultType="kr.com.brorder.review.domain.MenuOptionDTO">
+        SELECT
+        m.menu_id AS menuId,
+        m.name    AS menuName
+        FROM menu m
+        WHERE m.store_id = #{storeId}
+        ORDER BY m.menu_id
+    </select>
+
 </mapper>
+
