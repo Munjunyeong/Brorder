@@ -35,5 +35,28 @@
 		SELECT * FROM user_address
 		WHERE user_id=#{userid}
 	</select>
+	
+	<insert id="addaddress">
+		INSERT INTO user_address
+		(user_id, address, address_detail, address_comment, entrance, address_name)
+		VALUES
+		(#{userid}, #{address}, #{addressdetail}, #{addresscomment}, #{entrance}, #{addressname})
+	</insert>
+	
+	<delete id="deleteaddress">
+		DELETE FROM user_address
+		WHERE address_id=#{addressid}
+	</delete>
+	
+	<select id="addressitem" resultType="kr.com.brorder.users.Address">
+		SELECT * FROM user_address
+		WHERE address_id=#{addressid}
+	</select>
+	
+	<update id="updateaddress">
+		UPDATE user_address
+		SET address=#{address}, address_detail=#{addressdetail}, address_comment=#{addresscomment}, entrance=#{entrance}, address_name=#{addressname}
+		WHERE address_id=#{addressid}
+	</update>
 
 </mapper>
