@@ -48,5 +48,24 @@ public class UsersServiceImpl implements UsersService {
 	public List<Address> list(Long userid) {
 		return usersDao.list(userid);
 	}
+	@Override
+	public void addaddress(Address item) {
+		usersDao.addaddress(item);
+	}
+
+	@Override
+	public void deleteaddress(Long addressid) {
+		usersDao.deleteaddress(addressid);
+	}
+
+	@Override
+	public Address addressitem(Long addressid) {
+		return usersDao.addressitem(addressid);
+	}
+
+	@Override
+	public void updateaddress(Address item) {
+		usersDao.updateaddress(item);
+	}
 
 }

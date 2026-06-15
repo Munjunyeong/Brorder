@@ -15,5 +15,13 @@ public interface UsersService {
 	void update(Users item);
 
 	List<Address> list(Long userid);
+	
+	Address addressitem(Long addressid);
+
+	void addaddress(Address item);
+
+	void deleteaddress(Long addressid);
+
+	void updateaddress(Address item);
 
 }

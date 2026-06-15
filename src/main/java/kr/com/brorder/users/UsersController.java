@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -58,7 +59,43 @@ public class UsersController {
 		model.addAttribute("list", list);
 		
 		return "user/address";
+	}
+	
+	@GetMapping("/my/address/add")
+	String addaddress() {
+		return "user/addaddress";
+	}
+	
+	@PostMapping("/my/address/add")
+	String addaddress(Address item, HttpSession session) {
+		Users users = (Users) session.getAttribute("users");
+		item.setUserid(users.getUserid());
 		
+		service.addaddress(item);
+		
+		return "redirect:/users/my/address";
+	}
+	
+	@GetMapping("/my/address/delete/{addressid}")
+	String deleteaddress(@PathVariable Long addressid) {
+		service.deleteaddress(addressid);
+		
+		return "redirect:/users/my/address";
+	}
+	
+	@GetMapping("/my/address/update/{addressid}")
+	String updateAddress(@PathVariable Long addressid, Model model) {
+		Address item = service.addressitem(addressid);
+		
+		model.addAttribute("item", item);
+		
+		return "user/addressupdate";
+	}
+	
+	@PostMapping("/my/address/update/{addressid}")
+	String updateAddress(@PathVariable Long addressid, Address item) {
+		service.updateaddress(item);
+		return "redirect:/users/my/address";
 	}
 
 }
