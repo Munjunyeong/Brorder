@@ -1,4 +1,4 @@
-package kr.com.brorder.menu.model;
+package kr.com.brorder.menu.model; //메뉴모델
 
 public class Menu {
 

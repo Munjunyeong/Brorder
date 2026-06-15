@@ -1,4 +1,4 @@
-package kr.com.brorder.menu.dao;
+package kr.com.brorder.menu.dao;//메뉴임플
 
 import kr.com.brorder.menu.model.Menu;
 import org.apache.ibatis.session.SqlSession;
