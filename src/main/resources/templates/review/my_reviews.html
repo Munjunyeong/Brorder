@@ -27,7 +27,7 @@
                     <span class="title-badge" th:text="${myReviewList != null ? myReviewList.size() + '개' : '0개'}">0개</span>
                 </h1>
             </div>
-            <a th:href="@{/review/store/1}" class="myreview-write-btn">
+            <a th:href="@{/review/write}" class="myreview-write-btn">
                 <i class="fa-solid fa-pen-to-square"></i> 새 리뷰 작성
             </a>
         </div>
@@ -99,14 +99,14 @@
                 <span>작성한 리뷰 목록</span>
             </div>
             <div class="myreview-list">
-                <div class="myreview-card"
+                <div class="myreview-card card-visible"
                      th:each="review, stat : ${myReviewList}"
                      th:attr="data-delay=${stat.index * 70}"
                      th:data-review-dom-id="${review.reviewId}">
 
                     <div class="myreview-card-inner">
                         <div class="mrc-img">
-                            <img th:src="${(review.picture != null and review.picture != '') ? '/images/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}"
+                            <img th:src="${(review.picture != null and review.picture != '') ? '/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}" th:alt="${review.menuName}">
                                  th:alt="${review.menuName}">
                         </div>
 
@@ -136,9 +136,6 @@
                             <p class="mrc-content" th:text="${review.content}">리뷰 본문 내용</p>
 
                             <div class="mrc-thumb-row" th:if="${review.picture != null and review.picture != ''}">
-                                <div class="mrc-thumb">
-                                    <img th:src="'/images/' + ${review.picture}" alt="첨부 이미지">
-                                </div>
                             </div>
                         </div>
 
@@ -210,4 +207,3 @@
 <script th:src="@{/js/review.js}"></script>
 </body>
 </html>
-<!--06/15 커밋 테스트-->
