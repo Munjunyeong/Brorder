@@ -1,4 +1,4 @@
-package kr.com.brorder.menu.service;
+package kr.com.brorder.menu.service; //메뉴서비스
 
 import kr.com.brorder.menu.model.Menu;
 

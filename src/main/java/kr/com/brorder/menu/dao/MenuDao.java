@@ -1,4 +1,4 @@
-package kr.com.brorder.menu.dao;
+package kr.com.brorder.menu.dao; //메뉴다오
 
 import kr.com.brorder.menu.model.Menu;
 
