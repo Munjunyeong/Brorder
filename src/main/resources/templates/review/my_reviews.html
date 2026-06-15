@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/review.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+
+<div class="myreview-page">
+    <div class="myreview-hero">
+        <div class="myreview-hero-inner">
+            <div>
+                <div class="myreview-breadcrumb">
+                    <a href="/"><i class="fa-solid fa-house"></i> 홈</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <a href="#">마이페이지</a>
+                    <i class="fa-solid fa-chevron-right"></i>
+                    <span>내 리뷰 관리</span>
+                </div>
+                <h1 class="myreview-page-title">
+                    <div class="title-icon-wrap">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    내 리뷰 관리
+                    <span class="title-badge" th:text="${myReviewList != null ? myReviewList.size() + '개' : '0개'}">0개</span>
+                </h1>
+            </div>
+            <a th:href="@{/review/store/1}" class="myreview-write-btn">
+                <i class="fa-solid fa-pen-to-square"></i> 새 리뷰 작성
+            </a>
+        </div>
+    </div>
+
+    <div class="myreview-stats-wrap">
+        <div class="myreview-stats">
+            <div class="mstat-card">
+                <div class="mstat-icon msi-1"><i class="fa-solid fa-pen-nib"></i></div>
+                <div class="mstat-body">
+                    <div class="mstat-num" th:text="${myReviewList != null ? myReviewList.size() : 0}">0</div>
+                    <div class="mstat-label">작성한 리뷰</div>
+                </div>
+            </div>
+            <div class="mstat-card">
+                <div class="mstat-icon msi-2"><i class="fa-solid fa-star"></i></div>
+                <div class="mstat-body">
+                    <div class="mstat-num">4.6</div>
+                    <div class="mstat-label">평균 별점</div>
+                </div>
+            </div>
+            <div class="mstat-card">
+                <div class="mstat-icon msi-3"><i class="fa-solid fa-coins"></i></div>
+                <div class="mstat-body">
+                    <div class="mstat-num">2,400P</div>
+                    <div class="mstat-label">적립된 포인트</div>
+                </div>
+            </div>
+            <div class="mstat-card">
+                <div class="mstat-icon msi-4"><i class="fa-solid fa-reply"></i></div>
+                <div class="mstat-body">
+                    <div class="mstat-num">1</div>
+                    <div class="mstat-label">사장님 답글</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="myreview-content">
+
+        <div class="myreview-filter-bar">
+            <div class="filter-tabs">
+                <a href="#" class="filter-tab active">전체</a>
+                <a href="#" class="filter-tab">
+                    <i class="fa-solid fa-star review-gold-icon"></i> 5점
+                </a>
+                <a href="#" class="filter-tab">
+                    <i class="fa-solid fa-star review-gold-icon"></i> 4점
+                </a>
+                <a href="#" class="filter-tab">
+                    <i class="fa-solid fa-star review-gold-icon"></i> 3점 이하
+                </a>
+                <a href="#" class="filter-tab">
+                    <i class="fa-solid fa-reply"></i> 답글 있음
+                </a>
+            </div>
+            <div class="filter-right">
+                <select class="filter-sort-select">
+                    <option value="latest">최신순</option>
+                    <option value="rating-desc">별점 높은순</option>
+                    <option value="rating-asc">별점 낮은순</option>
+                </select>
+                <span class="filter-count">총 <strong th:text="${myReviewList != null ? myReviewList.size() : 0}">0</strong>개</span>
+            </div>
+        </div>
+
+        <div th:if="${myReviewList != null and !myReviewList.isEmpty()}">
+            <div class="list-section-label">
+                <span>작성한 리뷰 목록</span>
+            </div>
+            <div class="myreview-list">
+                <div class="myreview-card"
+                     th:each="review, stat : ${myReviewList}"
+                     th:attr="data-delay=${stat.index * 70}"
+                     th:data-review-dom-id="${review.reviewId}">
+
+                    <div class="myreview-card-inner">
+                        <div class="mrc-img">
+                            <img th:src="${(review.picture != null and review.picture != '') ? '/images/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}"
+                                 th:alt="${review.menuName}">
+                        </div>
+
+                        <div class="mrc-body">
+                            <div class="mrc-top-row">
+                                <span class="mrc-store-name">BRORDER 점포</span>
+                                <span class="mrc-store-tag">음식배달</span>
+                                <span class="mrc-menu-chip" th:if="${review.menuName != null and review.menuName != ''}">
+                                    <i class="fa-solid fa-utensils"></i>
+                                    <span th:text="${review.menuName}">메뉴명</span>
+                                </span>
+                            </div>
+
+                            <div class="mrc-rating-row">
+                                <div class="mrc-stars">
+                                    <i th:each="s : ${#numbers.sequence(1,5)}"
+                                       th:classappend="${s <= review.rating} ? ' active' : ''"
+                                       class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="mrc-rating-pill">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span th:text="${review.rating + '.0'}">5.0</span>
+                                </span>
+                                <span class="mrc-date" th:text="${#temporals.format(review.createdData, 'yyyy.MM.dd')}">2026.05.28</span>
+                            </div>
+
+                            <p class="mrc-content" th:text="${review.content}">리뷰 본문 내용</p>
+
+                            <div class="mrc-thumb-row" th:if="${review.picture != null and review.picture != ''}">
+                                <div class="mrc-thumb">
+                                    <img th:src="'/images/' + ${review.picture}" alt="첨부 이미지">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mrc-actions">
+                            <span class="mrc-status-badge mrc-status-published">
+                                <span class="status-dot-anim"></span>게시됨
+                            </span>
+                            <div class="mrc-action-btns">
+                                <a th:href="@{/review/update/{id}(id=${review.reviewId})}" class="mrc-btn mrc-btn-edit">
+                                    <i class="fa-solid fa-pen"></i> 수정
+                                </a>
+                                <button class="mrc-btn mrc-btn-delete"
+                                        th:data-review-id="${review.reviewId}"
+                                        th:data-store-id="${review.storeId}"
+                                        onclick="openDeleteModal(this)">
+                                    <i class="fa-solid fa-trash"></i> 삭제
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mrc-reply">
+                        <div class="mrc-reply-icon"><i class="fa-solid fa-store"></i></div>
+                        <div class="mrc-reply-body">
+                            <div class="mrc-reply-label">사장님 답글</div>
+                            <p class="mrc-reply-text">소중한 첫 리뷰 작성을 진심으로 환영합니다! 다음 주문 시에도 최상의 맛과 빠른 배달로 찾아뵙겠습니다.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="myreview-empty" th:if="${myReviewList == null or myReviewList.isEmpty()}">
+            <div class="myreview-empty-rings">
+                <div class="empty-ring empty-ring-1"></div>
+                <div class="empty-ring empty-ring-2"></div>
+                <div class="empty-ring empty-ring-3"></div>
+                <div class="empty-ring-center"><i class="fa-solid fa-star-half-stroke"></i></div>
+            </div>
+            <h3>아직 작성한 리뷰가 없어요</h3>
+            <p>주문하신 음식에 대한 솔직한 리뷰를 남겨주세요.<br>리뷰 작성 시 포인트 200P가 즉시 적립됩니다.</p>
+            <a th:href="@{/review/store/1}" class="myreview-write-btn myreview-empty-write-btn">
+                <i class="fa-solid fa-pen-to-square"></i> 첫 리뷰 작성하기
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-warn-icon"><i class="fa-solid fa-trash-can"></i></div>
+        <h3>리뷰를 삭제할까요?</h3>
+        <p>삭제된 리뷰는 복구할 수 없습니다.<br>정말 삭제하시겠습니까?</p>
+        <div class="modal-btns">
+            <button class="modal-btn modal-btn-cancel" onclick="closeDeleteModal()">취소</button>
+            <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn">삭제하기</button>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <i class="fa-solid fa-chevron-up"></i>
+</button>
+
+<script th:src="@{/js/review.js}"></script>
+</body>
+</html>
+<!--06/15 커밋 테스트-->

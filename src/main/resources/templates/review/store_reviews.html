@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <style>
+        /* ===== BRORDER STYLE GUIDE v1.0 ===== */
+        :root {
+            --brand-red: #E8213A;
+            --red-light: #FF3B5C;
+            --dark-navy: #1A1F2E;
+            --white: #FFFFFF;
+            --bg-gray: #F5F5F5;
+
+            --teal: #00BFA5;
+            --amber: #FF9F1C;
+            --violet: #6C63FF;
+            --pink: #FF6B9D;
+            --green: #22C55E;
+            --blue: #3B82F6;
+
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        /* 떨림 수정: body에 will-change 방지 + overflow 고정 */
+        html, body {
+            overflow-x: hidden;
+        }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background: var(--bg-gray) !important;
+            color: var(--dark-navy) !important;
+            line-height: 1.5;
+            /* 서브픽셀 렌더링 안정화 */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .page-hero {
+            background: linear-gradient(135deg, #1A1F2E 0%, #2D364D 100%);
+            padding: 36px 40px 40px;
+            color: var(--white);
+            /* GPU 레이어 고정 → 스크롤 중 hero 자체가 흔들리지 않게 */
+            will-change: auto;
+            transform: translateZ(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* hero 배경 장식 원 */
+        .page-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            pointer-events: none;
+        }
+        .page-hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            right: 160px;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: rgba(232, 33, 58, 0.12);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ★ 수정: padding-left를 추가하여 아이콘(🍱)과 타이틀 전체를 현재 위치에서 오른쪽으로 살짝 밀어냄 */
+        .hero-title-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-left: 50px;
+        }
+
+        .store-icon {
+            width: 60px; height: 60px;
+            background: var(--brand-red);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 4px 12px rgba(232, 33, 58, 0.3);
+            flex-shrink: 0;
+        }
+        .hero-title {
+            font-size: 35px;
+            font-weight: 800;
+            color: var(--white);
+        }
+        .hero-count {
+            background: var(--teal);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-left: 8px;
+        }
+
+        /* hero 타이틀 아래 메타 정보 바 */
+        .hero-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            flex-wrap: wrap;
+            /* 타이틀 영역 위치와 정렬을 맞추기 위해 메타바에도 동일하게 패딩 적용 */
+            padding-left: 50px;
+        }
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .hero-meta-item strong {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 700;
+        }
+        .hero-meta-divider {
+            width: 1px;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .container {
+            max-width: 840px;
+            margin: 32px auto 60px;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== SUMMARY CARD ===== */
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px 32px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+        .score-big {
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .score-num {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--dark-navy);
+            line-height: 1;
+        }
+        .score-stars {
+            color: var(--amber);
+            font-size: 16px;
+            margin: 8px 0;
+        }
+        .score-total { font-size: 13px; color: #9ca3af; }
+
+        .score-bars { flex: 1; min-width: 0; }
+        .bar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 4px;
+        }
+        .bar-n { font-size: 12px; color: #6b7280; width: 10px; font-weight: 700; }
+        .bar-bg {
+            flex: 1;
+            height: 6px;
+            background: #f3f4f6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            height: 100%;
+            background: var(--brand-red);
+            border-radius: 10px;
+        }
+        .bar-count {
+            font-size: 12px;
+            color: #9ca3af;
+            min-width: 32px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f9fafb;
+            border-radius: 10px;
+            padding: 10px 16px;
+            gap: 2px;
+        }
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--dark-navy);
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #9ca3af;
+            font-weight: 600;
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-hot { background: var(--dark-navy); color: var(--white); }
+        .badge-new { background: var(--teal); color: var(--white); }
+        .badge-sale { background: var(--brand-red); color: var(--white); }
+        .badge-done { background: var(--green); color: var(--white); }
+
+        /* ===== REVIEW CARD ===== */
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .review-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            transition: box-shadow 0.2s;
+        }
+        .review-card:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            gap: 8px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+        .user-img {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+        .user-name {
+            font-weight: 700;
+            font-size: 15px;
+            word-break: break-all;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px;
+        }
+        .order-date {
+            font-size: 13px;
+            color: #9ca3af;
+            margin-top: 2px;
+            line-height: 1;
+            transform: translateZ(0);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .review-stars { color: var(--amber); font-size: 14px; margin-bottom: 8px; }
+        .review-content {
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* 사진 그리드 */
+        .review-photos {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            flex-wrap: wrap;
+        }
+        .review-photo {
+            width: 100px; height: 100px;
+            border-radius: 8px;
+            background: #f3f4f6;
+            object-fit: cover;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .review-photo:hover { opacity: 0.85; }
+
+        /* 사진 없을 때 */
+        .no-photo-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #f3f4f6;
+            color: #9ca3af;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+
+        /* STATUS TAGS */
+        .status-tag {
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .dot-green { background: var(--green); }
+
+        /* 이미지 확대 팝업 모달 */
+        .img-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); display: none;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+        .img-modal-overlay.active { display: flex; }
+        .img-modal-box { position: relative; }
+        .img-modal-box img { max-width: 90vw; max-height: 85vh; border-radius: 12px; display: block; }
+        .img-modal-close { position: absolute; top: -45px; right: 0; color: #fff; font-size: 36px; cursor: pointer; background: none; border: none; }
+
+        /* ===== 태블릿 반응형 (768px 이하) ===== */
+        @media (max-width: 768px) {
+            .page-hero { padding: 28px 20px 44px; }
+            .hero-title-area { padding-left: 0; }
+            .hero-meta { padding-left: 0; }
+            .hero-title { font-size: 22px; }
+            .hero-count { font-size: 12px; padding: 3px 10px; }
+            .store-icon { width: 44px; height: 44px; font-size: 20px; border-radius: 12px; }
+            .summary-card { flex-direction: column; align-items: stretch; gap: 20px; padding: 20px; }
+            .score-big { display: flex; align-items: center; gap: 16px; }
+            .score-num { font-size: 40px; }
+            .summary-stats { flex-direction: row; min-width: unset; }
+            .stat-item { flex: 1; padding: 10px 8px; }
+            .stat-value { font-size: 17px; }
+            .container { margin-top: 24px; padding: 0 12px; }
+            .review-card { padding: 18px 16px; }
+            .review-photo { width: 80px; height: 80px; }
+            .hero-meta { gap: 12px; }
+        }
+
+        /* ===== 모바일 반응형 (480px 이하) ===== */
+        @media (max-width: 480px) {
+            .page-hero { padding: 20px 16px 40px; }
+            .hero-title-area { padding-left: 0; }
+            .hero-meta { padding-left: 0; }
+            .hero-title { font-size: 18px; }
+            .store-icon { width: 38px; height: 38px; font-size: 17px; border-radius: 10px; }
+            .hero-sub { font-size: 11px; word-break: break-all; }
+            .score-big { flex-direction: column; align-items: flex-start; gap: 4px; }
+            .score-num { font-size: 36px; }
+            .score-stars { font-size: 14px; margin: 0; }
+            .stat-value { font-size: 15px; }
+            .stat-label { font-size: 10px; }
+            .container { padding: 0 10px; gap: 14px; margin-top: 20px; }
+            .review-card { padding: 14px 12px; }
+            .review-header { flex-direction: column; gap: 10px; }
+            .status-tag { align-self: flex-start; }
+            .user-img { width: 38px; height: 38px; font-size: 13px; }
+            .user-name { font-size: 13px; }
+            .order-date { font-size: 11px; }
+            .review-stars { font-size: 13px; }
+            .review-content { font-size: 14px; }
+            .review-photos { gap: 6px; }
+            .review-photo { width: calc(33.33% - 4px); height: 90px; }
+            .badge { font-size: 10px; padding: 3px 7px; }
+            .hero-meta { gap: 10px; padding-top: 14px; margin-top: 14px; }
+            .hero-meta-item { font-size: 12px; }
+            .hero-meta-divider { display: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .review-card { transition: none; }
+            .review-photo { transition: none; }
+        }
+    </style>
+</head>
+<body>
+
+<th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
+
+<header class="page-hero">
+    <div>
+        <div class="hero-content">
+            <div class="hero-title-area">
+                <div class="store-icon">🍱</div>
+                <h1 class="hero-title">등록된 리뷰</h1>
+            </div>
+        </div>
+
+        <div class="hero-meta">
+            <div class="hero-meta-item">
+                🏪 가게번호 <strong th:text="${currentStoreId}">1</strong>
+            </div>
+            <div class="hero-meta-divider"></div>
+            <div class="hero-meta-item">
+                ⭐ 평균 평점 <strong>4.7</strong>
+            </div>
+            <div class="hero-meta-divider"></div>
+            <div class="hero-meta-item">
+                📋 총 리뷰 <strong th:text="${reviewList != null ? reviewList.size() + '개' : '0개'}">4개</strong>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <section class="review-list">
+
+        <div class="summary-card" th:if="${!#lists.isEmpty(reviewList)}">
+            <div class="score-big">
+                <div class="score-num">4.7</div>
+                <div class="score-stars">★★★★★</div>
+                <div class="score-total" th:text="'리뷰 ' + ${reviewList.size()} + '개'">리뷰 4개</div>
+            </div>
+
+            <div class="score-bars">
+                <div class="bar-item">
+                    <span class="bar-n">5</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 80%;"></div></div>
+                    <span class="bar-count">3개</span>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-n">4</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 20%;"></div></div>
+                    <span class="bar-count">1개</span>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-n">3</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                    <span class="bar-count">0개</span>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-n">2</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                    <span class="bar-count">0개</span>
+                </div>
+                <div class="bar-item">
+                    <span class="bar-n">1</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 0%;"></div></div>
+                    <span class="bar-count">0개</span>
+                </div>
+            </div>
+
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <span class="stat-value" th:text="${reviewList.size()}">4</span>
+                    <span class="stat-label">총 리뷰</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-value" style="color: var(--teal);">4.7</span>
+                    <span class="stat-label">평균 평점</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="review-list-empty" th:if="${#lists.isEmpty(reviewList)}" style="background:#fff; border-radius:12px; padding:60px; text-align:center; box-shadow:var(--shadow);">
+            <div style="font-size:48px; color:#9ca3af; margin-bottom:16px;">📂</div>
+            <div style="font-size:18px; font-weight:700;">아직 등록된 리뷰가 없습니다</div>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(reviewList)}" style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="review-card" th:each="review : ${reviewList}">
+                <div class="review-header">
+                    <div class="user-info">
+                        <div class="user-img" th:text="${review.userIdName != null and #strings.length(review.userIdName) >= 2 ? #strings.substring(review.userIdName, 0, 2).toUpperCase() : 'U'}">U1</div>
+                        <div>
+                            <div class="user-name">
+                                <span th:text="${review.userIdName}">user1</span>
+                                <span class="badge badge-sale" th:if="${review.menuName != null and review.menuName != ''}" th:text="${review.menuName}" style="margin-left: 4px; background: rgba(0, 191, 165, 0.1); color: var(--teal);">짜장면</span>
+                            </div>
+                            <div class="order-date" th:text="${#temporals.format(review.createdData, 'yyyy.MM.dd HH:mm')}">2026.06.09 10:25</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-stars">
+                    <span th:each="s : ${#numbers.sequence(1,5)}" th:text="${s <= review.rating} ? '★' : '☆'">★</span>
+                    <strong style="color: var(--dark-navy); margin-left: 4px;" th:text="${review.rating + '.0'}">5.0</strong>
+                </div>
+
+                <p class="review-content" th:text="${review.content}">음식이 정말 맛있어요!</p>
+
+                <div th:if="${review.picture != null and !#strings.isEmpty(review.picture)}" class="review-photos">
+                    <img th:src="@{'/images/' + ${review.picture}}"
+                         class="review-photo"
+                         alt="리뷰 사진"
+                         th:onclick="openImageModal([[${'/images/' + review.picture}]])" />
+                </div>
+                <div th:unless="${review.picture != null and !#strings.isEmpty(review.picture)}" class="no-photo-tag">
+                    📷 사진 없음
+                </div>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<div class="img-modal-overlay" id="imageLargeModal" onclick="closeImageModal()">
+    <div class="img-modal-box" onclick="event.stopPropagation()">
+        <button class="img-modal-close" onclick="closeImageModal()">&times;</button>
+        <img id="modalTargetImg" src="" alt="확대 보기">
+    </div>
+</div>
+
+<script th:src="@{/js/review.js}"></script>
+
+<th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<script>
+    function openImageModal(imgSrc) {
+        const modal = document.getElementById('imageLargeModal');
+        const modalImg = document.getElementById('modalTargetImg');
+        modalImg.src = imgSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeImageModal() {
+        const modal = document.getElementById('imageLargeModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+</script>
+</body>
+</html>
+<!--06/15 커밋 테스트-->
