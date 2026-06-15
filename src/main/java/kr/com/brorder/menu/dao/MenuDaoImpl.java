@@ -19,6 +19,11 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
+    public void insertMenu(Menu menu) {
+        sqlSession.insert(NAMESPACE + "insertMenu", menu);
+    }
+
+    @Override
     public List<Menu> selectMenuListByStoreId(Integer storeId) {
 
         return sqlSession.selectList(

@@ -43,8 +43,11 @@
                     <span class="menu-desc" th:text="${menu.content}">바삭한 튀김옷이 일품인 기본 메뉴</span>
                     <span class="menu-price" th:text="${#numbers.formatInteger(menu.price, 3, 'COMMA') + '원'}">18,000원</span>
                 </div>
-                <img th:if="${menu.picture != null}" th:src="${menu.picture}" class="menu-img" alt="메뉴 이미지">
-                <div th:if="${menu.picture == null}" class="menu-img" style="display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">이미지 없음</div>
+                <img th:if="${menu.image != null}"
+                     th:src="@{'/upload/' + ${menu.image}}"
+                     class="menu-img"
+                     alt="menu image">
+                <div th:if="${menu.image == null}" class="menu-img" style="display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">이미지 없음</div>
                 <div style="margin-left: 15px;">
                     <button type="button" 
                             th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]])"

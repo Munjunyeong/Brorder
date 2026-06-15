@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface MenuDao {
 
+    void insertMenu(Menu menu);
     List<Menu> selectMenuListByStoreId(Integer storeId);
     Menu selectMenuById(Integer menuId);
     List<Menu> list(Integer storeId);
