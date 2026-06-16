@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>메뉴 등록</title>
+</head>
+<body>
+
+<h2>메뉴 등록</h2>
+
+<form th:action="@{/menu/add}"
+      method="post"
+      enctype="multipart/form-data">
+
+  <input type="hidden" name="storeId" th:value="${storeId}">
+
+  <div>
+    메뉴명
+    <input type="text" name="name" required>
+  </div>
+
+  <div>
+    설명
+    <input type="text" name="content">
+  </div>
+
+  <div>
+    가격
+    <input type="number" name="price" required>
+  </div>
+
+  <div>
+    메뉴 사진
+    <input type="file" name="file" accept="image/*">
+  </div>
+
+  <button type="submit">등록</button>
+
+</form>
+
+</body>
+</html>

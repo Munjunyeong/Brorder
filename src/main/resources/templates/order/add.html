@@ -123,8 +123,8 @@
             <div class="menu-list-section" id="menu-area">
                 <div th:each="menu, stat : ${menuList}" class="menu-item">
                     <div class="menu-main">
-                        <img th:if="${menu.picture != null}" th:src="${menu.picture}" class="menu-img" alt="메뉴 이미지">
-                        <div th:unless="${menu.picture != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
+                        <img th:if="${menu.image != null}" th:src="${menu.image}" class="menu-img" alt="메뉴 이미지">
+                        <div th:unless="${menu.image != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
                             <i class="fa-solid fa-utensils" style="color: #ccc;"></i>
                         </div>
                         <div class="menu-info">
