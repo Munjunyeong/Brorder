@@ -11,8 +11,6 @@ public interface MenuService {
     List<Menu> selectMenuListByStoreId(Integer storeId);
     Menu selectMenuById(Integer menuId);
 
-    Menu selectMenuById(Integer menuId);
-
     void insertMenu(Menu menu, MultipartFile file) throws IOException;
 
     void deleteMenu(Integer menuId);

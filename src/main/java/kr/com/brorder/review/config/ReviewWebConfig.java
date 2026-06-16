@@ -26,8 +26,7 @@ public class ReviewWebConfig implements WebMvcConfigurer {
                 .addPathPatterns(
                         "/review/write/**",        // ★ 뒤에 /** 를 붙여서 파라미터가 붙은 GET/POST 진입로 전체를 묶어 감시합니다.
                         "/review/delete/**",       // 리뷰 삭제 전체 감시
-                        "/review/update/**",       // 리뷰 수정 전체 감시
-                        "/users/my/review"         // 내 리뷰 목록 조회 감시
+                        "/review/update/**"      // 리뷰 수정 전체 감시
                 )
 
                 // 정적 자원 및 비회원 공개 페이지는 제외
