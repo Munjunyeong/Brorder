@@ -8,28 +8,39 @@ import java.time.LocalDateTime;
  */
 public class ReviewResponseDTO {
 
-    private int reviewId;       // 화면에 렌더링하고 수정/삭제 시 식별자로 활용할 리뷰 고유 번호임
-    private int storeId;        // 마이바티스 매퍼 결과 조립 시 매장 구별 및 조건 분기를 위해 유입되는 점포 일련번호임
-    private int menuId;         // 마이바티스 매퍼 결과 조립 시 개별 음식 구별을 위해 유입되는 메뉴 일련번호임
-    private int rating;         // 타임리프 화면에서 별점(★) 아이콘 개수를 출력할 평점 데이터임
-    private String content;     // 사용자가 등록한 리뷰 본문 텍스트 내용임
-    private String picture;     // 화면에 리뷰 이미지를 띄우기 위한 첨부 파일명 또는 경로 문자열임
-    private LocalDateTime createdData; // 리뷰 카드의 작성 일시(연.월.일 시:분)를 포맷팅하여 보여주기 위한 시간 데이터임
+    private int reviewId;
+    private int storeId;
+    private int menuId;
+    private int rating;
+    private String content;
+    private String picture;
+    private LocalDateTime createdData;
 
-    private String userIdName;  // users 테이블과 JOIN하여 가져온 실제 유저의 로그인 아이디 또는 닉네임 정보임
-    private String menuName;    // menu 테이블과 JOIN하여 가져온 실제 주문 메뉴 명칭(예: 짜장면, 치킨 등)임
+    private String userIdName;
+    private String storeName;   // 추가
+    private String menuName;
 
     /**
-     * 마이바티스(MyBatis) 맵퍼 플러그인 등에서 결과를 자동으로 바인딩하기 위한 기본 생성자임
+     * 기본 생성자
      */
     public ReviewResponseDTO() {
     }
 
     /**
-     * 데이터베이스 JOIN 쿼리 조회 결과를 한 번에 주입하여 객체를 생성하는 생성자임
-     * 새로 추가된 storeId와 menuId 필드를 포함하여 모든 조회 필드값들을 파라미터로 수용하고 매핑하는 기능
+     * 전체 생성자
      */
-    public ReviewResponseDTO(int reviewId, int storeId, int menuId, int rating, String content, String picture, LocalDateTime createdData, String userIdName, String menuName) {
+    public ReviewResponseDTO(
+            int reviewId,
+            int storeId,
+            int menuId,
+            int rating,
+            String content,
+            String picture,
+            LocalDateTime createdData,
+            String userIdName,
+            String storeName,
+            String menuName
+    ) {
         this.reviewId = reviewId;
         this.storeId = storeId;
         this.menuId = menuId;
@@ -38,34 +49,87 @@ public class ReviewResponseDTO {
         this.picture = picture;
         this.createdData = createdData;
         this.userIdName = userIdName;
+        this.storeName = storeName;
         this.menuName = menuName;
     }
 
-    public int getReviewId() { return reviewId; }
-    public void setReviewId(int reviewId) { this.reviewId = reviewId; }
+    public int getReviewId() {
+        return reviewId;
+    }
 
-    public int getStoreId() { return storeId; }
-    public void setStoreId(int storeId) { this.storeId = storeId; }
+    public void setReviewId(int reviewId) {
+        this.reviewId = reviewId;
+    }
 
-    public int getMenuId() { return menuId; }
-    public void setMenuId(int menuId) { this.menuId = menuId; }
+    public int getStoreId() {
+        return storeId;
+    }
 
-    public int getRating() { return rating; }
-    public void setRating(int rating) { this.rating = rating; }
+    public void setStoreId(int storeId) {
+        this.storeId = storeId;
+    }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public int getMenuId() {
+        return menuId;
+    }
 
-    public String getPicture() { return picture; }
-    public void setPicture(String picture) { this.picture = picture; }
+    public void setMenuId(int menuId) {
+        this.menuId = menuId;
+    }
 
-    public LocalDateTime getCreatedData() { return createdData; }
-    public void setCreatedData(LocalDateTime createdData) { this.createdData = createdData; }
+    public int getRating() {
+        return rating;
+    }
 
-    public String getUserIdName() { return userIdName; }
-    public void setUserIdName(String userIdName) { this.userIdName = userIdName; }
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
-    public String getMenuName() { return menuName; }
-    public void setMenuName(String menuName) { this.menuName = menuName; }
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public LocalDateTime getCreatedData() {
+        return createdData;
+    }
+
+    public void setCreatedData(LocalDateTime createdData) {
+        this.createdData = createdData;
+    }
+
+    public String getUserIdName() {
+        return userIdName;
+    }
+
+    public void setUserIdName(String userIdName) {
+        this.userIdName = userIdName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
 }
-// 06/15 커밋 테스트

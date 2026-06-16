@@ -121,5 +121,10 @@ public class ReviewServiceImpl implements ReviewService {
     public List<MenuOptionDTO> getMenusByStoreId(int storeId) {
         return reviewDao.findMenusByStoreId(storeId);
     }
+
+    @Override
+    public ReviewResponseDTO getOrderReviewInfo(int orderId) {
+        return reviewDao.getOrderReviewInfo(orderId);
+    }
 }
 // 06/15 커밋 테스트

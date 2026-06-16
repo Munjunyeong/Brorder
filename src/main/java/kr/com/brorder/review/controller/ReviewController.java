@@ -43,10 +43,8 @@ public class ReviewController {
     // =========================
     @GetMapping("/review/write")
     public String showReviewWriteForm(
-            @RequestParam(value = "storeId", defaultValue = "1") int storeId,
-            @RequestParam(value = "storeName", defaultValue = "홍콩반점") String storeName,
-            @RequestParam(value = "menuId", defaultValue = "1") int menuId,
-            @RequestParam(value = "menuName", defaultValue = "짜장면") String menuName,
+            @RequestParam int orderId,
+            @RequestParam int storeId,
             Model model,
             HttpServletRequest request) {
 
@@ -57,10 +55,12 @@ public class ReviewController {
             return "redirect:/login";
         }
 
-        model.addAttribute("storeId", storeId);
-        model.addAttribute("storeName", storeName);
-        model.addAttribute("menuId", menuId);
-        model.addAttribute("menuName", menuName);
+        ReviewResponseDTO orderInfo = reviewService.getOrderReviewInfo(orderId);
+
+        model.addAttribute("storeId", orderInfo.getStoreId());
+        model.addAttribute("storeName", orderInfo.getStoreName());
+        model.addAttribute("menuId", orderInfo.getMenuId());
+        model.addAttribute("menuName", orderInfo.getMenuName());
 
         return "review/write";
     }
@@ -168,6 +168,14 @@ public class ReviewController {
 
         int userId = loginUser.getUserid().intValue();
 
+        Review targetReview = reviewService.getReviewById(reviewId);
+        if (targetReview != null && targetReview.getPicture() != null && !targetReview.getPicture().isEmpty()) {
+            File fileToDelete = new File(path, targetReview.getPicture());
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+            }
+        }
+
         reviewService.removeReview(reviewId, userId);
 
         return "redirect:/review/store/" + storeId;
@@ -187,7 +195,7 @@ public class ReviewController {
     }
 
     // =========================
-    // 리뷰 수정 처리
+    // 리뷰 수정 처리 (이전 파일 물리 파기 로직 조립 완료)
     // =========================
     @PostMapping("/review/update/{reviewId}")
     public String updateReview(@PathVariable int reviewId,
@@ -206,8 +214,18 @@ public class ReviewController {
 
         MultipartFile imageFile = requestDTO.getReviewImageFile();
 
+        // 사용자가 수정창에서 '새로운 사진 파일'을 첨부하여 가방이 채워졌을 때만 분기문 진입
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
+                // [수정 핵심 구역] 새 파일 저장 전, DB에서 기존 리뷰에 등록되어 있던 옛날 파일명을 먼저 조회
+                Review oldReview = reviewService.getReviewById(reviewId);
+                if (oldReview != null && oldReview.getPicture() != null && !oldReview.getPicture().isEmpty()) {
+                    File oldFile = new File(path, oldReview.getPicture());
+                    if (oldFile.exists()) {
+                        oldFile.delete(); // 하드디스크에서 예전 사진 파일 물리 삭제 처분
+                    }
+                }
+
                 File dir = new File(path);
                 if (!dir.exists()) dir.mkdirs();
 

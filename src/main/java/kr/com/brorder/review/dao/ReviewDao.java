@@ -67,4 +67,6 @@ public interface ReviewDao {
     List<MenuOptionDTO> findMenusByStoreId(
             @Param("storeId") int storeId
     );
+
+    ReviewResponseDTO getOrderReviewInfo(int orderId);
 }
