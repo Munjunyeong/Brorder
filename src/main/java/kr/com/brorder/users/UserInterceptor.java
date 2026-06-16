@@ -19,10 +19,11 @@ public class UserInterceptor implements HandlerInterceptor {
 		if(users != null) {
 			String role = users.getRole().toUpperCase();
 		
-			if(role.equals("USER"))
+			if(role.equals("USER")) {
 				return true;
+			}
 		}
-		
+
 		response.sendRedirect("/");
 		return false;
 	}
