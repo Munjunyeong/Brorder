@@ -1,4 +1,4 @@
-package kr.com.brorder.order.dao; //dao
+package kr.com.brorder.order.dao; //오더다오
 
 import java.util.List;
 import kr.com.brorder.order.model.Order;

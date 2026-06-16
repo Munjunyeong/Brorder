@@ -1,4 +1,4 @@
-package kr.com.brorder.order.controller; //오더컨트롤러
+package kr.com.brorder.order.controller; //오더컨트롤러.
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
