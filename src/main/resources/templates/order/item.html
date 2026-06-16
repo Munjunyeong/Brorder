@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  <!--  테스트용 주석 -->
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
     <title>주문 상세 - BRORDER</title>
     <style>
-        .order-detail-section { padding: 40px var(--side-pad); background: #f8f8f8; min-height: calc(100vh - 80px - 300px); }
+        .order-detail-section { padding: 40px var(--side-pad); background: #f5f5f5; min-height: calc(100vh - 80px - 300px); }
         .detail-container { max-width: 600px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #eee; overflow: hidden; }
         
         .detail-header { padding: 24px; border-bottom: 1px solid #f4f4f4; text-align: center; }
@@ -16,9 +16,10 @@
         
         .menu-list-section { padding: 24px; border-bottom: 8px solid #f8f8f8; }
         .section-title { font-size: 16px; font-weight: 800; color: #333; margin-bottom: 16px; display: block; }
-        .menu-item { display: flex; justify-content: space-between; margin-bottom: 12px; }
-        .menu-name { font-size: 15px; color: #333; font-weight: 600; }
-        .menu-price { font-size: 15px; color: #333; }
+        .menu-item { display: flex; align-items: center; margin-bottom: 16px; gap: 12px; }
+        .menu-img { width: 50px; height: 50px; border-radius: 4px; object-fit: cover; background: #f0f0f0; flex-shrink: 0; }
+        .menu-name { font-size: 15px; color: #333; font-weight: 600; flex: 1; }
+        .menu-price { font-size: 15px; color: #333; text-align: right; }
         
         .payment-info-section { padding: 24px; }
         .payment-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; color: #666; }
@@ -54,7 +55,19 @@
         <div class="menu-list-section">
             <span class="section-title">주문 메뉴</span>
             <div th:each="item : ${order.items}" class="menu-item">
-                <span class="menu-name" th:text="${item.menuName}"></span>
+                <img th:if="${item.menuPicture != null}" th:src="${item.menuPicture}" class="menu-img" alt="메뉴 이미지">
+                <div th:unless="${item.menuPicture != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-utensils" style="color: #ccc; font-size: 14px;"></i>
+                </div>
+                <div class="menu-name">
+                    <span th:text="${item.menuName}"></span>
+                    <div th:if="${item.optionName != null && !item.optionName.empty}" 
+                         style="font-size: 13px; color: #888; margin-top: 4px; font-weight: normal;">
+                        [옵션] <span th:text="${item.optionName}"></span>
+                        <span th:if="${item.optionPrice != null && item.optionPrice > 0}" 
+                              th:text="'(+' + ${#numbers.formatInteger(item.optionPrice, 0, 'COMMA')} + '원)'"></span>
+                    </div>
+                </div>
                 <span class="menu-price" th:text="${#numbers.formatInteger(item.price, 0, 'COMMA') + '원'}"></span>
             </div>
         </div>
@@ -63,7 +76,11 @@
             <span class="section-title">결제 금액</span>
             <div class="payment-row">
                 <span>주문금액</span>
-                <span th:text="${#numbers.formatInteger(order.totalPrice, 0, 'COMMA') + '원'}"></span>
+                <span th:text="${#numbers.formatInteger((order.totalPrice ?: 3000) - 3000, 0, 'COMMA') + '원'}"></span>
+            </div>
+            <div class="payment-row">
+                <span>배달팁</span>
+                <span>3,000원</span>
             </div>
             <div class="payment-total">
                 <span class="total-label">총 결제금액</span>
@@ -76,7 +93,7 @@
                     <span class="info-content" th:text="${order.paymentMethod}"></span>
                 </div>
                 <div class="info-item">
-                    <span class="info-label">요청사항</span>
+                    <span class="info-label">가게 요청사항</span>
                     <span class="info-content" th:text="${order.requests != null && !order.requests.empty ? order.requests : '없음'}"></span>
                 </div>
             </div>

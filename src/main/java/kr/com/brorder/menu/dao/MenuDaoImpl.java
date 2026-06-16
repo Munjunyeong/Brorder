@@ -1,4 +1,4 @@
-package kr.com.brorder.menu.dao;
+package kr.com.brorder.menu.dao;//메뉴임플
 
 import kr.com.brorder.menu.model.Menu;
 import org.apache.ibatis.session.SqlSession;
@@ -19,6 +19,11 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
+    public void insertMenu(Menu menu) {
+        sqlSession.insert(NAMESPACE + "insertMenu", menu);
+    }
+
+    @Override
     public List<Menu> selectMenuListByStoreId(Integer storeId) {
 
         return sqlSession.selectList(
@@ -27,7 +32,19 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
+    public Menu selectMenuById(Integer menuId) {
+        return sqlSession.selectOne(NAMESPACE + "selectMenuById", menuId);
+    }
+
+    @Override
     public List<Menu> list(Integer storeId) {
         return List.of();
+    }
+
+    @Override
+    public void deleteMenu(Integer menuId) {
+        sqlSession.delete(
+                NAMESPACE + "deleteMenu",
+                menuId);
     }
 }

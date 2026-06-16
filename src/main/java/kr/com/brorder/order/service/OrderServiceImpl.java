@@ -1,4 +1,4 @@
-package kr.com.brorder.order.service;
+package kr.com.brorder.order.service;  //오더 서비스임플
 
 import java.util.List;
 
@@ -25,9 +25,17 @@ public class OrderServiceImpl implements OrderService {
         int totalPrice = 0;
         if (order.getItems() != null) {
             for (OrderMenu item : order.getItems()) {
-                totalPrice += item.getPrice();
+                if (item.getPrice() != null) {
+                    totalPrice += item.getPrice();
+                }
             }
         }
+        
+        // 기본 배달팁 3,000원 추가 (메뉴가 1개 이상일 때)
+        if (totalPrice > 0) {
+            totalPrice += 3000;
+        }
+        
         order.setTotalPrice(totalPrice);
 
         orderDao.insertOrder(order);
@@ -41,8 +49,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> list() {
-        return orderDao.selectOrderList();
+    public List<Order> list(Long userId) {
+        return orderDao.selectOrderList(userId);
     }
 
     @Override

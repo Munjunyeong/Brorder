@@ -6,9 +6,12 @@ public class OrderMenu {
     private Long orderId;
     private Long menuId;
     private Long optionId;
-    private int price;
+    private String optionName;
+    private Integer optionPrice;
+    private Integer price;
 
     private String menuName;
+    private String menuPicture;
 
     public Long getOrderMenuId() {
         return orderMenuId;
@@ -42,11 +45,27 @@ public class OrderMenu {
         this.optionId = optionId;
     }
 
-    public int getPrice() {
+    public String getOptionName() {
+        return optionName;
+    }
+
+    public void setOptionName(String optionName) {
+        this.optionName = optionName;
+    }
+
+    public Integer getOptionPrice() {
+        return optionPrice;
+    }
+
+    public void setOptionPrice(Integer optionPrice) {
+        this.optionPrice = optionPrice;
+    }
+
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
@@ -56,5 +75,13 @@ public class OrderMenu {
 
     public void setMenuName(String menuName) {
         this.menuName = menuName;
+    }
+
+    public String getMenuPicture() {
+        return menuPicture;
+    }
+
+    public void setMenuPicture(String menuPicture) {
+        this.menuPicture = menuPicture;
     }
 }

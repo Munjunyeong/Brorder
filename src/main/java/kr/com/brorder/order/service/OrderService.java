@@ -1,4 +1,4 @@
-package kr.com.brorder.order.service;
+package kr.com.brorder.order.service; //오더 서비스
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public interface OrderService {
 
     void insert(Order order);
 
-    List<Order> list();
+    List<Order> list(Long userId);
 
     Order item(Long orderId);
 
