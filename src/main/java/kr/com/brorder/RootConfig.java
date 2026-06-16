@@ -17,6 +17,9 @@ public class RootConfig implements WebMvcConfigurer{
 	@Autowired
 	HandlerInterceptor userInterceptor;
 	
+	@Autowired
+	HandlerInterceptor loginInterceptor;
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(userInterceptor).addPathPatterns("/users/**");

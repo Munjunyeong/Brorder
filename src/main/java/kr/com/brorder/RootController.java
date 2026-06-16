@@ -34,17 +34,32 @@ public class RootController {
 	}
 	
 	@GetMapping("/login")
-	String login() {
-		return "login"; //로그인 페이지
+	String login(HttpSession session) {
+		if(session.getAttribute("users") == null)
+			return "login"; //로그인 페이지
+		
+		return "redirect:/";
 	}
 	
 	@PostMapping("/login")
 	String login(Users item, HttpSession session) {
 		if(usersService.login(item)) {
-			session.setAttribute("users", item); //서비스에서 받아온 item을 세션에 users라는 이름으로 넣어둠
-		}
-		
-		return "redirect:/";
+	        session.setAttribute("users", item);
+	        String role = item.getRole();
+
+	        if(role.equals("USER")) {
+	            return "redirect:/";
+	        }
+
+	        if(role.equals("OWNER")) {
+	            return "redirect:/owner/list";
+	        }
+
+	        if(role.equals("ADMIN")) {
+	            return "redirect:/admin";
+	        }
+	    }
+		return "redirect:/login";
 	}
 	
 	@GetMapping("/logout")
