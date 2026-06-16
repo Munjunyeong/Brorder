@@ -1,4 +1,4 @@
-package kr.com.brorder.order.model; //모델
+package kr.com.brorder.order.model; //메뉴모델
 
 import java.sql.Timestamp;
 import java.util.List;

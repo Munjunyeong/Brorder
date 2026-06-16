@@ -1,4 +1,4 @@
-package kr.com.brorder.order.dao; //daoimpl
+package kr.com.brorder.order.dao; //daoimpl오더
 
 import java.util.List;
 import org.apache.ibatis.session.SqlSession;

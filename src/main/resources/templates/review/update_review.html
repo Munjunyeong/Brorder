@@ -335,6 +335,49 @@
             color: var(--primary-mint, #2AC1BC); display: inline-flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0;
         }
 
+        /*
+         * 데이터베이스 → 화면
+         * 서버에 저장되어 있던 기존 이미지 파일 정보를 유저에게 노출하는 카드 영역 스타일
+         */
+        .current-image-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px;
+            border: 1.5px solid #E7EAF0;
+            border-radius: 14px;
+            background: #FAFBFC;
+            margin-bottom: 12px;
+        }
+        /*
+         * 데이터베이스 → 화면
+         * 기존 이미지의 비율을 깨뜨리지 않고 네모 틀 안에 채우는 사각형 썸네일 이미지 처리
+         */
+        .current-image-thumb {
+            width: 64px; height: 64px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid #D4D8E0;
+        }
+        /*
+         * 데이터베이스 → 화면
+         * 썸네일 오른쪽에 정렬되는 제목 및 안내 배지 텍스트 가방
+         */
+        .current-image-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .current-image-info .ci-title {
+            font-size: 13px; font-weight: 900; color: #444;
+        }
+        .current-image-info .ci-badge {
+            display: inline-flex; align-items: center; width: max-content;
+            padding: 2px 8px; font-size: 10px; font-weight: 800;
+            background: #E9ECF0; color: #666; border-radius: 4px;
+        }
+
+
         /* ══ RESPONSIVE ══ */
         @media (max-width: 920px) {
             .update-body { grid-template-columns: 1fr; }
@@ -379,20 +422,30 @@
             </div>
         </section>
 
-        <div class="update-body">
+        <div class="update-form-card">
+            <form th:action="@{/review/update/{reviewId}(reviewId=${review.reviewId})}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  id="updateForm">
+                <input type="hidden" name="storeId" th:value="${review.storeId}">
 
-            <div class="update-form-card">
-                <form th:action="@{/review/update/{reviewId}(reviewId=${review.reviewId})}"
-                      method="post"
-                      enctype="multipart/form-data"
-                      id="updateForm">
-                    <input type="hidden" name="storeId" th:value="${review.storeId}">
+                <div class="update-field">
+                    <div class="update-field-label">
+                        <span class="lbl-icon"><i class="fa-solid fa-utensils"></i></span>
+                        선택한 메뉴
+                    </div>
+                    <input type="text"
+                           class="update-input"
+                           th:value="${review.menuName}"
+                           disabled
+                           style="background:#E9ECF0; color:#666; cursor:not-allowed; font-weight:800;">
+                </div>
 
-                    <div class="update-field">
-                        <div class="update-field-label">
-                            <span class="lbl-icon"><i class="fa-solid fa-star"></i></span>
-                            만족도 별점
-                        </div>
+                <div class="update-field">
+                    <div class="update-field-label">
+                        <span class="lbl-icon"><i class="fa-solid fa-star"></i></span>
+                        만족도 별점
+                    </div>
                         <div class="update-star-box" id="starWidget">
                             <button type="button" class="star-btn-js" data-val="1">&#9733;</button>
                             <button type="button" class="star-btn-js" data-val="2">&#9733;</button>
@@ -423,12 +476,20 @@
                             <span class="lbl-icon"><i class="fa-solid fa-image"></i></span>
                             사진 첨부 <span style="font-weight:600;color:#bbb;font-size:12px;margin-left:4px;">선택사항</span>
                         </div>
+
+                        <div class="current-image-wrapper" th:if="${review.picture != null and review.picture != ''}" id="currentImageZone">
+                            <img th:src="'/' + ${review.picture}" class="current-image-thumb" alt="현재 등록된 이미지">
+                            <div class="current-image-info">
+                                <span class="ci-title">현재 등록된 사진이 있습니다</span>
+                                <span class="ci-badge">새 사진을 등록하면 기존 사진은 대체됩니다</span>
+                            </div>
+                        </div>
+
                         <div class="update-file-upload-box" id="dropZone">
                             <input type="file"
-                                   name="pictureFile"
+                                   name="reviewImageFile"
                                    id="fileInput"
-                                   accept="image/*"
-                                   multiple>
+                                   accept="image/*">
                             <div class="file-upload-icon">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                             </div>
@@ -508,8 +569,18 @@
     const filePreviewList = document.getElementById('filePreviewList');
     const dropZone        = document.getElementById('dropZone');
 
+    /*
+     * 화면 → 스크립트
+     * 상단에 주입한 기존 이미지 시각화 레이아웃 박스를 탐색하여 스크립트 제어 변수에 저장
+     */
+    const currentImageZone = document.getElementById('currentImageZone');
+
     let selectedFiles = [];
 
+    /*
+     * 스크립트 → 화면
+     * 새로운 사진 파일을 드래그하거나 인풋을 통해 등록/삭제할 때마다 화면 미리보기를 다시 그리는 함수
+     */
     function renderPreviews() {
         if (!filePreviewList) return;
         filePreviewList.innerHTML = '';
@@ -528,9 +599,25 @@
             filePreviewList.appendChild(item);
         });
 
+        /*
+         * 스크립트 → 화면
+         * 새로 올린 파일 목록(selectedFiles)의 길이가 0보다 크면 기존 이미지 가방을 display non 처리하여 부드럽게 숨김
+         * 만약 유저가 새로 올린 사진을 지워서 목록이 다시 비어있게 되면 기존 이미지 정보를 화면에 다시 출력
+         */
+        if (selectedFiles.length > 0 && currentImageZone) {
+            currentImageZone.style.display = 'none';
+        } else if (selectedFiles.length === 0 && currentImageZone) {
+            currentImageZone.style.display = 'flex';
+        }
+
         filePreviewList.querySelectorAll('.file-remove-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 selectedFiles.splice(parseInt(btn.dataset.idx), 1);
+                /*
+                 * 스크립트 → 화면
+                 * 특정 파일 미리보기를 취소할 때 실제 파일 인풋 데이터도 빈 값으로 초기화하여 백엔드 전송 데이터 싱크 일치
+                 */
+                if (fileInput) fileInput.value = '';
                 renderPreviews();
             });
         });

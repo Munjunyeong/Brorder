@@ -20,5 +20,26 @@
         FROM menu
         WHERE menu_id = #{menuId}
     </select>
+    
+    <insert id="insertMenu" parameterType="kr.com.brorder.menu.model.Menu">
+        INSERT INTO menu (
+            store_id,
+            name,
+            content,
+            image,
+            price
+        ) VALUES (
+            #{storeId},
+            #{name},
+            #{content},
+            #{image},
+            #{price}
+        )
+    </insert>
+
+    <delete id="deleteMenu">
+        DELETE FROM menu
+        WHERE menu_id = #{menuId}
+    </delete>
 
 </mapper>

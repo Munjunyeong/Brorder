@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.com.brorder.review.dao.ReviewDao">
 
@@ -12,24 +13,29 @@
         <result property="picture" column="picture"/>
         <result property="createdData" column="createdData"/>
         <result property="userIdName" column="userIdName"/>
+        <result property="storeName" column="storeName"/>
         <result property="menuName" column="menuName"/>
     </resultMap>
 
-    <select id="findById" parameterType="int" resultType="kr.com.brorder.review.domain.Review">
+    <select id="findById" parameterType="int"
+            resultType="kr.com.brorder.review.domain.Review">
         SELECT
-        review_id    AS reviewId,
-        store_id     AS storeId,
-        user_id      AS userId,
-        menu_id      AS menuId,
-        rating       AS rating,
-        content      AS content,
-        picture      AS picture,
-        created_data AS createdData
-        FROM review
-        WHERE review_id = #{reviewId}
+        r.review_id    AS reviewId,
+        r.store_id     AS storeId,
+        r.user_id      AS userId,
+        r.menu_id      AS menuId,
+        m.name         AS menuName,
+        r.rating       AS rating,
+        r.content      AS content,
+        r.picture      AS picture,
+        r.created_data AS createdData
+        FROM review r
+        LEFT JOIN menu m ON r.menu_id = m.menu_id
+        WHERE r.review_id = #{reviewId}
     </select>
 
-    <select id="findByStoreId" parameterType="int" resultMap="ReviewResponseMap">
+    <select id="findByStoreId" parameterType="int"
+            resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
         r.store_id     AS storeId,
@@ -39,15 +45,18 @@
         r.picture      AS picture,
         r.created_data AS createdData,
         u.id           AS userIdName,
+        s.name         AS storeName,
         m.name         AS menuName
         FROM review r
         LEFT JOIN users u ON r.user_id = u.user_id
-        LEFT JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN store s ON r.store_id = s.store_id
+        LEFT JOIN menu m ON r.menu_id = m.menu_id
         WHERE r.store_id = #{storeId}
         ORDER BY r.created_data DESC
     </select>
 
-    <select id="findByUserId" parameterType="int" resultMap="ReviewResponseMap">
+    <select id="findByUserId" parameterType="int"
+            resultMap="ReviewResponseMap">
         SELECT
         r.review_id    AS reviewId,
         r.store_id     AS storeId,
@@ -57,15 +66,18 @@
         r.picture      AS picture,
         r.created_data AS createdData,
         u.id           AS userIdName,
+        s.name         AS storeName,
         m.name         AS menuName
         FROM review r
         LEFT JOIN users u ON r.user_id = u.user_id
-        LEFT JOIN menu m  ON r.menu_id = m.menu_id
+        LEFT JOIN store s ON r.store_id = s.store_id
+        LEFT JOIN menu m ON r.menu_id = m.menu_id
         WHERE r.user_id = #{userId}
         ORDER BY r.created_data DESC
     </select>
 
-    <insert id="save" parameterType="kr.com.brorder.review.domain.Review">
+    <insert id="save"
+            parameterType="kr.com.brorder.review.domain.Review">
         INSERT INTO review (
         store_id,
         user_id,
@@ -90,25 +102,39 @@
         WHERE review_id = #{reviewId}
     </delete>
 
-    <update id="update" parameterType="kr.com.brorder.review.domain.Review">
+    <update id="update"
+            parameterType="kr.com.brorder.review.domain.Review">
         UPDATE review
         SET
-        rating  = #{rating},
+        rating = #{rating},
         content = #{content},
         picture = #{picture}
-        WHERE
-        review_id = #{reviewId}
+        WHERE review_id = #{reviewId}
     </update>
 
-    <select id="findMenusByStoreId" parameterType="int" resultType="kr.com.brorder.review.domain.MenuOptionDTO">
+    <select id="findMenusByStoreId"
+            parameterType="int"
+            resultType="kr.com.brorder.review.domain.MenuOptionDTO">
         SELECT
         m.menu_id AS menuId,
-        m.name    AS menuName
+        m.name AS menuName
         FROM menu m
         WHERE m.store_id = #{storeId}
         ORDER BY m.menu_id
     </select>
 
-</mapper>
+    <select id="getOrderReviewInfo" resultType="kr.com.brorder.review.domain.ReviewResponseDTO">
+        SELECT
+        o.order_id AS orderId,
+        s.store_id AS storeId,
+        s.name AS storeName,
+        m.menu_id AS menuId,
+        m.name AS menuName
+        FROM orders o
+        JOIN store s ON o.store_id = s.store_id
+        JOIN order_menu om ON o.order_id = om.order_id
+        JOIN menu m ON om.menu_id = m.menu_id
+        WHERE o.order_id = #{orderId}
+    </select>
 
-<!--06/15 커밋 테스트-->
+</mapper>

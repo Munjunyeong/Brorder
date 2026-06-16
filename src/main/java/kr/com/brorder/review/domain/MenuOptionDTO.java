@@ -24,4 +24,3 @@ public class MenuOptionDTO {
         this.menuName = menuName;
     }
 }
-// 06/15 커밋 테스트

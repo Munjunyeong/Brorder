@@ -6,7 +6,7 @@ public class Menu {
     private Integer storeId;
     private String name;
     private String content;
-    private String picture;
+    private String image;
     private Integer price;
 
     public Integer getMenuId() {
@@ -41,12 +41,12 @@ public class Menu {
         this.content = content;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getImage() {
+        return image;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public Integer getPrice() {
