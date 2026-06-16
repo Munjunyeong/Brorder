@@ -10,4 +10,6 @@ public interface MenuDao {
     List<Menu> selectMenuListByStoreId(Integer storeId);
     Menu selectMenuById(Integer menuId);
     List<Menu> list(Integer storeId);
+
+    void deleteMenu(Integer menuId);
 }

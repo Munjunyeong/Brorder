@@ -36,6 +36,11 @@
 
     <div class="menu-section">
         <h3>메뉴 목록</h3>
+
+        <a th:href="@{/menu/add(storeId=${store.storeId})}">
+            메뉴 추가
+        </a>
+
         <ul class="menu-list">
             <li class="menu-item" th:each="menu : ${menuList}">
                 <div class="menu-info">
@@ -54,6 +59,12 @@
                             style="padding: 8px 15px; background: #2ac1bc; color: white; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; font-weight: bold;">
                         주문하기
                     </button>
+
+                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}"
+                          method="post">
+                        <button type="submit">삭제</button>
+                    </form>
+
                 </div>
             </li>
             <li th:if="${#lists.isEmpty(menuList)}" style="padding: 40px; text-align: center; color: #999;">

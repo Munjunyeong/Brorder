@@ -37,4 +37,9 @@
         )
     </insert>
 
+    <delete id="deleteMenu">
+        DELETE FROM menu
+        WHERE menu_id = #{menuId}
+    </delete>
+
 </mapper>

@@ -40,4 +40,11 @@ public class MenuDaoImpl implements MenuDao {
     public List<Menu> list(Integer storeId) {
         return List.of();
     }
+
+    @Override
+    public void deleteMenu(Integer menuId) {
+        sqlSession.delete(
+                NAMESPACE + "deleteMenu",
+                menuId);
+    }
 }

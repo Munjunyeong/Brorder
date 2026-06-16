@@ -50,7 +50,7 @@ public class MenuServiceImpl implements MenuService {
                 file.transferTo(saveFile);
 
                 // DB에 저장될 이미지 경로 (/upload/파일명)
-                menu.setImage("/upload/" + saveName);
+                menu.setImage(saveName);
             }
 
             // DB 저장
@@ -60,5 +60,10 @@ public class MenuServiceImpl implements MenuService {
             e.printStackTrace();
             throw new RuntimeException("메뉴 저장 실패");
         }
+    }
+
+    @Override
+    public void deleteMenu(Integer menuId) {
+        menuDao.deleteMenu(menuId);
     }
 }
