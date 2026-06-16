@@ -12,4 +12,8 @@ public interface MenuDao {
     List<Menu> list(Integer storeId);
 
     void deleteMenu(Integer menuId);
+
+    void deleteOrderMenuByMenuId(Integer menuId);
+
+    void updateMenu(Menu menu);
 }

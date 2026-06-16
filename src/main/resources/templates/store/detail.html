@@ -54,14 +54,17 @@
                      alt="menu image">
                 <div th:if="${menu.image == null}" class="menu-img" style="display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">이미지 없음</div>
                 <div style="margin-left: 15px;">
-                    <button type="button" 
+                    <button type="button"
                             th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]])"
                             style="padding: 8px 15px; background: #2ac1bc; color: white; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; font-weight: bold;">
                         주문하기
                     </button>
 
-                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}"
-                          method="post">
+                    <form th:action="@{/menu/{menuId}/update(menuId=${menu.menuId})}" method="get">
+                        <button type="submit">수정</button>
+                    </form>
+
+                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}" method="post">
                         <button type="submit">삭제</button>
                     </form>
 

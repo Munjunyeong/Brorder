@@ -21,49 +21,64 @@ public class MenuServiceImpl implements MenuService {
     @Value("${kopo.upload.path}")
     private String uploadPath;
 
+    // 메뉴 목록
     @Override
     public List<Menu> selectMenuListByStoreId(Integer storeId) {
         return menuDao.selectMenuListByStoreId(storeId);
     }
 
+    // 단일 메뉴 조회
     @Override
     public Menu selectMenuById(Integer menuId) {
         return menuDao.selectMenuById(menuId);
     }
 
+    // 메뉴 등록
     @Override
     public void insertMenu(Menu menu, MultipartFile file) {
 
         try {
-            // 파일 있을 때만 처리
             if (file != null && !file.isEmpty()) {
-
-                String originalName = file.getOriginalFilename();
-                String saveName = System.currentTimeMillis() + "_" + originalName;
-
-                File folder = new File(uploadPath);
-                if (!folder.exists()) {
-                    folder.mkdirs();
-                }
-
-                File saveFile = new File(uploadPath, saveName);
-                file.transferTo(saveFile);
-
-                // DB에 저장될 이미지 경로 (/upload/파일명)
+                String saveName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                file.transferTo(new File(uploadPath, saveName));
                 menu.setImage(saveName);
             }
 
-            // DB 저장
             menuDao.insertMenu(menu);
 
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("메뉴 저장 실패");
+            throw new RuntimeException(e);
         }
     }
 
+    // 메뉴 삭제
     @Override
     public void deleteMenu(Integer menuId) {
+
+        menuDao.deleteOrderMenuByMenuId(menuId);
         menuDao.deleteMenu(menuId);
+    }
+
+    // 메뉴 수정
+    @Override
+    public void updateMenu(Menu menu, MultipartFile file) {
+
+        Menu origin = menuDao.selectMenuById(menu.getMenuId());
+        menu.setStoreId(origin.getStoreId());
+
+        try {
+            if (file != null && !file.isEmpty()) {
+                String saveName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                file.transferTo(new File(uploadPath, saveName));
+                menu.setImage(saveName);
+            } else {
+                menu.setImage(origin.getImage());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        menuDao.updateMenu(menu);
     }
 }

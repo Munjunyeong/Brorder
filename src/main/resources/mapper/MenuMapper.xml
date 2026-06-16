@@ -42,4 +42,19 @@
         WHERE menu_id = #{menuId}
     </delete>
 
+    <delete id="deleteOrderMenuByMenuId">
+        DELETE FROM order_menu
+        WHERE menu_id = #{menuId}
+    </delete>
+
+    <update id="updateMenu" parameterType="kr.com.brorder.menu.model.Menu">
+        UPDATE menu
+        SET
+            name = #{name},
+            content = #{content},
+            price = #{price},
+            image = #{image}
+        WHERE menu_id = #{menuId}
+    </update>
+
 </mapper>

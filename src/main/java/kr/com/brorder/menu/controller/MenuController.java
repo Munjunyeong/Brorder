@@ -28,18 +28,15 @@ public class MenuController {
                           Model model) {
 
         model.addAttribute("storeId", storeId);
-
         return "menu/add";
     }
 
     // 메뉴 등록 처리
     @PostMapping("/menu/add")
     public String addMenu(Menu menu,
-                          @RequestParam("file") MultipartFile file)
-            throws IOException {
+                          @RequestParam("file") MultipartFile file) throws IOException {
 
         menuService.insertMenu(menu, file);
-
         return "redirect:/store/" + menu.getStoreId();
     }
 
@@ -48,28 +45,44 @@ public class MenuController {
     public String menuList(@RequestParam Integer storeId,
                            Model model) {
 
-        List<Menu> menuList =
-                menuService.selectMenuListByStoreId(storeId);
+        List<Menu> menuList = menuService.selectMenuListByStoreId(storeId);
 
         model.addAttribute("menuList", menuList);
+        model.addAttribute("storeId", storeId);
 
         return "menu/list";
     }
 
+    // 메뉴 수정 화면
+    @GetMapping("/menu/{menuId}/update")
+    public String updateForm(@PathVariable Integer menuId, Model model) {
+        model.addAttribute("menu", menuService.selectMenuById(menuId));
+        return "menu/update";
+    }
+
+    @PostMapping("/menu/{menuId}/update")
+    public String updateMenu(@PathVariable Integer menuId,
+                             Menu menu,
+                             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+
+        Menu origin = menuService.selectMenuById(menuId);
+
+        menu.setMenuId(menuId);
+        menu.setStoreId(origin.getStoreId());
+
+        menuService.updateMenu(menu, file);
+
+        return "redirect:/store/" + origin.getStoreId();
+    }
+
+    // 메뉴 삭제
     @PostMapping("/menu/{menuId}/delete")
     public String deleteMenu(@PathVariable Integer menuId) {
 
-        System.out.println("삭제 요청 들어옴");
-
         Menu menu = menuService.selectMenuById(menuId);
-
-        System.out.println("메뉴 조회 완료");
-
         Integer storeId = menu.getStoreId();
 
         menuService.deleteMenu(menuId);
-
-        System.out.println("삭제 완료");
 
         return "redirect:/store/" + storeId;
     }

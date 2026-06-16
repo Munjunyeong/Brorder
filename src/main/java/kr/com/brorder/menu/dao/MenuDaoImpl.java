@@ -47,4 +47,20 @@ public class MenuDaoImpl implements MenuDao {
                 NAMESPACE + "deleteMenu",
                 menuId);
     }
+
+    @Override
+    public void deleteOrderMenuByMenuId(Integer menuId) {
+        sqlSession.delete(
+                NAMESPACE + "deleteOrderMenuByMenuId",
+                menuId
+        );
+    }
+
+    @Override
+    public void updateMenu(Menu menu) {
+        sqlSession.update(
+                NAMESPACE + "updateMenu",
+                menu
+        );
+    }
 }

@@ -15,4 +15,6 @@ public interface MenuService {
     void insertMenu(Menu menu, MultipartFile file) throws IOException;
 
     void deleteMenu(Integer menuId);
+
+    void updateMenu(Menu menu, MultipartFile file);
 }
