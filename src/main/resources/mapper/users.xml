@@ -7,7 +7,7 @@
 		INSERT INTO users
 		(id, password, name, phone, role, created_data)
 		VALUES
-		(#{id}, #{password}, #{name}, #{phone}, #{role}, CURDATE())
+		(#{id}, #{password}, #{name}, #{phone}, #{role}, NOW())
 	</insert>
 	
 	<select id="item" resultType="kr.com.brorder.users.Users">
