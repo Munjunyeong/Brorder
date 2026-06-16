@@ -1,18 +1,24 @@
 package kr.com.brorder.store;
 
+import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-//테스트
+
 @Controller
 @RequestMapping("/store") // 주소창에 localhost:9090/store/... 로 접근
 public class StoreController {
 
     @Autowired
+    /**내 서비스 안에서만 안전하게 DB에 접근**/
     private StoreService storeService;
+
+    @Autowired
+    private MenuService menuService;
 
     // 테스트
     // 1. 판매처 목록 조회 (카테고리 필터 + 이름 검색창) (GET /store/list)
@@ -33,6 +39,7 @@ public class StoreController {
     // 2. 특정 판매처 상세 정보 화면 (GET /store/{storeId})
     @GetMapping("/{storeId}")
     public String storeDetail(@PathVariable("storeId") Integer store_id, Model model) {
+
         // 만약 값이 안 넘어왔을 경우에 대한 방어 코드 추가
         if (store_id == null) {
             return "redirect:/store/list"; // 값이 없으면 그냥 리스트 화면으로 튕겨버림
@@ -44,7 +51,11 @@ public class StoreController {
             return "error/404";
         }
 
+        List<Menu> menuList = menuService.selectMenuListByStoreId(store_id);
+
         model.addAttribute("store", store);
+        model.addAttribute("menuList", menuList);
+
         return "store/detail"; // src/main/resources/templates/store/detail.html
     }
 

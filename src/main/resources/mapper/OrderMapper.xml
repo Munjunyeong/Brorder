@@ -116,7 +116,7 @@
             om.order_id      AS orderId,
             om.menu_id       AS menuId,
             m.name           AS menuName,
-            m.picture        AS menuPicture,
+            m.image        AS menuimage,
             om.option_id     AS optionId,
             om.option_name   AS optionName,
             om.option_price  AS optionPrice,
