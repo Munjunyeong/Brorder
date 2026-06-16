@@ -1,4 +1,4 @@
-package kr.com.brorder.order.controller; //오더컨트롤러.
+package kr.com.brorder.order.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,8 +50,8 @@ public class OrderController {
         return "order/list";
     }
 
-    // 주문 상세 페이지
-    @GetMapping("/{orderId}")
+    //
+    @GetMapping("/{orderId:\\d+}")
     public String item(@PathVariable Long orderId,
                        HttpSession session,
                        Model model) {
@@ -61,8 +61,8 @@ public class OrderController {
         }
 
         Order order = orderService.item(orderId);
-        
-        // 본인 주문이 아니면 접근 차단 (관리자 권한이 있다면 예외 가능하지만 여기서는 단순하게 본인 확인)
+
+        // 본인 주문이 아니면 접근 차단
         if (order != null && order.getUserId() != user.getUserid().intValue()) {
             return "redirect:/orders";
         }
@@ -75,14 +75,19 @@ public class OrderController {
         return "order/item";
     }
 
-    // 주문 생성
+    // 주문 생성 담당 메서드
     @PostMapping
     public String insert(@ModelAttribute Order order, HttpSession session) {
+        // 1. 세션에서 로그인 유저 체크
         Users user = (Users) session.getAttribute("users");
-        if (user != null) {
-            order.setUserId(user.getUserid().intValue());
+        if (user == null) {
+            return "redirect:/login";
         }
 
+
+        order.setUserId(user.getUserid().intValue());
+
+        // 3. 서비스 호출 및 저장
         orderService.insert(order);
 
         return "redirect:/orders";
@@ -106,7 +111,7 @@ public class OrderController {
                     model.addAttribute("menuList", List.of());
                 }
             } else {
-                // 가게 전체 메뉴 (장바구니 구현 전까지는 전체를 보여줌)
+                // 가게 전체 메뉴
                 List<Menu> menuList = menuService.selectMenuListByStoreId(storeId);
                 model.addAttribute("menuList", menuList);
             }
@@ -122,7 +127,8 @@ public class OrderController {
         return "order/add";
     }
 
-    @GetMapping("/delete/{orderId}")
+
+    @GetMapping("/delete/{orderId:\\d+}")
     public String delete(@PathVariable Long orderId, HttpSession session) {
         Users user = (Users) session.getAttribute("users");
         if (user == null) {
