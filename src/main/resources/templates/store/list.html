@@ -7,19 +7,23 @@
 <body>
 
 <th:block th:replace="~{fragments/header :: gnbHeader}"></th:block>
-<!--테스트-->
 
 <!-- ══ 타이틀 + 카테고리 한 줄 (무조건 출력되는 하드코딩 8대 카테고리 패치) ══ -->
 <div class="sl-header">
     <div class="sl-header__inner">
         <h1 class="sl-header__title">음식 배달</h1>
+
+<!--        &lt;!&ndash;  세션의 users 권한이 OWNER이거나 ADMIN일 때만 '새 가게 등록' 버튼 노출 &ndash;&gt;-->
+<!--        <div th:if="${session.users != null and (session.users.role == 'OWNER' or session.users.role == 'ADMIN')}" style="text-align: right; margin-bottom: 10px;">-->
+<!--            <a th:href="@{/store/add}" style="padding: 8px 16px; background-color: #333; color: white; border-radius: 4px; text-decoration: none;">새 가게 등록</a>-->
+<!--        </div>-->
         <div class="sl-header__cats">
             <!-- 전체 보기 -->
             <a th:href="@{/store/list}"
                th:class="${selectedCategory == null or selectedCategory == '' ? 'sl-chip sl-chip--active' : 'sl-chip'}">
                 전체
             </a>
-            <!-- 📲 [교정 완료] 컨트롤러 데이터 누락에 영향받지 않도록 고정된 8대 카테고리 버튼 생성 및 활성화 조건 매칭 -->
+            <!-- 컨트롤러 데이터 누락에 영향받지 않도록 고정된 8대 카테고리 버튼 생성 및 활성화 조건 매칭 -->
             <a th:href="@{/store/list(category='치킨')}"
                th:class="${selectedCategory == '치킨' ? 'sl-chip sl-chip--active' : 'sl-chip'}">치킨</a>
 
@@ -56,7 +60,12 @@
            th:classappend="${store.status == 'CLOSE' ? ' sl-card--closed' : ''}">
 
             <div class="sl-thumb">
-                <div class="sl-thumb__placeholder">
+                <img th:if="${store.titleImage != null and store.titleImage != ''}"
+                     th:src="@{/upload/{filename}(filename=${store.titleImage})}"
+                     class="sl-thumb__img"
+                     alt="가게 대표 이미지">
+
+                <div th:if="${store.titleImage == null or store.titleImage == ''}" class="sl-thumb__placeholder">
                     <span class="sl-thumb__brand">BRORDER</span>
                 </div>
 

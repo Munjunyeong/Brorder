@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>사장님 전용 - 내 가게 관리</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        .owner-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .store-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .store-table th, .store-table td { border: 1px solid #ccc; padding: 12px; text-align: center; }
+        .store-table th { background-color: #f4f4f4; }
+        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; display: inline-block; }
+        .btn-edit { background-color: #4CAF50; color: white; }
+        .btn-delete { background-color: #f44336; color: white; border: none; cursor: pointer; }
+        .btn-add { background-color: #008CBA; color: white; font-weight: bold; }
+        .thumb-img { width: 60px; height: 45px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="owner-header">
+    <h1>👨‍🍳 내 가게 관리 대시보드</h1>
+    <p>안녕하세요, <strong th:text="${session.users.name}">사장님</strong>님!</p>
+</div>
+
+<div style="margin-top: 15px; text-align: right;">
+    <a th:href="@{/store/add}" class="btn btn-add">+ 새 매장 등록하기</a>
+</div>
+
+<table class="store-table">
+    <thead>
+    <tr>
+        <th>이미지</th>
+        <th>가게명</th>
+        <th>카테고리</th>
+        <th>전화번호</th>
+        <th>상태</th>
+        <th>관리 액션</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 💡 사장님이 등록한 가게 목록 반복 출력 -->
+    <tr th:each="store : ${stores}">
+        <td>
+            <img th:if="${store.titleImage != null and store.titleImage != ''}" th:src="@{/upload/{filename}(filename=${store.titleImage})}" class="thumb-img">
+            <span th:if="${store.titleImage == null or store.titleImage == ''}" style="color:#ccc; font-size:12px;">없음</span>
+        </td>
+        <td>
+            <a th:href="@{/store/{id}(id=${store.storeId})}" th:text="${store.name}" style="font-weight:bold; color:#333;">가게이름</a>
+        </td>
+        <td th:text="${store.category}">치킨</td>
+        <td th:text="${store.phone}">02-123-4567</td>
+        <td>
+            <span th:if="${store.status == 'OPEN'}" style="color: green; font-weight: bold;">영업중</span>
+            <span th:if="${store.status == 'CLOSE'}" style="color: red; font-weight: bold;">준비중</span>
+        </td>
+        <td>
+            <!-- 수정 페이지 연동 -->
+            <a th:href="@{/store/{id}/update(id=${store.storeId})}" class="btn btn-edit">수정</a>
+
+            <!-- 삭제 처리 연동 -->
+            <form th:action="@{/store/{id}/delete(id=${store.storeId})}" method="post" style="display:inline;" onsubmit="return confirm('정말 이 매장을 삭제하시겠습니까?');">
+                <button type="submit" class="btn btn-delete">삭제</button>
+            </form>
+        </td>
+    </tr>
+    <!-- 등록된 가게가 없을 때 -->
+    <tr th:if="${#lists.isEmpty(stores)}">
+        <td colspan="6" style="padding: 30px; color: #777;">아직 등록된 매장이 없습니다. 첫 매장을 등록해 보세요!</td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<a th:href="@{/store/list}">← 소비자 페이지(전체 목록) 보기</a>
+
+</body>
+</html>

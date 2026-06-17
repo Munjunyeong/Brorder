@@ -27,6 +27,21 @@
 				<a href="">메뉴</a>
 				<a href="">리뷰</a>
 			</div>
+
+			<!--  세션에 로그인한 유저 정보가 있고, 권한이 OWNER이거나 ADMIN일 때만 이 박스가 노출됩니다. -->
+			<div th:if="${session.users != null and (session.users.role == 'OWNER' or session.users.role == 'ADMIN')}"
+			     style="margin: 20px 0; padding: 15px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 8px; max-width: 500px;">
+
+				<p style="margin: 0 0 10px 0; font-size: 14px; color: #555;">
+					안녕하세요, <strong th:text="${session.users.name}" style="color: #333;">사장님</strong>님! 매장 관리 권한이 확인되었습니다.
+				</p>
+
+				<!--  클릭 시 우리가 완성한 사장님 대시보드 주소로 안전하게 이동합니다 -->
+				<a th:href="@{/store/owner}"
+				   style="display: inline-block; padding: 10px 20px; background-color: #2c3e50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 15px;">
+					 내 가게 관리 대시보드 바로가기
+				</a>
+			</div>
 		</div>
 	</div>
 </body>
