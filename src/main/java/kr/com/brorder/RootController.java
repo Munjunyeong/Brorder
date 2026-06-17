@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import jakarta.servlet.http.HttpSession;
 import kr.com.brorder.users.Users;
@@ -95,6 +97,15 @@ public class RootController {
 		model.addAttribute("findpw", findpw);
 		
 		return "user/resultpw";
+	}
+	
+	@ResponseBody
+	@GetMapping("/check_id/{id}")
+	String checkId(@PathVariable String id) {
+		if(usersService.item(id) == null)
+			return "true";
+		
+		return "false";
 	}
 
 }
