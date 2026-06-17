@@ -794,8 +794,10 @@
                         th:text="${review.rating + '.0'}">5.0</strong></div>
                 <p class="review-content" th:text="${review.content}">음식이 정말 맛있어요!</p>
                 <div th:if="${review.picture != null and !#strings.isEmpty(review.picture)}" class="review-photos"><img
-                        th:src="'/' + ${review.picture}" class="review-photo" alt="리뷰 사진"
-                        th:onclick="openImageModal([['/' + ${review.picture}]])"/></div>
+                        th:src="'/upload/' + ${review.picture}"
+                        class="review-photo"
+                        alt="리뷰 사진"
+                        th:onclick="openImageModal([['/upload/' + ${review.picture}]])"/></div>
                 <div th:unless="${review.picture != null and !#strings.isEmpty(review.picture)}" class="no-photo-tag">
                     📷 사진 없음
                 </div>

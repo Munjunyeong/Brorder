@@ -570,7 +570,7 @@
 /* 내 리뷰 페이지 최신 스타일 */
 .myreview-hero {
     background: linear-gradient(135deg, #0f0f1e 0%, #1a0a14 50%, #0a1628 100%);
-    padding: 52px var(--side-pad, 5%) 88px;
+    padding: 52px var(--side-pad, 5%) 48px;
     position: relative;
     overflow: hidden;
 }
@@ -703,16 +703,15 @@
 }
 
 .myreview-stats-wrap {
-    margin: -44px auto 0;
+    margin: 32px auto 0;
     padding: 0 var(--side-pad, 5%);
     position: relative;
     z-index: 10;
 }
-
 .myreview-stats {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
 }
 
 .mstat-card {

@@ -27,40 +27,24 @@
                     <span class="title-badge" th:text="${myReviewList != null ? myReviewList.size() + '개' : '0개'}">0개</span>
                 </h1>
             </div>
-            <a th:href="@{/review/write}" class="myreview-write-btn">
-                <i class="fa-solid fa-pen-to-square"></i> 새 리뷰 작성
-            </a>
         </div>
     </div>
 
-    <div class="myreview-stats-wrap">
+    <div class="myreview-stats-wrap" th:with="totalCount=${myReviewList != null ? myReviewList.size() : 0}">
         <div class="myreview-stats">
             <div class="mstat-card">
                 <div class="mstat-icon msi-1"><i class="fa-solid fa-pen-nib"></i></div>
                 <div class="mstat-body">
-                    <div class="mstat-num" th:text="${myReviewList != null ? myReviewList.size() : 0}">0</div>
+                    <div class="mstat-num" th:text="${totalCount}">0</div>
                     <div class="mstat-label">작성한 리뷰</div>
                 </div>
             </div>
             <div class="mstat-card">
                 <div class="mstat-icon msi-2"><i class="fa-solid fa-star"></i></div>
                 <div class="mstat-body">
-                    <div class="mstat-num">4.6</div>
+                    <div class="mstat-num" th:if="${totalCount > 0}" th:text="${#numbers.formatDecimal(#aggregates.sum(myReviewList.![rating]) / totalCount, 1, 1)}">0.0</div>
+                    <div class="mstat-num" th:unless="${totalCount > 0}">0.0</div>
                     <div class="mstat-label">평균 별점</div>
-                </div>
-            </div>
-            <div class="mstat-card">
-                <div class="mstat-icon msi-3"><i class="fa-solid fa-coins"></i></div>
-                <div class="mstat-body">
-                    <div class="mstat-num">2,400P</div>
-                    <div class="mstat-label">적립된 포인트</div>
-                </div>
-            </div>
-            <div class="mstat-card">
-                <div class="mstat-icon msi-4"><i class="fa-solid fa-reply"></i></div>
-                <div class="mstat-body">
-                    <div class="mstat-num">1</div>
-                    <div class="mstat-label">사장님 답글</div>
                 </div>
             </div>
         </div>
@@ -70,27 +54,24 @@
 
         <div class="myreview-filter-bar">
             <div class="filter-tabs">
-                <a href="#" class="filter-tab active">전체</a>
-                <a href="#" class="filter-tab">
+                <a href="#" class="filter-tab filter-tab-js active" data-filter="all">전체</a>
+                <a href="#" class="filter-tab filter-tab-js" data-filter="5">
                     <i class="fa-solid fa-star review-gold-icon"></i> 5점
                 </a>
-                <a href="#" class="filter-tab">
+                <a href="#" class="filter-tab filter-tab-js" data-filter="4">
                     <i class="fa-solid fa-star review-gold-icon"></i> 4점
                 </a>
-                <a href="#" class="filter-tab">
+                <a href="#" class="filter-tab filter-tab-js" data-filter="under3">
                     <i class="fa-solid fa-star review-gold-icon"></i> 3점 이하
-                </a>
-                <a href="#" class="filter-tab">
-                    <i class="fa-solid fa-reply"></i> 답글 있음
                 </a>
             </div>
             <div class="filter-right">
-                <select class="filter-sort-select">
+                <select class="filter-sort-select filter-sort-select-js">
                     <option value="latest">최신순</option>
                     <option value="rating-desc">별점 높은순</option>
                     <option value="rating-asc">별점 낮은순</option>
                 </select>
-                <span class="filter-count">총 <strong th:text="${myReviewList != null ? myReviewList.size() : 0}">0</strong>개</span>
+                <span class="filter-count">총 <strong id="dynamicFilterCount" th:text="${myReviewList != null ? myReviewList.size() : 0}">0</strong>개</span>
             </div>
         </div>
 
@@ -98,63 +79,63 @@
             <div class="list-section-label">
                 <span>작성한 리뷰 목록</span>
             </div>
-            <div class="myreview-list">
-                <div class="myreview-card card-visible"
+            <div class="myreview-list" id="myreviewListContainer">
+                <div class="myreview-card card-visible myreview-card-item-js"
                      th:each="review, stat : ${myReviewList}"
                      th:attr="data-delay=${stat.index * 70}"
-                     th:data-review-dom-id="${review.reviewId}">
+                     th:data-review-dom-id="${review.reviewId}"
+                     th:data-rating-val="${review.rating}"
+                     th:data-has-reply="true"> <div class="myreview-card-inner">
+                    <div class="mrc-img">
+                        <img th:src="${(review.picture != null and review.picture != '') ? '/upload/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}" th:alt="${review.menuName}">
+                    </div>
 
-                    <div class="myreview-card-inner">
-                        <div class="mrc-img">
-                            <img th:src="${(review.picture != null and review.picture != '') ? '/' + review.picture : 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=200&q=80'}" th:alt="${review.menuName}">
-                        </div>
-
-                        <div class="mrc-body">
-                            <div class="mrc-top-row">
-                                <span class="mrc-store-name">BRORDER 점포</span>
-                                <span class="mrc-store-tag">음식배달</span>
-                                <span class="mrc-menu-chip" th:if="${review.menuName != null and review.menuName != ''}">
+                    <div class="mrc-body">
+                        <div class="mrc-top-row">
+                            <span class="mrc-store-name">BRORDER 점포</span>
+                            <span class="mrc-store-tag">음식배달</span>
+                            <span class="mrc-menu-chip" th:if="${review.menuName != null and review.menuName != ''}">
                                     <i class="fa-solid fa-utensils"></i>
                                     <span th:text="${review.menuName}">메뉴명</span>
                                 </span>
-                            </div>
+                        </div>
 
-                            <div class="mrc-rating-row">
-                                <div class="mrc-stars">
-                                    <i th:each="s : ${#numbers.sequence(1,5)}"
-                                       th:classappend="${s <= review.rating} ? ' active' : ''"
-                                       class="fa-solid fa-star"></i>
-                                </div>
-                                <span class="mrc-rating-pill">
+                        <div class="mrc-rating-row">
+                            <div class="mrc-stars">
+                                <i th:each="s : ${#numbers.sequence(1,5)}"
+                                   th:classappend="${s <= review.rating} ? ' active' : ''"
+                                   class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="mrc-rating-pill">
                                     <i class="fa-solid fa-star"></i>
                                     <span th:text="${review.rating + '.0'}">5.0</span>
                                 </span>
-                                <span class="mrc-date" th:text="${#temporals.format(review.createdData, 'yyyy.MM.dd')}">2026.05.28</span>
-                            </div>
-
-                            <p class="mrc-content" th:text="${review.content}">리뷰 본문 내용</p>
-
-                            <div class="mrc-thumb-row" th:if="${review.picture != null and review.picture != ''}">
-                            </div>
+                            <span class="mrc-date" th:text="${#temporals.format(review.createdData, 'yyyy.MM.dd')}">2026.05.28</span>
                         </div>
 
-                        <div class="mrc-actions">
+                        <p class="mrc-content" th:text="${review.content}">리뷰 본문 내용</p>
+
+                        <div class="mrc-thumb-row" th:if="${review.picture != null and review.picture != ''}">
+                        </div>
+                    </div>
+
+                    <div class="mrc-actions">
                             <span class="mrc-status-badge mrc-status-published">
                                 <span class="status-dot-anim"></span>게시됨
                             </span>
-                            <div class="mrc-action-btns">
-                                <a th:href="@{/review/update/{id}(id=${review.reviewId})}" class="mrc-btn mrc-btn-edit">
-                                    <i class="fa-solid fa-pen"></i> 수정
-                                </a>
-                                <button class="mrc-btn mrc-btn-delete"
-                                        th:data-review-id="${review.reviewId}"
-                                        th:data-store-id="${review.storeId}"
-                                        onclick="openDeleteModal(this)">
-                                    <i class="fa-solid fa-trash"></i> 삭제
-                                </button>
-                            </div>
+                        <div class="mrc-action-btns">
+                            <a th:href="@{/review/update/{id}(id=${review.reviewId})}" class="mrc-btn mrc-btn-edit">
+                                <i class="fa-solid fa-pen"></i> 수정
+                            </a>
+                            <button class="mrc-btn mrc-btn-delete"
+                                    th:data-review-id="${review.reviewId}"
+                                    th:data-store-id="${review.storeId}"
+                                    onclick="openDeleteModal(this)">
+                                <i class="fa-solid fa-trash"></i> 삭제
+                            </button>
                         </div>
                     </div>
+                </div>
 
                     <div class="mrc-reply">
                         <div class="mrc-reply-icon"><i class="fa-solid fa-store"></i></div>
@@ -204,5 +185,92 @@
 </button>
 
 <script th:src="@{/js/review.js}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const tabs = document.querySelectorAll('.filter-tab-js');
+        const countDisplay = document.getElementById('dynamicFilterCount');
+        const sortSelect = document.querySelector('.filter-sort-select-js');
+        const listContainer = document.getElementById('myreviewListContainer');
+
+        function applySortAndFilter() {
+            if (!listContainer) return;
+
+            // 1. 매번 현재 존재하는 카드들을 실시간으로 다시 긁어옵니다.
+            const cards = Array.from(document.querySelectorAll('.myreview-card-item-js'));
+            if (cards.length === 0) return;
+
+            const sortBy = sortSelect ? sortSelect.value : 'latest';
+            const activeTab = document.querySelector('.filter-tab-js.active');
+            const filter = activeTab ? activeTab.dataset.filter : 'all';
+
+            // 2. 정렬 알고리즘 프로세스 가동
+            cards.sort((a, b) => {
+                if (sortBy === 'latest') {
+                    // HTML 화면에 찍힌 날짜 문자열(2026.06.17)을 그대로 긁어와 문자열 비교 처리
+                    const dateA = a.querySelector('.mrc-date')?.textContent.trim() || '';
+                    const dateB = b.querySelector('.mrc-date')?.textContent.trim() || '';
+                    return dateB.localeCompare(dateA);
+                } else if (sortBy === 'rating-desc') {
+                    const rateA = parseInt(a.dataset.ratingVal) || 0;
+                    const rateB = parseInt(b.dataset.ratingVal) || 0;
+                    return rateB - rateA;
+                } else if (sortBy === 'rating-asc') {
+                    const rateA = parseInt(a.dataset.ratingVal) || 0;
+                    const rateB = parseInt(b.dataset.ratingVal) || 0;
+                    return rateA - rateB;
+                }
+                return 0;
+            });
+
+            // 3. DOM 컨테이너 정렬 순서대로 노드 재배치 및 필터 가시성 토글 동시 처리
+            let matchCount = 0;
+            cards.forEach(card => {
+                listContainer.appendChild(card); // 정렬 순으로 하위에 재삽입
+
+                const rating = parseInt(card.dataset.ratingVal) || 0;
+                let isShow = false;
+
+                if (filter === 'all') {
+                    isShow = true;
+                } else if (filter === '5') {
+                    isShow = (rating === 5);
+                } else if (filter === '4') {
+                    isShow = (rating === 4);
+                } else if (filter === 'under3') {
+                    isShow = (rating <= 3);
+                }
+
+                if (isShow) {
+                    card.style.display = 'block';
+                    matchCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // 4. 총 개수 텍스트 동기화
+            if (countDisplay) {
+                countDisplay.textContent = matchCount;
+            }
+        }
+
+        // 탭 메뉴 클릭 이벤트 바인딩
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                applySortAndFilter();
+            });
+        });
+
+        // 정렬 셀렉트 박스 변경 이벤트 바인딩
+        sortSelect?.addEventListener('change', applySortAndFilter);
+
+        // 첫 페이지 진입 시 초기 정렬 및 필터 일괄 구동
+        applySortAndFilter();
+    });
+</script>
 </body>
 </html>

@@ -135,6 +135,7 @@
         JOIN order_menu om ON o.order_id = om.order_id
         JOIN menu m ON om.menu_id = m.menu_id
         WHERE o.order_id = #{orderId}
+        LIMIT 1
     </select>
 
 </mapper>
