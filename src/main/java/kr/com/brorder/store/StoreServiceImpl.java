@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//테스트
+
 @Service
 public class StoreServiceImpl implements StoreService {
 
@@ -20,6 +20,11 @@ public class StoreServiceImpl implements StoreService {
         searchMap.put("searchKeyword", searchKeyword);
         // 비즈니스 로직 필요 시 추가 (예: 정렬, 상태 필터링 등)
         return storeDAO.selectStoreList(searchMap);
+    }
+
+    @Override
+    public List<Store> getStoreListByOwner(Long userid) {
+        return storeDAO.selectStoreListByOwner(userid);
     }
 
     @Override

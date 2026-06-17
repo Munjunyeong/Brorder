@@ -4,8 +4,7 @@
 <body>
 <h1>가게 정보 수정</h1>
 <hr>
-<form th:action="@{/store/update}" method="post">
-<!--    테스트-->
+<form th:action="@{/store/{id}/update(id=${store.storeId})}" method="post" enctype="multipart/form-data">
     <!-- 반드시 변경 대상 Id를 hidden으로 같이 전송해야 쿼리가 성립합니다 -->
     <input type="hidden" name="storeId" th:value="${store.storeId}">
 
@@ -17,6 +16,9 @@
             <option value="중식" th:selected="${store.category == '중식'}">중식</option>
             <option value="일식" th:selected="${store.category == '일식'}">일식</option>
             <option value="양식" th:selected="${store.category == '양식'}">양식</option>
+            <option value="분식" th:selected="${store.category == '분식'}">분식</option>
+            <option value="패스트푸드" th:selected="${store.category == '패스트푸드'}">패스트푸드</option>
+            <option value="카페/디저트" th:selected="${store.category == '카페/디저트'}">카페/디저트</option>
         </select>
     </label><br><br>
     <label>주소: <input type="text" name="address" th:value="${store.address}" required></label><br><br>
@@ -25,8 +27,15 @@
         <input type="radio" name="status" value="OPEN" th:checked="${store.status == 'OPEN'}"> 영업중
         <input type="radio" name="status" value="CLOSE" th:checked="${store.status == 'CLOSE'}"> 준비중
     </label><br><br>
+<!--    기존에 등록된 대표 이미지가 있다면 수정 화면에서 미리 볼 수 있도록 띄워줌-->
+    <div th:if="${store['titleImage'] != null and store['titleImage'] != ''}" style="margin-bottom: 15px;">
+        <p>기존 등록 이미지:</p>
+        <img th:src="@{/upload/{filename}(filename=${store.titleImage})}" alt="기존 이미지" style="width: 150px; height: auto; border: 1px solid #ccc;">
+    </div>
+
+    <label>대표 이미지 변경: <input type="file" name="imageFile" accept="image/*"></label><br><br>
     <button type="submit">수정 완료</button>
 </form>
-<a th:href="@{/store/detail(store_id=${store.storeId})}">취소</a>
+<a th:href="@{/store/{id}(id=${store.storeId})}">취소</a>
 </body>
 </html>

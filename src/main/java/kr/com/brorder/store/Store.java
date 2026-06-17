@@ -1,16 +1,25 @@
 package kr.com.brorder.store;
 
 import java.time.LocalDateTime;
-//테스트
+
 public class Store {
     private Integer storeId;
+    private Long userid;
     private String name;
     private String category;
     private String address;
     private String phone;
-    private Integer rating;
     private LocalDateTime createdData;
     private String status;
+    private String titleImage;
+
+    public String getTitleImage() {
+        return titleImage;
+    }
+
+    public void setTitleImage(String titleImage) {
+        this.titleImage = titleImage;
+    }
 
     public Integer getStoreId() {
         return storeId;
@@ -19,6 +28,10 @@ public class Store {
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
     }
+
+    public Long getUserid() {return userid;}
+
+    public void setUserid(Long userid) {this.userid =userid;}
 
     public String getName() {
         return name;
@@ -50,14 +63,6 @@ public class Store {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Integer getRating() {
-        return rating;
-    }
-
-    public void setRating(Integer rating) {
-        this.rating = rating;
     }
 
     public LocalDateTime getCreatedData() {

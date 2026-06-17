@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Repository
 public class StoreDaoImpl implements StoreDao {
-//테스트
+
     @Autowired
     SqlSession sqlSession; // MyBatis의 핵심 객체 주입
 
@@ -20,6 +20,11 @@ public class StoreDaoImpl implements StoreDao {
     public List<Store> selectStoreList(Map<String, Object> searchMap) {
         // XML의 <select id="selectStoreList"> 호출
         return sqlSession.selectList(NAMESPACE + "selectStoreList", searchMap);
+    }
+
+    @Override
+    public List<Store> selectStoreListByOwner(Long user_id) {
+        return sqlSession.selectList(NAMESPACE + "selectStoreListByOwner", user_id);
     }
 
     @Override

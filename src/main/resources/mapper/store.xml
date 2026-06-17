@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!--테스트-->
+
 <mapper namespace="kr.com.brorder.store.Store">
 
     <!-- 1. 판매처 전체 목록 조회 -->
@@ -14,7 +14,9 @@
             address,
             phone,
             created_data AS createdData,
-            status
+            status,
+            titleimage AS titleImage,
+            user_id AS userid
         FROM
             store
         <!-- category 파라미터가 null이 아니고 비어있지 않을 때만 WHERE 조건 추가 -->
@@ -40,7 +42,9 @@
             address,
             phone,
             created_data AS createdData,
-            status
+            status,
+            titleimage AS titleImage,
+            user_id AS userid
         FROM
             store
         WHERE
@@ -49,8 +53,8 @@
 
     <!-- 3. 가게 등록 -->
     <insert id="insertStore" parameterType="kr.com.brorder.store.Store">
-        INSERT INTO store (name, category, address, phone, created_data, status)
-        VALUES (#{name}, #{category}, #{address}, #{phone}, NOW(), 'OPEN')
+        INSERT INTO store (name, category, address, phone, created_data, status, titleimage, user_id)
+        VALUES (#{name}, #{category}, #{address}, #{phone}, NOW(), 'OPEN', #{titleImage}, #{userid})
     </insert>
 
     <!-- 4. 가게 수정 -->
@@ -61,6 +65,9 @@
             address = #{address},
             phone = #{phone},
             status = #{status}
+            <if test="titleImage != null and titleImage != ''">
+                , titleimage = #{titleImage}
+            </if>
         WHERE store_id = #{storeId}
     </update>
 
@@ -68,5 +75,26 @@
     <delete id="deleteStore" parameterType="java.lang.Integer">
         DELETE FROM store WHERE store_id = #{storeId}
     </delete>
+
+    <!-- 사장님 전용: 내가 등록한 가게 목록만 조회 -->
+    <select id="selectStoreListByOwner" parameterType="java.lang.Long" resultType="kr.com.brorder.store.Store">
+        SELECT
+            store_id     AS storeId,
+            name,
+            category,
+            address,
+            phone,
+            created_data AS createdData,
+            status,
+            titleimage   AS titleImage,
+            user_id AS userid
+        FROM
+            store
+        WHERE
+            user_id = #{userid}
+        ORDER BY
+            store_id DESC
+    </select>
+
 
 </mapper>
