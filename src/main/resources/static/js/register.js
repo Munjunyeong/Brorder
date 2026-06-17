@@ -21,7 +21,7 @@ const accuse = e => {
     if(form.password.value != form.check_password.value) {
         alert("비밀번호와 비밀번호 확인이 일치하지 않습니다."); return;
     }
-    if(form.role.value == "user" || form.role.value == "owner") {
+    if(form.role.value != "user" || form.role.value != "owner") {
         alert("잘못된 역할입니다."); return;
     }
 
