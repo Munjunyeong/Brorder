@@ -37,9 +37,11 @@
     <div class="menu-section">
         <h3>메뉴 목록</h3>
 
-        <a th:href="@{/menu/add(storeId=${store.storeId})}">
-            메뉴 추가
-        </a>
+        <th:block th:if="${session.users != null and session.users.role == 'OWNER'}">
+            <a th:href="@{/menu/add(storeId=${store.storeId})}">
+                메뉴 추가
+            </a>
+        </th:block>
 
         <ul class="menu-list">
             <li class="menu-item" th:each="menu : ${menuList}">
@@ -60,13 +62,17 @@
                         주문하기
                     </button>
 
-                    <form th:action="@{/menu/{menuId}/update(menuId=${menu.menuId})}" method="get">
-                        <button type="submit">수정</button>
-                    </form>
+                    <th:block th:if="${session.users != null and session.users.role == 'OWNER'}">
 
-                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}" method="post">
-                        <button type="submit">삭제</button>
-                    </form>
+                        <form th:action="@{/menu/{menuId}/update(menuId=${menu.menuId})}" method="get">
+                            <button type="submit">수정</button>
+                        </form>
+
+                        <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}" method="post">
+                            <button type="submit">삭제</button>
+                        </form>
+
+                    </th:block>
 
                 </div>
             </li>
@@ -76,6 +82,7 @@
         </ul>
     </div>
 
+    <th:block th:if="${session.users != null and session.users.role == 'ADMIN'}">
     <div class="btn-group">
         <div style="display: flex; gap: 10px;">
             <a th:href="@{/store/{id}/update(id=${store.storeId})}" style="padding: 5px 15px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: #333; font-size: 14px;">정보 수정</a>
@@ -85,6 +92,7 @@
         </div>
     </div>
 </div>
+</th:block>
 
 <!-- 옵션 선택 모달 -->
 <div id="optionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
