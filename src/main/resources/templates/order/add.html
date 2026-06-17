@@ -46,7 +46,7 @@
             <div class="menu-list-section" id="menu-area">
                 <div th:each="menu, stat : ${menuList}" class="menu-item">
                     <div class="menu-main">
-                        <img th:src="${menu.image}" class="menu-img">
+                        <img th:src="@{'/upload/' + ${menu.image}}" class="menu-img">
                         <div class="menu-info">
                             <div class="menu-name" th:text="${menu.name}"></div>
                             <a th:href="@{/orders/cart/remove(index=${stat.index}, storeId=${store?.storeId})}" class="delete-btn">삭제하기</a>
@@ -54,8 +54,13 @@
                         </div>
                     </div>
                     <div class="option-box">
-                        <div class="option-row"><span>기본 옵션</span><span>무료</span></div>
+                        <div class="option-summary" th:id="'option-summary-' + ${stat.index}">
+                            <div class="option-row"><span>기본 옵션</span><span>무료</span></div>
+                        </div>
                     </div>
+
+                    <input type="hidden" th:id="'selected-options-' + ${stat.index}">
+
                     <button type="button" class="btn-option-change"
                             th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]], [[${stat.index}]])">
                         옵션 추가/변경
@@ -109,44 +114,118 @@
 
 <script>
     window.onload = calculateTotal;
-    let currentItem = { index: null, menuId: null, name: '', basePrice: 0 };
+
+    let currentItem = {
+        index: null,
+        menuId: null,
+        name: '',
+        basePrice: 0
+    };
 
     function openOptionModal(id, name, price, index) {
-        currentItem = { index, menuId: id, name, basePrice: price };
+        currentItem = {
+            index: index,
+            menuId: id,
+            name: name,
+            basePrice: price
+        };
+
         document.getElementById('modalMenuName').innerText = name;
+
         fetch(`/api/menus/${id}/options`)
             .then(res => res.json())
             .then(data => {
+
                 const container = document.getElementById('option-container');
+
                 container.innerHTML = data.map(opt => `
-                    <label><input type="checkbox" name="menuOption" value="${opt.price}" data-name="${opt.name}" onchange="updateModalTotalPrice()">
-                    ${opt.name} (+${opt.price}원)</label><br>
+                    <label>
+                        <input type="checkbox"
+                               name="menuOption"
+                               value="${opt.price}"
+                               data-name="${opt.name}"
+                               onchange="updateModalTotalPrice()">
+                        ${opt.name} (+${opt.price}원)
+                    </label>
+                    <br>
                 `).join('');
+
                 document.getElementById('optionModal').style.display = 'flex';
+
                 updateModalTotalPrice();
             });
     }
 
     function updateModalTotalPrice() {
+
         let total = currentItem.basePrice;
-        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => total += parseInt(cb.value));
-        document.getElementById('modalTotalPrice').innerText = total.toLocaleString() + '원';
+
+        document.querySelectorAll('input[name="menuOption"]:checked')
+            .forEach(cb => {
+                total += parseInt(cb.value);
+            });
+
+        document.getElementById('modalTotalPrice').innerText =
+            total.toLocaleString() + '원';
     }
 
     function applyOptionChange() {
-        const selected = Array.from(document.querySelectorAll('input[name="menuOption"]:checked'));
-        const totalOptionPrice = selected.reduce((sum, cb) => sum + parseInt(cb.value), 0);
-        const targetItem = document.querySelectorAll('.menu-item')[currentItem.index];
-        targetItem.querySelector('.item-total-price').value = currentItem.basePrice + totalOptionPrice;
+
+        const selected =
+            Array.from(document.querySelectorAll('input[name="menuOption"]:checked'));
+
+        const totalOptionPrice =
+            selected.reduce((sum, cb) => sum + parseInt(cb.value), 0);
+
+        const targetItem =
+            document.querySelectorAll('.menu-item')[currentItem.index];
+
+        // 메뉴 가격 변경
+        targetItem.querySelector('.item-total-price').value =
+            currentItem.basePrice + totalOptionPrice;
+
+        // 선택 옵션 표시
+        const summary =
+            targetItem.querySelector('.option-summary');
+
+        if (selected.length === 0) {
+
+            summary.innerHTML = `
+                <div class="option-row">
+                    <span>기본 옵션</span>
+                    <span>무료</span>
+                </div>
+            `;
+
+        } else {
+
+            summary.innerHTML = selected.map(cb => `
+                <div class="option-row">
+                    <span>${cb.dataset.name}</span>
+                    <span>+${parseInt(cb.value).toLocaleString()}원</span>
+                </div>
+            `).join('');
+        }
+
         document.getElementById('optionModal').style.display = 'none';
+
         calculateTotal();
     }
 
     function calculateTotal() {
+
         let sub = 0;
-        document.querySelectorAll('.item-total-price').forEach(i => sub += parseInt(i.value));
-        document.getElementById('subtotal-price').innerText = sub.toLocaleString() + '원';
-        document.getElementById('final-total-price').innerText = (sub + 3000).toLocaleString() + '원';
+
+        document.querySelectorAll('.item-total-price')
+            .forEach(i => {
+                sub += parseInt(i.value);
+            });
+
+        document.getElementById('subtotal-price').innerText =
+            sub.toLocaleString() + '원';
+
+        document.getElementById('final-total-price').innerText =
+            (sub + 3000).toLocaleString() + '원';
     }
 </script>
 </body>
