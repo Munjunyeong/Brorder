@@ -1,4 +1,4 @@
-<!DOCTYPE html> <!-- 테스트용 주석 -->
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -36,10 +36,7 @@
 
     <div class="menu-section">
         <h3>메뉴 목록</h3>
-
-        <a th:href="@{/menu/add(storeId=${store.storeId})}">
-            메뉴 추가
-        </a>
+        <a th:href="@{/menu/add(storeId=${store.storeId})}">메뉴 추가</a>
 
         <ul class="menu-list">
             <li class="menu-item" th:each="menu : ${menuList}">
@@ -48,45 +45,21 @@
                     <span class="menu-desc" th:text="${menu.content}">바삭한 튀김옷이 일품인 기본 메뉴</span>
                     <span class="menu-price" th:text="${#numbers.formatInteger(menu.price, 3, 'COMMA') + '원'}">18,000원</span>
                 </div>
-                <img th:if="${menu.image != null}"
-                     th:src="@{'/upload/' + ${menu.image}}"
-                     class="menu-img"
-                     alt="menu image">
+                <img th:if="${menu.image != null}" th:src="@{'/upload/' + ${menu.image}}" class="menu-img" alt="menu image">
                 <div th:if="${menu.image == null}" class="menu-img" style="display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">이미지 없음</div>
                 <div style="margin-left: 15px;">
-                    <button type="button"
-                            th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]])"
+                    <button type="button" th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]])"
                             style="padding: 8px 15px; background: #2ac1bc; color: white; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; font-weight: bold;">
                         주문하기
                     </button>
-
-                    <form th:action="@{/menu/{menuId}/update(menuId=${menu.menuId})}" method="get">
-                        <button type="submit">수정</button>
-                    </form>
-
-                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}" method="post">
-                        <button type="submit">삭제</button>
-                    </form>
-
+                    <form th:action="@{/menu/{menuId}/update(menuId=${menu.menuId})}" method="get"><button type="submit">수정</button></form>
+                    <form th:action="@{/menu/{menuId}/delete(menuId=${menu.menuId})}" method="post"><button type="submit">삭제</button></form>
                 </div>
-            </li>
-            <li th:if="${#lists.isEmpty(menuList)}" style="padding: 40px; text-align: center; color: #999;">
-                등록된 메뉴가 없습니다.
             </li>
         </ul>
     </div>
-
-    <div class="btn-group">
-        <div style="display: flex; gap: 10px;">
-            <a th:href="@{/store/{id}/update(id=${store.storeId})}" style="padding: 5px 15px; border: 1px solid #ccc; border-radius: 4px; text-decoration: none; color: #333; font-size: 14px;">정보 수정</a>
-            <form th:action="@{/store/{id}/delete(id=${store.storeId})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                <button type="submit" style="color: red; padding: 5px 15px; border: 1px solid red; border-radius: 4px; background: white; cursor: pointer; font-size: 14px;">가게 삭제</button>
-            </form>
-        </div>
-    </div>
 </div>
 
-<!-- 옵션 선택 모달 -->
 <div id="optionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
     <div style="background: white; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden;">
         <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
@@ -94,35 +67,14 @@
             <button onclick="closeOptionModal()" style="border: none; background: none; font-size: 20px; cursor: pointer;">&times;</button>
         </div>
         <div style="padding: 20px;">
-            <div style="margin-bottom: 20px;">
-                <p style="font-weight: bold; margin-bottom: 10px;">기본 옵션</p>
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #2ac1bc; border-radius: 8px; background: #f0fdfc;">
-                    <span>기본 선택</span>
-                    <span style="color: #2ac1bc; font-weight: bold;">+0원</span>
-                </div>
-            </div>
-            <div style="margin-bottom: 20px;">
-                <p style="font-weight: bold; margin-bottom: 10px;">추가 옵션</p>
-                <label style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" name="menuOption" value="2000" data-name="사이즈 업" onchange="updateTotalPrice()">
-                        <span>사이즈 업</span>
-                    </div>
-                    <span style="color: #666;">+2,000원</span>
-                </label>
-                <label style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; cursor: pointer;">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="checkbox" name="menuOption" value="3000" data-name="사이드 추가" onchange="updateTotalPrice()">
-                        <span>사이드 추가</span>
-                    </div>
-                    <span style="color: #666;">+3,000원</span>
-                </label>
+            <p style="font-weight: bold; margin-bottom: 10px;">추가 옵션</p>
+            <div id="dynamic-options-container">
             </div>
         </div>
         <div style="padding: 20px; border-top: 1px solid #eee;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <span style="font-weight: bold;">총 주문금액</span>
-                <span id="modalTotalPrice" style="font-size: 20px; font-weight: 900; color: #2ac1bc;">18,000원</span>
+                <span id="modalTotalPrice" style="font-size: 20px; font-weight: 900; color: #2ac1bc;">0원</span>
             </div>
             <button onclick="submitOrder()" style="width: 100%; padding: 15px; background: #2ac1bc; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">장바구니 담기</button>
         </div>
@@ -130,52 +82,52 @@
 </div>
 
 <script th:inline="javascript">
-    let currentMenu = {
-        id: null,
-        name: '',
-        basePrice: 0,
-        storeId: /*[[${store.storeId}]]*/ 0
-    };
+    let currentMenu = { id: null, name: '', basePrice: 0, storeId: /*[[${store.storeId}]]*/ 0 };
 
     function openOptionModal(id, name, price) {
         currentMenu.id = id;
         currentMenu.name = name;
         currentMenu.basePrice = price;
-        
         document.getElementById('modalMenuName').innerText = name;
-        document.querySelectorAll('input[name="menuOption"]').forEach(cb => cb.checked = false);
+
+        const container = document.getElementById('dynamic-options-container');
+        container.innerHTML = '<p style="color:#999; font-size:14px; text-align:center;">옵션을 불러오는 중...</p>';
         updateTotalPrice();
-        
         document.getElementById('optionModal').style.display = 'flex';
+
+        fetch(`/api/menus/${id}/options`)
+            .then(response => response.json())
+            .then(options => {
+                container.innerHTML = '';
+                if (options.length === 0) {
+                    container.innerHTML = '<p style="color:#999; font-size:14px;">선택 가능한 옵션이 없습니다.</p>';
+                    return;
+                }
+                options.forEach(opt => {
+                    const label = document.createElement('label');
+                    label.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 8px; cursor: pointer; margin-bottom: 8px;';
+                    label.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" name="menuOption" value="${opt.price}" data-name="${opt.name}" onchange="updateTotalPrice()">
+                            <span>${opt.name}</span>
+                        </div>
+                        <span style="color: #666;">+${opt.price.toLocaleString()}원</span>
+                    `;
+                    container.appendChild(label);
+                });
+            });
     }
 
-    function closeOptionModal() {
-        document.getElementById('optionModal').style.display = 'none';
-    }
+    function closeOptionModal() { document.getElementById('optionModal').style.display = 'none'; }
 
     function updateTotalPrice() {
         let total = currentMenu.basePrice;
-        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
-            total += parseInt(cb.value);
-        });
+        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => { total += parseInt(cb.value); });
         document.getElementById('modalTotalPrice').innerText = total.toLocaleString() + '원';
     }
 
     function submitOrder() {
-        let options = [];
-        document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
-            options.push({
-                name: cb.getAttribute('data-name'),
-                price: parseInt(cb.value)
-            });
-        });
-
-        // 현재는 단순 이동이므로 쿼리 스트링으로 전달 (실제로는 세션/장바구니 등을 사용하겠지만 구조에 맞춤)
-        let url = `/orders/add?storeId=${currentMenu.storeId}&menuId=${currentMenu.id}`;
-        
-        // 옵션이 있는 경우 (현재 OrderController는 단일 메뉴 정보만 처리하므로 복잡한 옵션 전달은 한계가 있음)
-        // 하지만 요구사항인 "창이 뜨게 만들어줘"에 집중
-        location.href = url;
+        location.href = `/orders/add?storeId=${currentMenu.storeId}&menuId=${currentMenu.id}`;
     }
 </script>
 
