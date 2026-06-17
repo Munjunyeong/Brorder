@@ -68,4 +68,9 @@ public class UsersServiceImpl implements UsersService {
 		usersDao.updateaddress(item);
 	}
 
+	@Override
+	public Users item(String id) {
+		return usersDao.item(id);
+	}
+
 }

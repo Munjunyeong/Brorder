@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="/js/register.js"></script>
 </head>
 <body>
 	<div>
@@ -11,15 +12,27 @@
 		</div>
 		
 		<div>
-			<form method="post">
+			<form method="post" id="register_form">
 				<div>
 					<div><label>아이디:</label></div>
 					<div><input name="id" type="text"></div>
+					<div><button type="button" id="check_id">중복 확인</button></div>
 				</div>
 			
 				<div>
 					<div><label>비밀번호:</label></div>
-					<div><input name="password" type="password"></div>
+					<div>
+						<input name="password" type="password">
+						<button type="button" class="view">*ㅅ*</button>
+					</div>
+				</div>
+				
+				<div>
+					<div><label>비밀번호확인:</label></div>
+					<div>
+						<input name="check_password" type="password">
+						<button type="button" class="view">*ㅅ*</button>
+					</div>
 				</div>
 				
 				<div>
@@ -48,8 +61,8 @@
 				</div>
 				
 				<div>
-					<div><button>등록</button></div>
-					<div><a href="list">취소</a></div>
+					<div><button type="button" id="accuse" disabled>회원가입</button></div>
+					<div><a href="/">취소</a></div>
 				</div>
 			</form>
 		</div>
