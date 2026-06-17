@@ -56,4 +56,3 @@ public class ReviewRequestDTO {
         this.reviewImageFile = reviewImageFile;
     }
 }
-// 06/15 커밋 테스트
