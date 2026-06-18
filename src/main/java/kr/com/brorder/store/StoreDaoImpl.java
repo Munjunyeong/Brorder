@@ -23,6 +23,11 @@ public class StoreDaoImpl implements StoreDao {
     }
 
     @Override
+    public List<Store> selectStoreListByOwner(Long user_id) {
+        return sqlSession.selectList(NAMESPACE + "selectStoreListByOwner", user_id);
+    }
+
+    @Override
     public Store selectStoreById(Integer store_id) {
         // XML의 <select id="selectStoreById"> 호출
         return sqlSession.selectOne(NAMESPACE + "selectStoreById", store_id);

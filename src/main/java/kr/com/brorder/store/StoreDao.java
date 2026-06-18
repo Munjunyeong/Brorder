@@ -5,6 +5,7 @@ import java.util.Map;
 
 public interface StoreDao {
     List<Store> selectStoreList(Map<String, Object> searchMap);
+    List<Store> selectStoreListByOwner(Long userId);
     Store selectStoreById(Integer store_id);
 
     int insertStore(Store store);

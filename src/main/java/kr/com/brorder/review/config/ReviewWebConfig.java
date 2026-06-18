@@ -37,7 +37,7 @@ public class ReviewWebConfig implements WebMvcConfigurer {
         // 로그인 검사가 필수인 리뷰 관련 주소들의 가로채기 범위 정밀 교정
         registry.addInterceptor(reviewInterceptor)
                 .addPathPatterns(
-                        "/review/write/**",        // ★ 뒤에 /** 를 붙여서 파라미터가 붙은 GET/POST 진입로 전체를 묶어 감시합니다.
+                        "/review/write/**",        // ★ 뒤에 /** 를 붙여서 파라미터가 붙은 GET/POST 진입로 전체를 묶어 감시
                         "/review/delete/**",       // 리뷰 삭제 전체 감시
                         "/review/update/**",       // 리뷰 수정 전체 감시
                         "/users/my/review"         // 내 리뷰 목록 조회 감시

@@ -4,12 +4,22 @@ import java.time.LocalDateTime;
 
 public class Store {
     private Integer storeId;
+    private Long userid;
     private String name;
     private String category;
     private String address;
     private String phone;
     private LocalDateTime createdData;
     private String status;
+    private String titleImage;
+
+    public String getTitleImage() {
+        return titleImage;
+    }
+
+    public void setTitleImage(String titleImage) {
+        this.titleImage = titleImage;
+    }
 
     public Integer getStoreId() {
         return storeId;
@@ -18,6 +28,10 @@ public class Store {
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
     }
+
+    public Long getUserid() {return userid;}
+
+    public void setUserid(Long userid) {this.userid =userid;}
 
     public String getName() {
         return name;
