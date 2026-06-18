@@ -2,6 +2,7 @@ package kr.com.brorder.menu.service;
 
 import kr.com.brorder.menu.dao.MenuDao;
 import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.model.MenuOption; // 💡 MenuOption 모델 임포트 추가
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -80,5 +81,11 @@ public class MenuServiceImpl implements MenuService {
         }
 
         menuDao.updateMenu(menu);
+    }
+
+    @Override
+    public List<MenuOption> selectOptionsByMenuId(Integer menuId) {
+
+        return menuDao.selectOptionsByMenuId(menuId);
     }
 }

@@ -1,5 +1,7 @@
 package kr.com.brorder.menu.model; //메뉴모델
 
+import java.util.List;
+
 public class Menu {
 
     private Integer menuId;
@@ -8,6 +10,7 @@ public class Menu {
     private String content;
     private String image;
     private Integer price;
+    private List<String> selectedOptions;
 
     public Integer getMenuId() {
         return menuId;
@@ -56,4 +59,8 @@ public class Menu {
     public void setPrice(Integer price) {
         this.price = price;
     }
+
+    public List<String> getSelectedOptions() { return selectedOptions; }
+
+    public void setSelectedOptions(List<String> selectedOptions) { this.selectedOptions = selectedOptions; }
 }

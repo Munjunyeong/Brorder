@@ -1,13 +1,11 @@
 package kr.com.brorder.menu.controller;
 
 import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.model.MenuOption;
 import kr.com.brorder.menu.service.MenuService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -85,5 +83,12 @@ public class MenuController {
         menuService.deleteMenu(menuId);
 
         return "redirect:/store/" + storeId;
+    }
+
+    @GetMapping("/api/menus/{menuId}/options")
+    @ResponseBody
+    public List<MenuOption> getOptions(@PathVariable Integer menuId) {
+
+        return menuService.selectOptionsByMenuId(0);
     }
 }
