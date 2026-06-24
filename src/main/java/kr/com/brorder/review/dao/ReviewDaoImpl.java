@@ -51,5 +51,14 @@ public class ReviewDaoImpl implements ReviewDao {
     @Override
     public List<MenuOptionDTO> findMenusByStoreId(int storeId) {
         return sqlSession.selectList(NAMESPACE + "findMenusByStoreId", storeId);
+
+    }
+
+    @Override
+    public ReviewResponseDTO getOrderReviewInfo(int orderId) {
+        return sqlSession.selectOne(
+                NAMESPACE + "getOrderReviewInfo",
+                orderId
+        );
     }
 }

@@ -53,4 +53,7 @@ public interface ReviewService {
      * 지정된 가게 번호(storeId)를 기반으로 해당 매장에 등록된 메뉴 옵션 리스트 조회
      */
     List<MenuOptionDTO> getMenusByStoreId(int storeId);
+
+    ReviewResponseDTO getOrderReviewInfo(int orderId);
 }
+// 06/15 커밋 테스트

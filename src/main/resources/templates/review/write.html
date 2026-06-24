@@ -10,6 +10,7 @@
 
 <main class="rw-container">
     <div class="rw-card">
+
         <div class="rw-header">
             <h1 class="rw-header__title">리뷰 작성하기</h1>
             <p class="rw-header__info">
@@ -20,6 +21,7 @@
 
         <form th:action="@{/review/write}" method="post" enctype="multipart/form-data" class="rw-form">
             <input type="hidden" name="storeId" th:value="${storeId != null ? storeId : 1}">
+            <input type="hidden" name="menuId" th:value="${menuId != null ? menuId : 1}">
             <input type="hidden" name="menuName" th:value="${menuName != null ? menuName : '짜장면'}">
 
             <div class="rw-section">
@@ -90,3 +92,4 @@
 </script>
 </body>
 </html>
+<!--06/15 커밋 테스트-->

@@ -9,6 +9,7 @@ import kr.com.brorder.review.domain.ReviewResponseDTO;
 import kr.com.brorder.review.service.ReviewService;
 import kr.com.brorder.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,102 +21,114 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-// 리뷰 관련 모든 요청 처리 및 화면 매핑 컨트롤러
+/**
+ * 리뷰 컨트롤러
+ *
+ * 역할
+ * 사용자 요청을 받아 서비스로 전달하는 계층
+ * 화면 반환 및 입력 데이터 전달 담당
+ *
+ * 구조
+ * Controller Service DAO DB
+ *
+ * 보안 특징
+ * 사용자 식별은 반드시 세션 기반으로 처리
+ * 클라이언트 전달 값은 신뢰하지 않음
+ */
 @Controller
-@RequestMapping("/review")
 public class ReviewController {
 
     private final ReviewService reviewService;
 
-    // 생성자 주입으로 리뷰 서비스 객체 연결
+    /**
+     * 파일 업로드 경로
+     * application properties 설정값 사용
+     */
+    @Value("${kopo.upload.path}")
+    private String path;
+
     @Autowired
     public ReviewController(ReviewService reviewService) {
         this.reviewService = reviewService;
     }
 
-    // 📲 [추가 완료] 주문내역 등에서 파라미터를 들고 들어오는 리뷰 작성 폼 GET 매핑 핸들러
-    // 호출 주소: http://localhost:9090/review/write?storeId=1&storeName=홍콩반점&menuName=짜장면
-    @GetMapping("/write")
-    public String showReviewWriteForm(@RequestParam(value = "storeId", required = false, defaultValue = "1") int storeId,
-                                      @RequestParam(value = "storeName", required = false, defaultValue = "홍콩반점") String storeName,
-                                      @RequestParam(value = "menuName", required = false, defaultValue = "짜장면") String menuName,
-                                      Model model, HttpServletRequest request) {
+    /**
+     * 리뷰 작성 페이지 이동
+     *
+     * 주문 정보 기반으로 리뷰 작성 화면 데이터 구성
+     */
+    @GetMapping("/review/write")
+    public String showReviewWriteForm(
+            @RequestParam int orderId,
+            @RequestParam int storeId,
+            Model model,
+            HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
-        Users loginUser = (Users) session.getAttribute("users");
+        ReviewResponseDTO orderInfo = reviewService.getOrderReviewInfo(orderId);
 
-        // 비회원인 경우 접근을 제한하고 로그인 페이지로 리다이렉트 처리
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
+        model.addAttribute("storeId", orderInfo.getStoreId());
+        model.addAttribute("storeName", orderInfo.getStoreName());
+        model.addAttribute("menuId", orderInfo.getMenuId());
+        model.addAttribute("menuName", orderInfo.getMenuName());
 
-        // 폼 화면 내 텍스트 출력을 위해 타임리프 가방(Model)에 데이터 적재
-        model.addAttribute("storeId", storeId);
-        model.addAttribute("storeName", storeName);
-        model.addAttribute("menuName", menuName);
-
-        // templates/review/write.html 파일 반환
         return "review/write";
     }
 
-    // 가게별 전체 리뷰 목록 조회 및 화면 송신
-    @GetMapping("/store/{storeId}")
-    public String showStoreReviews(@PathVariable("storeId") int storeId, Model model) {
+    /**
+     * 가게 리뷰 목록 조회
+     *
+     * 비회원도 접근 가능한 공개 페이지
+     */
+    @GetMapping("/review/store/{storeId}")
+    public String showStoreReviews(@PathVariable int storeId, Model model) {
+
         List<ReviewResponseDTO> reviews = reviewService.getStoreReviews(storeId);
-        model.addAttribute("reviewList", reviews);
-        model.addAttribute("currentStoreId", storeId);
+        if (reviews == null) reviews = new ArrayList<>();
 
-        // 가게 고유 번호(storeId)에 해당하는 메뉴 옵션 리스트 조회
         List<MenuOptionDTO> menuOptions = reviewService.getMenusByStoreId(storeId);
+        if (menuOptions == null) menuOptions = new ArrayList<>();
 
-        // [방어 코드 추가] DB에 메뉴가 없어서 null이 넘어오면 화면이 깨지는 현상을 막기 위해 빈 가방 세팅
-        if (menuOptions == null) {
-            menuOptions = new ArrayList<>();
+        // [수정점] 리뷰가 있으면 DB에 연동된 진짜 상호명을 쓰고, 리뷰가 0개면 임시 상호명 분기 처리
+        String storeName = "홍콩반점";
+        if (storeId == 2) storeName = "치킨천국"; // ◀ 혹시 2번 가게 이름이 치킨천국이면 이런 식으로 분기 추가 가능!
+
+        if (!reviews.isEmpty()) {
+            storeName = reviews.get(0).getStoreName();
         }
 
+        model.addAttribute("reviewList", reviews);
+        model.addAttribute("currentStoreId", storeId);
+        model.addAttribute("storeName", storeName); // ◀ 가방에 이름 쏙 넣기
         model.addAttribute("menuOptions", menuOptions);
 
         return "review/store_reviews";
     }
 
-    // 신규 리뷰 정보 및 첨부 파일 서버 저장 등록 처리
-    @PostMapping("/write")
-    public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO, HttpServletRequest request) {
+    /**
+     * 리뷰 등록 처리
+     *
+     * 이미지 업로드 처리 후 서비스로 전달
+     * 로그인 사용자는 세션 기반으로 식별
+     */
+    @PostMapping("/review/write")
+    public String writeReview(@ModelAttribute ReviewRequestDTO requestDTO,
+                              HttpServletRequest request) {
+
         HttpSession session = request.getSession();
         Users loginUser = (Users) session.getAttribute("users");
+        int userId = loginUser.getUserid().intValue();
 
-        // 비회원인 경우 로그인 페이지로 리다이렉트
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
-
-        Long dbUserid = loginUser.getUserid();
-        if (dbUserid == null) {
-            return "redirect:/login";
-        }
-
-        Integer loginUserId = dbUserid.intValue();
-
-        // 폼 양식에서 전송된 멀티파트 이미지 파일 추출
         MultipartFile imageFile = requestDTO.getReviewImageFile();
+
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                // 물리 파일 보관용 외부 폴더 경로 설정 및 생성
-                String uploadDir = "C:/upload/images/";
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
+                File dir = new File(path);
+                if (!dir.exists()) dir.mkdirs();
 
-                // 파일 이름 중복 방지용 UUID 랜덤 키 결합
-                String originalFileName = imageFile.getOriginalFilename();
-                String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+                String savedFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
 
-                // 서버 실제 디스크 경로에 바이너리 파일 저장 실행
-                File serverFile = new File(uploadDir + savedFileName);
-                imageFile.transferTo(serverFile);
+                imageFile.transferTo(new File(dir, savedFileName));
 
-                // 업로드 완료된 고유 파일명을 DTO 가방에 저장
                 requestDTO.setPicture(savedFileName);
 
             } catch (IOException e) {
@@ -123,105 +136,106 @@ public class ReviewController {
             }
         }
 
-        reviewService.writeReview(requestDTO, loginUserId);
+        reviewService.writeReview(requestDTO, userId);
+
         return "redirect:/review/store/" + requestDTO.getStoreId();
     }
 
-    // 로그인 세션 유저가 작성한 마이페이지 리뷰 리스트 조회
-    @GetMapping("/my")
+    /**
+     * 내 리뷰 조회
+     *
+     * 로그인 사용자 기준 리뷰 목록 조회
+     */
+    @GetMapping("/users/my/review")
     public String showMyReviews(Model model, HttpServletRequest request) {
+
         HttpSession session = request.getSession();
         Users loginUser = (Users) session.getAttribute("users");
+        int userId = loginUser.getUserid().intValue();
 
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
+        List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(userId);
 
-        Long dbUserid = loginUser.getUserid();
-        if (dbUserid == null) {
-            return "redirect:/login";
-        }
+        if (myReviews == null) myReviews = new ArrayList<>();
 
-        Integer loginUserId = dbUserid.intValue();
-
-        List<ReviewResponseDTO> myReviews = reviewService.getMyReviews(loginUserId);
         model.addAttribute("myReviewList", myReviews);
 
         return "review/my_reviews";
     }
 
-    // 특정 리뷰 식별 번호 삭제 트랜잭션 호출
-    @PostMapping("/delete/{reviewId}")
-    public String deleteReview(@PathVariable("reviewId") int reviewId,
-                               @RequestParam("storeId") int storeId,
+    /**
+     * 리뷰 삭제 처리
+     *
+     * 서비스에서 권한 검증 후 삭제 수행
+     */
+    @PostMapping("/review/delete/{reviewId}")
+    public String deleteReview(@PathVariable int reviewId,
+                               @RequestParam int storeId,
                                HttpServletRequest request) {
+
         HttpSession session = request.getSession();
         Users loginUser = (Users) session.getAttribute("users");
+        int userId = loginUser.getUserid().intValue();
 
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
+        reviewService.removeReview(reviewId, userId);
 
-        Long dbUserid = loginUser.getUserid();
-        if (dbUserid == null) {
-            return "redirect:/login";
-        }
-
-        Integer loginUserId = dbUserid.intValue();
-
-        reviewService.removeReview(reviewId, loginUserId);
         return "redirect:/review/store/" + storeId;
     }
 
-    // 수정 대상 리뷰의 원본 데이터를 담아 수정 폼 화면 호출
-    @GetMapping("/update/{reviewId}")
-    public String showUpdateForm(@PathVariable("reviewId") int reviewId, Model model) {
+    /**
+     * 리뷰 수정 페이지 이동
+     *
+     * 기존 리뷰 데이터를 화면에 출력
+     */
+    @GetMapping("/review/update/{reviewId}")
+    public String showUpdateForm(@PathVariable int reviewId, Model model) {
+
         Review review = reviewService.getReviewById(reviewId);
+
         model.addAttribute("review", review);
+
         return "review/update_review";
     }
 
-    // 수정한 리뷰 데이터 및 새로 첨부한 이미지 파일 반영 수정 처리
-    @PostMapping("/update/{reviewId}")
-    public String updateReview(@PathVariable("reviewId") int reviewId,
+    /**
+     * 리뷰 수정 처리
+     *
+     * 이미지 변경 여부에 따라 파일 처리 분기
+     */
+    @PostMapping("/review/update/{reviewId}")
+    public String updateReview(@PathVariable int reviewId,
                                @ModelAttribute ReviewRequestDTO requestDTO,
-                               @RequestParam("storeId") int storeId,
+                               @RequestParam int storeId,
                                HttpServletRequest request) {
+
         HttpSession session = request.getSession();
         Users loginUser = (Users) session.getAttribute("users");
+        int userId = loginUser.getUserid().intValue();
 
-        if (loginUser == null) {
-            return "redirect:/login";
-        }
-
-        Long dbUserid = loginUser.getUserid();
-        if (dbUserid == null) {
-            return "redirect:/login";
-        }
-
-        Integer loginUserId = dbUserid.intValue();
-
-        // 수정 폼에서 새로 첨부한 이미지 파일 존재 여부 확인
         MultipartFile imageFile = requestDTO.getReviewImageFile();
+
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
-                String uploadDir = "C:/upload/images/";
-                File dir = new File(uploadDir);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                String originalFileName = imageFile.getOriginalFilename();
-                String savedFileName = UUID.randomUUID().toString() + "_" + originalFileName;
-                File serverFile = new File(uploadDir + savedFileName);
-                imageFile.transferTo(serverFile);
+                File dir = new File(path);
+                if (!dir.exists()) dir.mkdirs();
+
+                String savedFileName = UUID.randomUUID() + "_" + imageFile.getOriginalFilename();
+                imageFile.transferTo(new File(dir, savedFileName));
 
                 requestDTO.setPicture(savedFileName);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+
+            Review currentReview = reviewService.getReviewById(reviewId);
+            if (currentReview != null) {
+                requestDTO.setPicture(currentReview.getPicture());
+            }
         }
 
-        reviewService.modifyReview(reviewId, requestDTO, loginUserId);
+        reviewService.modifyReview(reviewId, requestDTO, userId);
+
         return "redirect:/review/store/" + storeId;
     }
 }

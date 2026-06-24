@@ -9,6 +9,7 @@ public class Review {
     private int storeId;        // 리뷰 작성 가게 ID
     private int userId;         // 리뷰 작성 회원 ID
     private int menuId;         // 주문 메뉴 ID
+    private String menuName;    // 매핑된 메뉴 명칭 문자열
     private int rating;         // 부여된 별점 점수 (1점 ~ 5점)
     private String content;     // 리뷰 내용 텍스트
     private String picture;     // 서버 저장용 랜덤 이미지 파일명
@@ -19,7 +20,9 @@ public class Review {
     }
 
     // 데이터 일괄 주입용 초기화 생성자
-    public Review(int reviewId, int storeId, int userId, int menuId, int rating, String content, String picture, LocalDateTime createdData) {
+    public Review(int reviewId, int storeId, int userId, int menuId,
+                  int rating, String content,
+                  String picture, LocalDateTime createdData) {
         this.reviewId = reviewId;
         this.storeId = storeId;
         this.userId = userId;
@@ -62,6 +65,14 @@ public class Review {
         this.menuId = menuId;
     }
 
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+
     public int getRating() {
         return rating;
     }
@@ -94,3 +105,5 @@ public class Review {
         this.createdData = createdData;
     }
 }
+// 06/15 커밋 테스트
+// 06/15 커밋 테스트

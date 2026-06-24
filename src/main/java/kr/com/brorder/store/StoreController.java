@@ -95,4 +95,3 @@ public class StoreController {
         return "redirect:/store/list";
     }
 }
-

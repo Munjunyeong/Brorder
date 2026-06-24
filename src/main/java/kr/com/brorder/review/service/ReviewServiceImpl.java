@@ -7,6 +7,7 @@ import kr.com.brorder.review.domain.ReviewRequestDTO;
 import kr.com.brorder.review.domain.ReviewResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.io.File; // ◀ 물리 파일 접근 및 삭제 연산을 위한 자바 입출력(IO) 클래스 임포트
 import java.util.List;
 
 /**
@@ -76,6 +77,20 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("본인이 작성한 리뷰만 삭제할 수 있습니다.");
         }
 
+        // -----------------------------------------------------------------------------------------
+        // 🛠️ [리뷰 삭제 시 물리 파일 자동 제거 조치]
+        // DB에서 리뷰 레코드를 날려버리기 전에, 등록되어 있던 파일명을 조회하여 D드라이브에서 먼저 지워버립니다.
+        // -----------------------------------------------------------------------------------------
+        String oldPicture = targetReview.getPicture();
+        if (oldPicture != null && !oldPicture.equals("")) {
+            String uploadPath = "d:/upload/";
+            File oldFile = new File(uploadPath + oldPicture);
+
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+        }
+
         reviewDao.deleteById(reviewId);
     }
 
@@ -104,6 +119,22 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("본인이 작성한 리뷰만 수정할 수 있습니다.");
         }
 
+        // -----------------------------------------------------------------------------------------
+        // 🛠️ [리뷰 수정 시 물리 파일 자동 제거 조치]
+        // 사용자가 수정창에서 '새로운 이미지 파일'을 업로드하여 기존 이미지 파일과 명칭이 달라졌는지 검증 후 파괴합니다.
+        // -----------------------------------------------------------------------------------------
+        String oldPicture = targetReview.getPicture();
+        String newPicture = requestDTO.getPicture();
+
+        if (oldPicture != null && !oldPicture.equals("") && !oldPicture.equals(newPicture)) {
+            String uploadPath = "d:/upload/";
+            File oldFile = new File(uploadPath + oldPicture);
+
+            if (oldFile.exists()) {
+                oldFile.delete();
+            }
+        }
+
         Review updateReview = new Review();
         updateReview.setReviewId(reviewId);
         updateReview.setRating(requestDTO.getRating());
@@ -121,4 +152,10 @@ public class ReviewServiceImpl implements ReviewService {
     public List<MenuOptionDTO> getMenusByStoreId(int storeId) {
         return reviewDao.findMenusByStoreId(storeId);
     }
+
+    @Override
+    public ReviewResponseDTO getOrderReviewInfo(int orderId) {
+        return reviewDao.getOrderReviewInfo(orderId);
+    }
 }
+// 06/15 커밋 테스트
