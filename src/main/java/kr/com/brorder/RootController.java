@@ -58,7 +58,7 @@ public class RootController {
 	        }
 
 	        if(role.equals("ADMIN")) {
-	            return "redirect:/admin";
+	            return "redirect:/admin/userlist";
 	        }
 	    }
 		return "redirect:/login";

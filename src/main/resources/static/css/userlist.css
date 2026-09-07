@@ -401,39 +401,10 @@ button {
   background-color: #fef2f2;
 }
 
-/* ===========================
-   Pagination
-=========================== */
 .pagination {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 4px;
-  margin-top: 20px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f1f3;
-}
-
-.page-btn {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #d1d5db;
-  background-color: #ffffff;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #374151;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-btn:hover {
-  background-color: #f3f4f6;
-}
-
-.page-btn.active {
-  background-color: #3dd68c;
-  color: #ffffff;
-  border-color: #3dd68c;
-  font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
 }

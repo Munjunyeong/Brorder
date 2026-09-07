@@ -25,7 +25,7 @@ public class UsersController {
 		
 		model.addAttribute("users", users);
 		
-		return "user/detail";
+		return "user/mypage";
 	}
 	
 	@GetMapping("/update")
@@ -96,6 +96,13 @@ public class UsersController {
 	String updateAddress(@PathVariable Long addressid, Address item) {
 		service.updateaddress(item);
 		return "redirect:/users/my/address";
+	}
+	
+	@GetMapping("/my/order")
+	String myorder(Model model, HttpSession session) {
+		
+		
+		return "user/myorder";
 	}
 
 }
