@@ -1,6 +1,7 @@
 package kr.com.brorder.menu.dao;//메뉴임플
 
 import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.model.MenuOption;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -47,4 +48,26 @@ public class MenuDaoImpl implements MenuDao {
                 NAMESPACE + "deleteMenu",
                 menuId);
     }
+
+    @Override
+    public void deleteOrderMenuByMenuId(Integer menuId) {
+        sqlSession.delete(
+                NAMESPACE + "deleteOrderMenuByMenuId",
+                menuId
+        );
+    }
+
+    @Override
+    public void updateMenu(Menu menu) {
+        sqlSession.update(
+                NAMESPACE + "updateMenu",
+                menu
+        );
+    }
+
+    @Override
+    public List<MenuOption> selectOptionsByMenuId(Integer menuId) {
+        return sqlSession.selectList(NAMESPACE + "selectOptionsByMenuId", menuId);
+    }
+
 }

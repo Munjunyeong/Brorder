@@ -2,6 +2,7 @@ package kr.com.brorder.order.service; //오더 서비스
 
 import java.util.List;
 
+import kr.com.brorder.menu.model.MenuOption;
 import kr.com.brorder.order.model.Order;
 
 public interface OrderService {
@@ -13,4 +14,5 @@ public interface OrderService {
     Order item(Long orderId);
 
     void delete(Long orderId);
+
 }

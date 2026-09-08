@@ -33,8 +33,8 @@
 						<td th:text="${item.addresscomment}"></td>
 						<td th:text="${item.entrance}"></td>
 						<td>
-							<a th:href="@{|update/${item.addressid}|}">수정</a>
-							<a th:href="@{|delete/${item.addressid}|}">삭제</a>
+							<a th:href="@{|address/update/${item.addressid}|}">수정</a>
+							<a th:href="@{|address/delete/${item.addressid}|}">삭제</a>
 						</td>
 					</tr>
 				</tbody>
@@ -42,6 +42,7 @@
 		</div>
 		
 		<div>
+			<div><a href="address/add">주소 추가</a></div>
 			<div><a href="../my">이전</a></div>
 		</div>
 	</div>

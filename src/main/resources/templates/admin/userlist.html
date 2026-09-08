@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>회원 관리 - 배달 서비스 관리자</title>
+  <link rel="stylesheet" href="/css/userlist.css" />
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">G</span>
+      <div>
+        <div class="brand-title">배달 서비스<br>관리자</div>
+        <div class="brand-sub">Admin Console</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">관리 메뉴</div>
+      <ul>
+        <li class="nav-item active"><a href="#">회원 관리</a></li>
+        <li class="nav-item"><a href="#">스토어 관리</a></li>
+        <li class="nav-item"><a href="#">주문 관리</a></li>
+        <li class="nav-item"><a href="#">리뷰 관리</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="#" class="sidebar-footer-link">설정</a>
+      <a href="#" class="sidebar-footer-link">로그아웃</a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <div class="main-wrapper">
+
+    <!-- Top breadcrumb -->
+    <header class="topbar">
+      <span class="breadcrumb">홈 / 회원 관리</span>
+    </header>
+
+    <main class="content">
+
+      <!-- Page title row -->
+      <div class="page-title-row">
+        <div>
+          <h1 class="page-title">회원 관리</h1>
+          <p class="page-breadcrumb">홈 / 회원 관리</p>
+        </div>
+        <button class="btn-primary">회원 추가</button>
+      </div>
+
+
+      <!-- Member table section -->
+      <div class="table-section">
+        <div class="table-header">
+          <h2 class="table-title">회원 관리 게시판</h2>
+          <div class="table-actions">
+            <input type="text" class="search-input" placeholder="검색..." />
+            <button class="btn-export">CSV</button>
+            <button class="btn-export">Excel</button>
+          </div>
+        </div>
+
+        <table class="member-table">
+          <thead>
+            <tr>
+              <th>유저 ID</th>
+              <th>이름</th>
+              <th>이메일</th>
+              <th>닉네임</th>
+              <th>상태</th>
+              <th>작성일시</th>
+              <th>관리</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#" class="user-id">hong123</a></td>
+              <td>홍길동</td>
+              <td>hong@mail.com</td>
+              <td>VIP 고객</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-01 09:12:34</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">kim456</a></td>
+              <td>김민준</td>
+              <td>kim456@mail.com</td>
+              <td>자주 이용</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-05 14:23:11</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">lee789</a></td>
+              <td>이수진</td>
+              <td>lee789@mail.com</td>
+              <td></td>
+              <td><span class="badge badge-inactive">비활성</span></td>
+              <td>2024-08-10 11:05:47</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">park001</a></td>
+              <td>박지영</td>
+              <td>park001@mail.com</td>
+              <td>리뷰 작성 활발</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-14 16:36:28</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">choi22</a></td>
+              <td>최현우</td>
+              <td>choi22@mail.com</td>
+              <td></td>
+              <td><span class="badge badge-inactive">비활성</span></td>
+              <td>2024-08-20 08:59:03</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">hong123</a></td>
+              <td>홍길동</td>
+              <td>hong@mail.com</td>
+              <td>VIP 고객</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-01 09:12:34</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">kim456</a></td>
+              <td>김민준</td>
+              <td>kim456@mail.com</td>
+              <td>자주 이용</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-05 14:23:11</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">lee789</a></td>
+              <td>이수진</td>
+              <td>lee789@mail.com</td>
+              <td></td>
+              <td><span class="badge badge-inactive">비활성</span></td>
+              <td>2024-08-10 11:05:47</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">park001</a></td>
+              <td>박지영</td>
+              <td>park001@mail.com</td>
+              <td>리뷰 작성 활발</td>
+              <td><span class="badge badge-active">활성</span></td>
+              <td>2024-08-14 16:36:28</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+            <tr>
+              <td><a href="#" class="user-id">choi22</a></td>
+              <td>최현우</td>
+              <td>choi22@mail.com</td>
+              <td></td>
+              <td><span class="badge badge-inactive">비활성</span></td>
+              <td>2024-08-20 08:59:03</td>
+              <td><button class="btn-action">수정</button></td>
+              <td><button class="btn-action btn-delete">삭제</button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="page-btn">&lsaquo;</button>
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">&rsaquo;</button>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

@@ -42,5 +42,25 @@ public class UsersDaoImpl implements UsersDao {
 		return sql.selectList("users.address", userid);
 	}
 
+	@Override
+	public void addaddress(Address item) {
+		sql.insert("users.addaddress", item);
+	}
+
+	@Override
+	public void deleteaddress(Long addressid) {
+		sql.delete("users.deleteaddress", addressid);
+	}
+
+	@Override
+	public Address addressitem(Long addressid) {
+		return sql.selectOne("users.addressitem", addressid);
+	}
+
+	@Override
+	public void updateaddress(Address item) {
+		sql.update("users.updateaddress", item);
+	}
+
 
 }
