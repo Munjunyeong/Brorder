@@ -1,6 +1,7 @@
 package kr.com.brorder.review.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry; // ◀ [추가 주석] 리소스 매핑을 위한 스펙 임포트
@@ -13,6 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class ReviewWebConfig implements WebMvcConfigurer {
+
+    @Value("${kopo.upload.url}")
+    private String uploadUrl;
 
     private final ReviewInterceptor reviewInterceptor;
 
@@ -28,8 +32,12 @@ public class ReviewWebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        registry.addResourceHandler("/upload/**")
+//                .addResourceLocations("file:///d:/upload/");
+        System.err.println("uploadUrl: " + uploadUrl);
+
         registry.addResourceHandler("/upload/**")
-                .addResourceLocations("file:///d:/upload/");
+                .addResourceLocations(uploadUrl);
     }
 
     @Override
