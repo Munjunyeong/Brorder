@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/components.css}">
     <title>주문 확인 - BRORDER</title>
     <style>
         .order-add-section { padding: 40px var(--side-pad); background: #f5f5f5; min-height: calc(100vh - 80px); }
@@ -23,7 +24,9 @@
         .btn-option-change { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; cursor: pointer; margin-top: 12px; background: #fff; }
         .payment-section { padding: 24px 20px; border-top: 8px solid #f5f5f5; }
         .bottom-actions { padding: 20px; position: sticky; bottom: 0; background: #fff; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        .btn-order-submit { flex: 2; padding: 16px; background: #2ac1bc; color: #fff; border: none; border-radius: 4px; font-size: 17px; font-weight: 800; cursor: pointer; }
+        /* .btn-order(컴포넌트)가 색상/radius/애니메이션을 담당하므로,
+           여기서는 bottom-actions 안에서의 크기(flex)만 지정합니다. */
+        .btn-order-submit { flex: 2; justify-content: center; }
         .hidden-inputs { display: none; }
     </style>
 </head>
@@ -93,8 +96,17 @@
                     메뉴 추가
                 </a>
 
-                <button type="submit" class="btn-order-submit" id="submit-btn" style="flex: 2;">
-                    배달 주문하기
+                <!-- ══ 여기 ══ Send 버튼 컴포넌트 적용: 주문(orders row 생성)이 실제로 일어나는 지점 -->
+                <button type="submit" class="btn-order btn-order-submit" id="submit-btn">
+                    <div class="svg-wrapper-1">
+                        <div class="svg-wrapper">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                                <path fill="none" d="M0 0h24v24H0z"></path>
+                                <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <span>배달 주문하기</span>
                 </button>
             </div>
         </form>
@@ -112,6 +124,7 @@
     </div>
 </div>
 
+<script th:src="@{/js/components.js}"></script>
 <script>
     window.onload = calculateTotal;
 
@@ -227,6 +240,11 @@
         document.getElementById('final-total-price').innerText =
             (sub + 3000).toLocaleString() + '원';
     }
+
+    /* ── 주문 전송(Send) 로딩 상태 ── */
+    document.getElementById('order-form')?.addEventListener('submit', () => {
+        setOrderButtonLoading(document.getElementById('submit-btn'), true);
+    });
 </script>
 </body>
 </html>
