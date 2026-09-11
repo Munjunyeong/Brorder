@@ -10,9 +10,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class InterceptorConfig {
 	
 	@Bean
-	HandlerInterceptor userInterceptor() {
-		return new UserInterceptor();
-	}
+	HandlerInterceptor userInterceptor() { return new UserInterceptor(); }
 
 	@Bean
 	HandlerInterceptor storeInterceptor() { return new StoreInterceptor(); }

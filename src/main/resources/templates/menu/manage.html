@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메뉴 관리</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        .menu-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .menu-table th, .menu-table td { border: 1px solid #ccc; padding: 12px; text-align: center; }
+        .menu-table th { background-color: #f9f9f9; }
+        .btn { padding: 6px 12px; text-decoration: none; border-radius: 4px; display: inline-block; }
+        .btn-add { background-color: #008CBA; color: white; font-weight: bold; }
+        .btn-edit { background-color: #4CAF50; color: white; }
+        .btn-delete { background-color: #f44336; color: white; border: none; cursor: pointer; }
+        .thumb-img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<h1>📋 [<span th:text="${store.name}">가게명</span>] 메뉴 관리</h1>
+<p>이곳에서 판매하실 메뉴를 등록하고 관리하세요.</p>
+<hr>
+
+<div style="text-align: right; margin-bottom: 10px;">
+    <!-- 메뉴 등록 폼으로 이동 (storeId를 경로에 포함) -->
+    <a th:href="@{/store/{storeId}/menu/add(storeId=${store.storeId})}" class="btn btn-add">+ 새 메뉴 등록</a>
+</div>
+
+<table class="menu-table">
+    <thead>
+    <tr>
+        <th>메뉴 사진</th>
+        <th>메뉴명</th>
+        <th>소개</th>
+        <th>가격</th>
+        <th>관리</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="menu : ${menuList}">
+        <td>
+            <img th:if="${menu.picture != null and menu.picture != ''}" th:src="@{/upload/{filename}(filename=${menu.picture})}" class="thumb-img">
+            <span th:unless="${menu.picture != null and menu.picture != ''}" style="color:#ccc; font-size:12px;">사진 없음</span>
+        </td>
+        <td th:text="${menu.name}" style="font-weight: bold;">메뉴명</td>
+        <td th:text="${menu.content}" style="font-size: 14px; color: #666;">메뉴 소개</td>
+        <td th:text="${#numbers.formatInteger(menu.price, 0, 'COMMA')} + '원'">20,000원</td>
+        <td>
+            <!-- 메뉴 수정 (미구현 상태라면 추후 추가) -->
+            <a th:href="@{/store/{storeId}/menu/{menuId}/update(storeId=${store.storeId}, menuId=${menu.menuId})}" class="btn btn-edit">수정</a>
+            <!-- 메뉴 삭제 -->
+            <form th:action="@{/store/{storeId}/menu/{menuId}/delete(storeId=${store.storeId}, menuId=${menu.menuId})}" method="post" style="display:inline;" onsubmit="return confirm('이 메뉴를 삭제하시겠습니까?');">
+                <button type="submit" class="btn btn-delete">삭제</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(menuList)}">
+        <td colspan="5" style="padding: 40px; color: #777;">등록된 메뉴가 없습니다. 우측 상단의 버튼을 눌러 첫 메뉴를 추가해 보세요!</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a th:href="@{/store/owner}">← 내 가게 목록으로 돌아가기</a>
+
+</body>
+</html>

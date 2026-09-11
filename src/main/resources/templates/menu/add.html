@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 메뉴 등록</title>
+</head>
+<body>
+
+<h2>🍔 새 메뉴 등록</h2>
+<p><strong>등록 가게:</strong> <span th:text="${store.name}">가게명</span></p>
+<hr>
+
+<!-- 파일 업로드가 있으므로 enctype="multipart/form-data" 필수 -->
+<form th:action="@{/store/{storeId}/menu/add(storeId=${store.storeId})}" method="post" enctype="multipart/form-data">
+
+    <label>메뉴명:
+        <input type="text" name="name" required placeholder="예: 치즈 떡볶이">
+    </label><br><br>
+
+    <label>가격 (원):
+        <input type="number" name="price" required placeholder="예: 15000">
+    </label><br><br>
+
+    <label>메뉴 소개 (선택):<br>
+        <textarea name="content" rows="4" cols="40" placeholder="메뉴에 대한 설명을 적어주세요."></textarea>
+    </label><br><br>
+
+    <label>메뉴 사진:
+        <input type="file" name="imageFile" accept="image/*">
+    </label><br><br>
+
+    <button type="submit" style="padding: 8px 16px; background-color: #333; color: white; border: none; cursor: pointer;">등록 완료</button>
+</form>
+
+<br>
+<a th:href="@{/store/{storeId}/menu/manage(storeId=${store.storeId})}">취소 (메뉴 관리로 돌아가기)</a>
+
+</body>
+</html>
