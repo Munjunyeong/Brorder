@@ -1,35 +1,23 @@
-package kr.com.brorder.menu.dao;//메뉴임플
+package kr.com.brorder.menu.dao;
 
-import kr.com.brorder.menu.model.Menu;
-import kr.com.brorder.menu.model.MenuOption;
 import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import kr.com.brorder.menu.model.Menu;
 
 @Repository
 public class MenuDaoImpl implements MenuDao {
 
-    private final SqlSession sqlSession;
+    @Autowired
+    private SqlSession sqlSession;
 
-    private static final String NAMESPACE =
-            "kr.com.brorder.menu.MenuMapper.";
-
-    public MenuDaoImpl(SqlSession sqlSession) {
-        this.sqlSession = sqlSession;
-    }
-
-    @Override
-    public void insertMenu(Menu menu) {
-        sqlSession.insert(NAMESPACE + "insertMenu", menu);
-    }
+    private static final String NAMESPACE = "kr.com.brorder.menu.MenuMapper.";
 
     @Override
     public List<Menu> selectMenuListByStoreId(Integer storeId) {
-
-        return sqlSession.selectList(
-                NAMESPACE + "selectMenuListByStoreId",
-                storeId);
+        return sqlSession.selectList(NAMESPACE + "selectMenuListByStoreId", storeId);
     }
 
     @Override
@@ -38,36 +26,17 @@ public class MenuDaoImpl implements MenuDao {
     }
 
     @Override
-    public List<Menu> list(Integer storeId) {
-        return List.of();
+    public int insertMenu(Menu menu) {
+        return sqlSession.insert(NAMESPACE + "insertMenu", menu);
     }
 
     @Override
-    public void deleteMenu(Integer menuId) {
-        sqlSession.delete(
-                NAMESPACE + "deleteMenu",
-                menuId);
+    public int updateMenu(Menu menu) {
+        return sqlSession.update(NAMESPACE + "updateMenu", menu);
     }
 
     @Override
-    public void deleteOrderMenuByMenuId(Integer menuId) {
-        sqlSession.delete(
-                NAMESPACE + "deleteOrderMenuByMenuId",
-                menuId
-        );
+    public int deleteMenu(Integer menuId) {
+        return sqlSession.delete(NAMESPACE + "deleteMenu", menuId);
     }
-
-    @Override
-    public void updateMenu(Menu menu) {
-        sqlSession.update(
-                NAMESPACE + "updateMenu",
-                menu
-        );
-    }
-
-    @Override
-    public List<MenuOption> selectOptionsByMenuId(Integer menuId) {
-        return sqlSession.selectList(NAMESPACE + "selectOptionsByMenuId", menuId);
-    }
-
 }

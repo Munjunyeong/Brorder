@@ -34,13 +34,41 @@
     <p><strong>현재상태:</strong> <span th:text="${store.status}">OPEN</span></p>
 </div>
 
+<h3>🍽️ 메뉴 목록</h3>
+<div class="menu-list">
+    <!-- 메뉴가 없을 경우 -->
+    <div th:if="${#lists.isEmpty(menuList)}" style="padding: 20px; border: 1px dashed #ccc; text-align: center; color: #777;">
+        아직 등록된 메뉴가 없습니다.
+    </div>
+
+    <!-- 메뉴가 있을 경우 반복문으로 출력 -->
+    <div th:each="menu : ${menuList}" class="menu-item">
+        <!-- 메뉴 이미지 -->
+        <img th:if="${menu.picture != null and menu.picture != ''}" th:src="@{/upload/{filename}(filename=${menu.picture})}" class="menu-pic" alt="메뉴 이미지">
+        <div th:unless="${menu.picture != null and menu.picture != ''}" class="menu-pic-none">No Image</div>
+
+        <!-- 메뉴 정보 -->
+        <div class="menu-info">
+            <h4 th:text="${menu.name}">황금올리브 치킨</h4>
+            <p th:text="${menu.content}">바삭바삭한 식감이 일품인 후라이드</p>
+            <div class="menu-price" th:text="${#numbers.formatInteger(menu.price, 0, 'COMMA')} + '원'">20,000원</div>
+        </div>
+
+        <!-- 주문(장바구니) 버튼 -->
+        <form th:action="@{/orders/add}" method="post">
+            <input type="hidden" name="menuId" th:value="${menu.menuId}">
+            <input type="hidden" name="storeId" th:value="${store.storeId}">
+            <button type="submit" class="btn-order">담기</button>
+        </form>
+    </div>
+</div>
 <br>
 <!-- 목록으로 돌아가기 링크 -->
 <a th:href="@{/store/list}">← 판매처 목록으로 돌아가기</a>
 <br>
 <div style="display: flex; gap: 10px;">
-    <!-- 세션 권한 체크 디렉티브 적용 -->
-    <div th:if="${session.users != null and (session.users.role == 'OWNER' or session.users.role == 'ADMIN')}" style="display: flex; gap: 10px;">
+    <!-- ADMIN은 무조건 통과, OWNER는 본인 가게일 때만 통과 -->
+    <div th:if="${session.users != null and (session.users.role == 'ADMIN' or (session.users.role == 'OWNER' and session.users.userid == store.userid))}" style="display: flex; gap: 10px;">
     <!-- 수정 화면 이동 -->
     <a th:href="@{/store/{id}/update(id=${store.storeId})}">정보 수정</a>
 

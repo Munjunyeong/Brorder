@@ -1,24 +1,12 @@
 package kr.com.brorder.menu.service;
 
-import kr.com.brorder.menu.model.Menu;
-import kr.com.brorder.menu.model.MenuOption;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
+import kr.com.brorder.menu.model.Menu;
 
 public interface MenuService {
-
-    List<Menu> selectMenuListByStoreId(Integer storeId);
-
-    Menu selectMenuById(Integer menuId);
-
-    void insertMenu(Menu menu, MultipartFile file) throws IOException;
-
-    void deleteMenu(Integer menuId);
-
-    void updateMenu(Menu menu, MultipartFile file);
-
-    List<MenuOption> selectOptionsByMenuId(Integer menuId);
-
+    List<Menu> getMenusByStoreId(Integer storeId);
+    Menu getMenuById(Integer menuId);
+    void addMenu(Menu menu);
+    void updateMenu(Menu menu);
+    void removeMenu(Integer menuId);
 }

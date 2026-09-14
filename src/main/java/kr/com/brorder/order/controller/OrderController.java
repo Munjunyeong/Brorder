@@ -115,7 +115,7 @@ public class OrderController {
         // 장바구니 추가
         if (menuId != null) {
 
-            Menu menu = menuService.selectMenuById(menuId);
+            Menu menu = menuService.getMenuById(menuId);
 
             if (menu != null) {
                 cart.add(menu);
