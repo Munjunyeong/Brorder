@@ -636,3 +636,36 @@
         left: 0 !important;
     }
 }
+/* =========================================================
+   순위 뱃지 (1위, 2위, 3위)
+   ========================================================= */
+.rank-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    color: #fff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+    z-index: 2;
+}
+
+/* 1위 금색 */
+.rank-1 {
+    background: linear-gradient(135deg, #FFD700, #F59E0B);
+}
+/* 2위 은색 */
+.rank-2 {
+    background: linear-gradient(135deg, #E2E8F0, #94A3B8);
+    color: #1a1a1a; /* 은색은 글씨를 어둡게 */
+}
+/* 3위 동색 */
+.rank-3 {
+    background: linear-gradient(135deg, #FDBA74, #EA580C);
+}

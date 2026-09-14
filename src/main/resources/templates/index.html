@@ -64,7 +64,6 @@
 		</div>
 	</div>
 </div>
-
 <!-- ══════════════════════════════════════════
      QUICK GRID
      ══════════════════════════════════════════ -->
@@ -74,10 +73,11 @@
 			<a th:href="@{/store/list}" class="quick-item reveal">
 				<div class="q-icon q-1"><i class="fa-solid fa-motorcycle"></i></div><span>배달 주문</span>
 			</a>
-			<a th:href="@{/review/store/1}" class="quick-item reveal reveal-d1">
-				<div class="q-icon q-3"><i class="fa-solid fa-fire-flame-curved"></i></div><span>인기 맛집</span>
+			<!-- ★ 인기 맛집 -> 인기 메뉴로 변경됨 -->
+			<a th:href="@{/menu/popular}" class="quick-item reveal reveal-d1">
+				<div class="q-icon q-3"><i class="fa-solid fa-utensils"></i></div><span>인기 메뉴</span>
 			</a>
-			<a th:href="@{/review/store/1}" class="quick-item reveal reveal-d2">
+			<a th:href="@{/store/list}" class="quick-item reveal reveal-d2">
 				<div class="q-icon q-4"><i class="fa-solid fa-star"></i></div><span>별점 TOP</span>
 			</a>
 		</div>
@@ -85,54 +85,68 @@
 </section>
 
 <!-- ══════════════════════════════════════════
-     지금 인기 맛집
+     우리 동네 별점 TOP 3 (랭킹)
      ══════════════════════════════════════════ -->
 <section class="popular-section snap-section">
 	<div class="section-head">
 		<div class="section-head-text">
-			<span class="section-label">TODAY'S PICK</span>
-			<h2><i class="fa-solid fa-fire"></i> 지금 인기 맛집</h2>
+			<span class="section-label">TOP RATED</span>
+			<h2><i class="fa-solid fa-ranking-star"></i> 우리 동네 별점 TOP 3</h2>
 		</div>
-		<a th:href="@{/review/store/1}" class="see-all">전체 보기 <i class="fa-solid fa-chevron-right"></i></a>
+		<a th:href="@{/store/list}" class="see-all">전체 보기 <i class="fa-solid fa-chevron-right"></i></a>
 	</div>
 
-	<!-- 로딩 스켈레톤 -->
-	<div class="sk-grid" id="popularSkeleton">
-		<div class="sk-card" th:each="i : ${#numbers.sequence(1,4)}">
-			<div class="sk-bone sk-img"></div>
-			<div class="sk-bone sk-line" style="width:80%"></div>
-			<div class="sk-bone sk-line sk-line-sm" style="width:55%"></div>
-			<div class="sk-foot">
-				<div class="sk-bone sk-price"></div>
-				<div class="sk-bone sk-btn"></div>
-			</div>
-		</div>
-	</div>
-
-	<div class="restaurant-grid sk-hidden" id="popularContent">
-		<a th:each="restaurant, stat : ${popularRestaurants}"
-		   th:href="@{${restaurant.detailUrl}}"
-		   th:class="${'rest-card reveal' + (restaurant.revealDelayClass != null ? ' ' + restaurant.revealDelayClass : '')}">
+	<!-- 백엔드 연결 전까지 임시로 1,2,3위 하드코딩 -->
+	<div class="restaurant-grid" id="popularContent">
+		<!-- 1위 카드 (DB 10번: 백지민의 반찬가게) -->
+		<a th:href="@{/store/10}" class="rest-card reveal">
 			<div class="rest-img-wrap">
-				<img th:src="${restaurant.imageUrl}" th:alt="${restaurant.imageAlt}">
-				<span th:class="${'rest-badge' + (restaurant.badgeClass != null ? ' ' + restaurant.badgeClass : '')}"
-				      th:text="${restaurant.badge}">HOT</span>
+				<img src="https://placehold.co/600x400?text=1ST+PLACE" alt="1위 매장">
+				<div class="rank-badge rank-1">1위</div> <!-- ★ 1위 뱃지 -->
 			</div>
 			<div class="rest-body">
-				<div class="rest-name" th:text="${restaurant.name}">황금올리브 치킨</div>
-				<div class="rest-tags">
-					<span th:each="tag : ${restaurant.tags}" class="rest-tag" th:text="${tag}">치킨</span>
-				</div>
+				<div class="rest-name">백지민의 반찬가게</div>
+				<div class="rest-tags"><span class="rest-tag">한식</span></div>
 				<div class="rest-meta">
-					<div class="rest-rating"><i class="fa-solid fa-star"></i> <span th:text="${restaurant.ratingText}">4.9 (2,841)</span></div>
-					<div class="rest-delivery" th:text="${restaurant.deliveryTime}">배달 20-30분</div>
+					<div class="rest-rating"><i class="fa-solid fa-star"></i> <span>5.0 (1,284)</span></div>
+					<div class="rest-delivery">배달 15-25분</div>
 				</div>
-				<div class="rest-min-order" th:text="${restaurant.minOrderText}">최소주문 15,000원 · 배달비 0원</div>
+			</div>
+		</a>
+
+		<!-- 2위 카드 (DB 8번: 임현주의 해병짜장) -->
+		<a th:href="@{/store/8}" class="rest-card reveal reveal-d1">
+			<div class="rest-img-wrap">
+				<img src="https://placehold.co/600x400?text=2ND+PLACE" alt="2위 매장">
+				<div class="rank-badge rank-2">2위</div> <!-- ★ 2위 뱃지 -->
+			</div>
+			<div class="rest-body">
+				<div class="rest-name">임현주의 해병짜장</div>
+				<div class="rest-tags"><span class="rest-tag">중식</span></div>
+				<div class="rest-meta">
+					<div class="rest-rating"><i class="fa-solid fa-star"></i> <span>4.9 (853)</span></div>
+					<div class="rest-delivery">배달 20-30분</div>
+				</div>
+			</div>
+		</a>
+
+		<!-- 3위 카드 (DB 9번: 진구 배포 테스트) -->
+		<a th:href="@{/store/9}" class="rest-card reveal reveal-d2">
+			<div class="rest-img-wrap">
+				<img src="https://placehold.co/600x400?text=3RD+PLACE" alt="3위 매장">
+				<div class="rank-badge rank-3">3위</div> <!-- ★ 3위 뱃지 -->
+			</div>
+			<div class="rest-body">
+				<div class="rest-name">진구 배포 테스트</div>
+				<div class="rest-tags"><span class="rest-tag">피자</span></div>
+				<div class="rest-meta">
+					<div class="rest-rating"><i class="fa-solid fa-star"></i> <span>4.8 (521)</span></div>
+					<div class="rest-delivery">배달 30-40분</div>
+				</div>
 			</div>
 		</a>
 	</div>
 </section>
-
 <!-- ══════════════════════════════════════════
      promo-band
      ══════════════════════════════════════════ -->
