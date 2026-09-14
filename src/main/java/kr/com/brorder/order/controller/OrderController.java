@@ -114,19 +114,28 @@ public class OrderController {
 
         // 장바구니 추가
         if (menuId != null) {
-
             Menu menu = menuService.selectMenuById(menuId);
 
             if (menu != null) {
+                // 무결성 체크: 장바구니에 다른 가게 메뉴가 있는지 확인
+                if (!cart.isEmpty() && !cart.get(0).getStoreId().equals(menu.getStoreId())) {
+                    cart.clear(); // 다른 가게 메뉴면 장바구니 비우기
+                }
                 cart.add(menu);
             }
 
             session.setAttribute("cart", cart);
 
-            return "redirect:/orders/add?storeId=" + sId;
+            // sId가 없거나 menu의 storeId와 다르면 menu의 storeId로 갱신
+            Integer targetStoreId = (menu != null) ? menu.getStoreId() : sId;
+            return "redirect:/orders/add?storeId=" + targetStoreId;
         }
 
         if (sId != null) {
+            // 장바구니 내 메뉴들이 현재 접근한 storeId와 일치하는지 최종 검증 (주소창 조작 방어)
+            if (!cart.isEmpty() && !cart.get(0).getStoreId().equals(sId)) {
+                return "redirect:/orders/add?storeId=" + cart.get(0).getStoreId();
+            }
 
             model.addAttribute("store",
                     storeService.getStoreById(sId));
@@ -171,24 +180,18 @@ public class OrderController {
 
     // 장바구니 메뉴 삭제
     @GetMapping("/cart/remove")
-    public String removeCartItem(@RequestParam int index,
+    public String removeCartItem(@RequestParam(required = false) Integer index,
                                  @RequestParam(required = false) String storeId,
                                  HttpSession session) {
 
-        List<Menu> cart =
-                (List<Menu>) session.getAttribute("cart");
+        List<Menu> cart = (List<Menu>) session.getAttribute("cart");
 
-        if (cart != null &&
-                index >= 0 &&
-                index < cart.size()) {
-
-            cart.remove(index);
-
+        if (cart != null && index != null && index >= 0 && index < cart.size()) {
+            cart.remove(index.intValue());
             session.setAttribute("cart", cart);
         }
 
-        return "redirect:/orders/add"
-                + (storeId != null ? "?storeId=" + storeId : "");
+        return "redirect:/orders/add" + (storeId != null ? "?storeId=" + storeId : "");
     }
 
     // 장바구니 저장

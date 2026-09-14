@@ -66,5 +66,7 @@
             name,
             price
         FROM menu_option
-        WHERE group_id IN (1, 2)  </select>
+        WHERE group_id IN (1, 2)
+        ORDER BY group_id ASC, option_id ASC
+    </select>
 </mapper>

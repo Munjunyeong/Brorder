@@ -172,10 +172,57 @@
             currentMenu.basePrice = price;
 
             document.getElementById('modalMenuName').innerText = name;
-            document.querySelectorAll('input[name="menuOption"]').forEach(cb => cb.checked = false);
-            updateTotalPrice();
+            
+            // API를 통해 옵션 목록 가져오기
+            fetch(`/api/menus/${id}/options`)
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('option-container');
+                    if (data && data.length > 0) {
+                        const group1 = data.filter(opt => opt.groupId === 1);
+                        const group2 = data.filter(opt => opt.groupId === 2);
 
-            document.getElementById('optionModal').style.display = 'flex';
+                        let html = '';
+                        
+                        // 기본 옵션 (Radio)
+                        if (group1.length > 0) {
+                            html += '<p style="font-weight: bold; margin: 10px 0;">기본/사이즈 선택</p>';
+                            html += group1.map((opt, idx) => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                    <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                        <input type="radio" name="menuOptionGroup1" value="${opt.price}" data-id="${opt.optionId}" data-name="${opt.name}" onchange="updateTotalPrice()" style="margin-right: 10px; width: 18px; height: 18px;" ${idx === 0 ? 'checked' : ''}>
+                                        <span>${opt.name}</span>
+                                    </label>
+                                    <span style="color: #666;">${opt.price > 0 ? '+' + opt.price.toLocaleString() + '원' : '무료'}</span>
+                                </div>
+                            `).join('');
+                        }
+
+                        // 추가 옵션 (Checkbox)
+                        if (group2.length > 0) {
+                            html += '<p style="font-weight: bold; margin: 10px 0;">추가 옵션</p>';
+                            html += group2.map(opt => `
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                    <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                        <input type="checkbox" name="menuOptionGroup2" value="${opt.price}" data-id="${opt.optionId}" data-name="${opt.name}" onchange="updateTotalPrice()" style="margin-right: 10px; width: 18px; height: 18px;">
+                                        <span>${opt.name}</span>
+                                    </label>
+                                    <span style="color: #666;">+${opt.price.toLocaleString()}원</span>
+                                </div>
+                            `).join('');
+                        }
+                        
+                        container.innerHTML = html || '<p style="color: #999; font-size: 14px; text-align: center; padding: 10px 0;">옵션이 없습니다.</p>';
+                    } else {
+                        container.innerHTML = '<p style="color: #999; font-size: 14px; text-align: center; padding: 10px 0;">옵션이 없습니다.</p>';
+                    }
+                    updateTotalPrice();
+                    document.getElementById('optionModal').style.display = 'flex';
+                })
+                .catch(err => {
+                    console.error('옵션을 불러오는데 실패했습니다:', err);
+                    alert('옵션 정보를 불러오지 못했습니다.');
+                });
         }
 
         function closeOptionModal() {
@@ -184,7 +231,15 @@
 
         function updateTotalPrice() {
             let total = currentMenu.basePrice;
-            document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            
+            // Group 1 (Radio)
+            const group1 = document.querySelector('input[name="menuOptionGroup1"]:checked');
+            if (group1) {
+                total += parseInt(group1.value);
+            }
+            
+            // Group 2 (Checkbox)
+            document.querySelectorAll('input[name="menuOptionGroup2"]:checked').forEach(cb => {
                 total += parseInt(cb.value);
             });
             document.getElementById('modalTotalPrice').innerText = total.toLocaleString() + '원';
@@ -192,21 +247,33 @@
 
         function submitOrder() {
             let options = [];
-            document.querySelectorAll('input[name="menuOption"]:checked').forEach(cb => {
+            
+            // Group 1 (Radio)
+            const group1 = document.querySelector('input[name="menuOptionGroup1"]:checked');
+            if (group1) {
                 options.push({
+                    optionId: group1.getAttribute('data-id'),
+                    name: group1.getAttribute('data-name'),
+                    price: parseInt(group1.value)
+                });
+            }
+            
+            // Group 2 (Checkbox)
+            document.querySelectorAll('input[name="menuOptionGroup2"]:checked').forEach(cb => {
+                options.push({
+                    optionId: cb.getAttribute('data-id'),
                     name: cb.getAttribute('data-name'),
                     price: parseInt(cb.value)
                 });
             });
 
-            // 현재는 단순 이동이므로 쿼리 스트링으로 전달 (실제로는 세션/장바구니 등을 사용하겠지만 구조에 맞춤)
-            let url = `/orders/add?storeId=${currentMenu.storeId}&menuId=${currentMenu.id}`;
+            // 옵션 정보를 세션 스토리지에 임시 저장 (장바구니 이동 시 활용)
+            sessionStorage.setItem('lastSelectedOptions_' + currentMenu.id, JSON.stringify(options));
 
-            // 옵션이 있는 경우 (현재 OrderController는 단일 메뉴 정보만 처리하므로 복잡한 옵션 전달은 한계가 있음)
-            // 하지만 요구사항인 "창이 뜨게 만들어줘"에 집중
+            let url = `/orders/add?storeId=${currentMenu.storeId}&menuId=${currentMenu.id}`;
             location.href = url;
         }
     </script>
-
+</div>
 </body>
 </html>
