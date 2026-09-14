@@ -11,7 +11,6 @@ import java.util.Map;
 public class StoreServiceImpl implements StoreService {
 
     @Autowired
-    /**내 서비스 안에서만 안전하게 DB에 접근**/
     private StoreDao storeDAO; // DAO 계층 주입
 
     @Override
@@ -21,6 +20,11 @@ public class StoreServiceImpl implements StoreService {
         searchMap.put("searchKeyword", searchKeyword);
         // 비즈니스 로직 필요 시 추가 (예: 정렬, 상태 필터링 등)
         return storeDAO.selectStoreList(searchMap);
+    }
+
+    @Override
+    public List<Store> getStoreListByOwner(Long userid) {
+        return storeDAO.selectStoreListByOwner(userid);
     }
 
     @Override
