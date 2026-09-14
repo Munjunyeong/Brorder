@@ -74,14 +74,19 @@
             </div>
 
             <div class="payment-section">
+                <div style="margin-bottom: 24px;">
+                    <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">가게 요청사항</label>
+                    <textarea name="requests" rows="3" placeholder="예) 견과류 빼주세요, 벨 누르고 문 앞에 놔주세요"
+                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
+                </div>
+
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: bold;">결제 수단</label>
-                    <select name="paymentMethod" required style="width: 100%; padding: 10px; margin-top: 5px;">
-                        <option value="CARD">신용/체크카드</option>
-                        <option value="NAVER_PAY">네이버페이</option>
-                        <option value="KAKAO_PAY">카카오페이</option>
-                        <option value="CASH">현장결제</option>
-                    </select>
+                    <div style="margin-top: 10px; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; color: #333; font-weight: 500;">
+                        <i class="fa-solid fa-wallet" style="margin-right: 8px; color: #666;"></i>
+                        현장결제
+                    </div>
+                    <input type="hidden" name="paymentMethod" value="CASH">
                 </div>
                 <div class="payment-row"><span>주문금액</span><span id="subtotal-price">0원</span></div>
                 <div class="total-price" id="final-total-price">0원</div>

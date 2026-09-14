@@ -55,7 +55,7 @@
         <div class="menu-list-section">
             <span class="section-title">주문 메뉴</span>
             <div th:each="item : ${order.items}" class="menu-item">
-                <img th:if="${item.menuPicture != null}" th:src="${item.menuPicture}" class="menu-img" alt="메뉴 이미지">
+                <img th:if="${item.menuPicture != null}" th:src="@{/upload/{img}(img=${item.menuPicture})}" class="menu-img" alt="메뉴 이미지">
                 <div th:unless="${item.menuPicture != null}" class="menu-img" style="display: flex; align-items: center; justify-content: center;">
                     <i class="fa-solid fa-utensils" style="color: #ccc; font-size: 14px;"></i>
                 </div>
@@ -90,11 +90,12 @@
             <div class="info-group">
                 <div class="info-item">
                     <span class="info-label">결제수단</span>
-                    <span class="info-content" th:text="${order.paymentMethod}"></span>
+                    <span class="info-content" th:text="${order.paymentMethod == 'CASH' ? '현장결제' : (order.paymentMethod == 'CARD' ? '신용/체크카드' : order.paymentMethod)}"></span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">가게 요청사항</span>
-                    <span class="info-content" th:text="${order.requests != null && !order.requests.empty ? order.requests : '없음'}"></span>
+                <div class="info-item" style="margin-top: 16px; padding: 16px; background: #fbfbfb; border-radius: 8px; border: 1px solid #f0f0f0;">
+                    <span class="info-label" style="color: #333; font-weight: 700; margin-bottom: 8px;">가게 요청사항</span>
+                    <span class="info-content" style="font-size: 15px; color: #555; line-height: 1.5;" 
+                          th:text="${order.requests != null && !order.requests.empty ? order.requests : '요청사항이 없습니다.'}"></span>
                 </div>
             </div>
         </div>
