@@ -43,6 +43,12 @@ public class OrderServiceImpl implements OrderService {
         if (order.getItems() != null) {
             for (OrderMenu item : order.getItems()) {
                 item.setOrderId((long) order.getOrderId());
+                
+                // 만약 optionsJson이 있다면 (여러 옵션 처리용)
+                // 현재 DB 구조는 order_menu에 option_id 하나만 저장 가능함.
+                // 첫 번째 옵션이라도 저장하도록 하거나, 비즈니스 로직에 맞게 처리.
+                // 여기서는 JSON 문자열을 파싱하지 않고, 프론트에서 넘어온 option_id가 있다면 그것을 우선 사용.
+                
                 orderDao.insertOrderMenu(item);
             }
         }

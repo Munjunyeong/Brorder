@@ -12,6 +12,15 @@ public class OrderMenu { //오더  메뉴
 
     private String menuName;
     private String menuPicture;
+    private String optionsJson;
+
+    public String getOptionsJson() {
+        return optionsJson;
+    }
+
+    public void setOptionsJson(String optionsJson) {
+        this.optionsJson = optionsJson;
+    }
 
     public Long getOrderMenuId() {
         return orderMenuId;

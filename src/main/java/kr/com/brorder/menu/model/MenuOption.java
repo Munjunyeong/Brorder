@@ -2,7 +2,7 @@ package kr.com.brorder.menu.model;
 
 public class MenuOption {
     private Integer optionId;
-    private Integer groupId; // menu_id에서 변경
+    private Integer groupId;
     private String name;
     private Integer price;
 

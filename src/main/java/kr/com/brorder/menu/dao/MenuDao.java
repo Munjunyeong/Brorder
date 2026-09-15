@@ -1,12 +1,22 @@
-package kr.com.brorder.menu.dao;
+package kr.com.brorder.menu.dao; //메뉴다오
+
+import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.model.MenuOption;
 
 import java.util.List;
-import kr.com.brorder.menu.model.Menu;
 
 public interface MenuDao {
-    List<Menu> selectMenuListByStoreId(Integer storeId); // 해당 가게의 모든 메뉴 조회
-    Menu selectMenuById(Integer menuId);                 // 메뉴 하나만 상세 조회
-    int insertMenu(Menu menu);                           // 메뉴 추가
-    int updateMenu(Menu menu);                           // 메뉴 수정
-    int deleteMenu(Integer menuId);                      // 메뉴 삭제
+
+    void insertMenu(Menu menu);
+    List<Menu> selectMenuListByStoreId(Integer storeId);
+    Menu selectMenuById(Integer menuId);
+    List<Menu> list(Integer storeId);
+
+    void deleteMenu(Integer menuId);
+
+    void deleteOrderMenuByMenuId(Integer menuId);
+
+    void updateMenu(Menu menu);
+
+    List<MenuOption> selectOptionsByMenuId(Integer menuId);
 }
