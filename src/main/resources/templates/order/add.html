@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <th:block th:replace="~{fragments/head :: commonHead}"></th:block>
-    <link rel="stylesheet" th:href="@{/css/components.css}">
     <title>주문 확인 - BRORDER</title>
     <style>
         .order-add-section { padding: 40px var(--side-pad); background: #f5f5f5; min-height: calc(100vh - 80px); }
@@ -24,9 +23,7 @@
         .btn-option-change { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; cursor: pointer; margin-top: 12px; background: #fff; }
         .payment-section { padding: 24px 20px; border-top: 8px solid #f5f5f5; }
         .bottom-actions { padding: 20px; position: sticky; bottom: 0; background: #fff; border-top: 1px solid #eee; display: flex; gap: 10px; }
-        /* .btn-order(컴포넌트)가 색상/radius/애니메이션을 담당하므로,
-           여기서는 bottom-actions 안에서의 크기(flex)만 지정합니다. */
-        .btn-order-submit { flex: 2; justify-content: center; }
+        .btn-order-submit { flex: 2; padding: 16px; background: #2ac1bc; color: #fff; border: none; border-radius: 4px; font-size: 17px; font-weight: 800; cursor: pointer; }
         .hidden-inputs { display: none; }
     </style>
 </head>
@@ -62,7 +59,7 @@
                         </div>
                     </div>
 
-                    <input type="hidden" th:id="'selected-options-' + ${stat.index}">
+                    <input type="hidden" th:id="'selected-options-' + ${stat.index}" th:name="'items[' + ${stat.index} + '].optionsJson'">
 
                     <button type="button" class="btn-option-change"
                             th:onclick="openOptionModal([[${menu.menuId}]], [[${menu.name}]], [[${menu.price}]], [[${stat.index}]])">
@@ -77,14 +74,19 @@
             </div>
 
             <div class="payment-section">
+                <div style="margin-bottom: 24px;">
+                    <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">가게 요청사항</label>
+                    <textarea name="requests" rows="3" placeholder="예) 견과류 빼주세요, 벨 누르고 문 앞에 놔주세요"
+                              style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
+                </div>
+
                 <div style="margin-bottom: 15px;">
                     <label style="font-weight: bold;">결제 수단</label>
-                    <select name="paymentMethod" required style="width: 100%; padding: 10px; margin-top: 5px;">
-                        <option value="CARD">신용/체크카드</option>
-                        <option value="NAVER_PAY">네이버페이</option>
-                        <option value="KAKAO_PAY">카카오페이</option>
-                        <option value="CASH">현장결제</option>
-                    </select>
+                    <div style="margin-top: 10px; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; color: #333; font-weight: 500;">
+                        <i class="fa-solid fa-wallet" style="margin-right: 8px; color: #666;"></i>
+                        현장결제
+                    </div>
+                    <input type="hidden" name="paymentMethod" value="CASH">
                 </div>
                 <div class="payment-row"><span>주문금액</span><span id="subtotal-price">0원</span></div>
                 <div class="total-price" id="final-total-price">0원</div>
@@ -96,37 +98,125 @@
                     메뉴 추가
                 </a>
 
-                <!-- ══ 여기 ══ Send 버튼 컴포넌트 적용: 주문(orders row 생성)이 실제로 일어나는 지점 -->
-                <button type="submit" class="btn-order btn-order-submit" id="submit-btn">
-                    <div class="svg-wrapper-1">
-                        <div class="svg-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                                <path fill="none" d="M0 0h24v24H0z"></path>
-                                <path fill="currentColor" d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                    <span>배달 주문하기</span>
+                <button type="submit" class="btn-order-submit" id="submit-btn" style="flex: 2;">
+                    배달 주문하기
                 </button>
             </div>
         </form>
     </div>
 </section>
 
-<div id="optionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
-    <div style="background:white; width:90%; max-width:400px; padding:20px; border-radius:12px;">
-        <h3 id="modalMenuName"></h3>
-        <div id="option-container"></div>
-        <div style="margin-top:20px;">
-            <p>총액: <span id="modalTotalPrice">0원</span></p>
-            <button onclick="applyOptionChange()">적용하기</button>
+<div id="optionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: white; width: 90%; max-width: 400px; border-radius: 12px; overflow: hidden;">
+
+        <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <h3 id="modalMenuName" style="margin: 0; font-size: 18px;">메뉴 이름</h3>
+
+            <button onclick="closeOptionModal()"
+                    style="border: none; background: none; font-size: 20px; cursor: pointer;">
+                &times;
+            </button>
         </div>
+
+        <div style="padding: 20px;">
+
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">기본 옵션</p>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #2ac1bc; border-radius: 8px; background: #f0fdfc;">
+                    <span>기본 선택</span>
+                    <span style="color: #2ac1bc; font-weight: bold;">+0원</span>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <p style="font-weight: bold; margin-bottom: 10px;">추가 옵션</p>
+
+                <div id="option-container">
+                </div>
+
+            </div>
+
+        </div>
+
+        <div style="padding: 20px; border-top: 1px solid #eee;">
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span style="font-weight: bold;">총 주문금액</span>
+
+                <span id="modalTotalPrice"
+                      style="font-size: 20px; font-weight: 900; color: #2ac1bc;">
+                    0원
+                </span>
+            </div>
+
+            <button onclick="applyOptionChange()"
+                    style="width: 100%; padding: 15px; background: #2ac1bc; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer;">
+                적용하기
+            </button>
+
+        </div>
+
     </div>
 </div>
 
-<script th:src="@{/js/components.js}"></script>
 <script>
-    window.onload = calculateTotal;
+    window.onload = function() {
+        // detail 페이지에서 넘어온 옵션 정보가 있다면 적용
+        document.querySelectorAll('.menu-item').forEach((item, index) => {
+            const menuId = item.querySelector('input[name$=".menuId"]').value;
+            const savedOptions = sessionStorage.getItem('lastSelectedOptions_' + menuId);
+            if (savedOptions) {
+                const options = JSON.parse(savedOptions);
+                applySavedOptions(index, options);
+                sessionStorage.removeItem('lastSelectedOptions_' + menuId);
+            }
+        });
+        calculateTotal();
+    };
+
+    function applySavedOptions(index, selectedOptions) {
+        const targetItem = document.querySelectorAll('.menu-item')[index];
+        const summary = targetItem.querySelector('.option-summary');
+        const hiddenInputs = targetItem.querySelector('.hidden-inputs');
+        const priceInput = targetItem.querySelector('.item-total-price');
+        
+        let totalOptionPrice = 0;
+        let html = '';
+        
+        selectedOptions.forEach(opt => {
+            totalOptionPrice += opt.price;
+            html += `
+                <div class="option-row">
+                    <span>${opt.name}</span>
+                    <span>${opt.price > 0 ? '+' + opt.price.toLocaleString() + '원' : '무료'}</span>
+                </div>
+            `;
+        });
+        
+        if (selectedOptions.length === 0) {
+            html = `
+                <div class="option-row">
+                    <span>기본 옵션</span>
+                    <span>무료</span>
+                </div>
+            `;
+        }
+        
+        summary.innerHTML = html;
+        priceInput.value = parseInt(priceInput.value) + totalOptionPrice;
+        
+        document.getElementById('selected-options-' + index).value = JSON.stringify(selectedOptions);
+        
+        let optionIdInput = hiddenInputs.querySelector('input[name$=".optionId"]');
+        if (!optionIdInput) {
+            optionIdInput = document.createElement('input');
+            optionIdInput.type = 'hidden';
+            optionIdInput.name = `items[${index}].optionId`;
+            hiddenInputs.appendChild(optionIdInput);
+        }
+        optionIdInput.value = selectedOptions.length > 0 ? selectedOptions[0].optionId : '';
+    }
 
     let currentItem = {
         index: null,
@@ -148,32 +238,70 @@
         fetch(`/api/menus/${id}/options`)
             .then(res => res.json())
             .then(data => {
-
                 const container = document.getElementById('option-container');
+                if (data && data.length > 0) {
+                    const group1 = data.filter(opt => opt.groupId === 1);
+                    const group2 = data.filter(opt => opt.groupId === 2);
 
-                container.innerHTML = data.map(opt => `
-                    <label>
-                        <input type="checkbox"
-                               name="menuOption"
-                               value="${opt.price}"
-                               data-name="${opt.name}"
-                               onchange="updateModalTotalPrice()">
-                        ${opt.name} (+${opt.price}원)
-                    </label>
-                    <br>
-                `).join('');
+                    let html = '';
+
+                    // 기본 옵션 (Radio)
+                    if (group1.length > 0) {
+                        html += '<p style="font-weight: bold; margin: 10px 0;">기본/사이즈 선택</p>';
+                        html += group1.map((opt, idx) => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                    <input type="radio" name="menuOptionGroup1" value="${opt.price}" data-id="${opt.optionId}" data-name="${opt.name}" onchange="updateModalTotalPrice()" style="margin-right: 10px; width: 18px; height: 18px;" ${idx === 0 ? 'checked' : ''}>
+                                    <span>${opt.name}</span>
+                                </label>
+                                <span style="color: #666;">${opt.price > 0 ? '+' + opt.price.toLocaleString() + '원' : '무료'}</span>
+                            </div>
+                        `).join('');
+                    }
+
+                    // 추가 옵션 (Checkbox)
+                    if (group2.length > 0) {
+                        html += '<p style="font-weight: bold; margin: 10px 0;">추가 옵션</p>';
+                        html += group2.map(opt => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0;">
+                                <label style="display: flex; align-items: center; cursor: pointer; flex: 1;">
+                                    <input type="checkbox" name="menuOptionGroup2" value="${opt.price}" data-id="${opt.optionId}" data-name="${opt.name}" onchange="updateModalTotalPrice()" style="margin-right: 10px; width: 18px; height: 18px;">
+                                    <span>${opt.name}</span>
+                                </label>
+                                <span style="color: #666;">+${opt.price.toLocaleString()}원</span>
+                            </div>
+                        `).join('');
+                    }
+
+                    container.innerHTML = html || '<p style="color: #999; font-size: 14px; text-align: center; padding: 10px 0;">옵션이 없습니다.</p>';
+                } else {
+                    container.innerHTML = '<p style="color: #999; font-size: 14px; text-align: center; padding: 10px 0;">옵션이 없습니다.</p>';
+                }
 
                 document.getElementById('optionModal').style.display = 'flex';
-
                 updateModalTotalPrice();
+            })
+            .catch(err => {
+                console.error('옵션을 불러오는데 실패했습니다:', err);
+                alert('옵션 정보를 불러오지 못했습니다.');
             });
     }
 
-    function updateModalTotalPrice() {
+    function closeOptionModal() {
+        document.getElementById('optionModal').style.display = 'none';
+    }
 
+    function updateModalTotalPrice() {
         let total = currentItem.basePrice;
 
-        document.querySelectorAll('input[name="menuOption"]:checked')
+        // Group 1 (Radio)
+        const group1 = document.querySelector('input[name="menuOptionGroup1"]:checked');
+        if (group1) {
+            total += parseInt(group1.value);
+        }
+
+        // Group 2 (Checkbox)
+        document.querySelectorAll('input[name="menuOptionGroup2"]:checked')
             .forEach(cb => {
                 total += parseInt(cb.value);
             });
@@ -183,12 +311,11 @@
     }
 
     function applyOptionChange() {
+        const selectedG1 = document.querySelector('input[name="menuOptionGroup1"]:checked');
+        const selectedG2 = Array.from(document.querySelectorAll('input[name="menuOptionGroup2"]:checked'));
 
-        const selected =
-            Array.from(document.querySelectorAll('input[name="menuOption"]:checked'));
-
-        const totalOptionPrice =
-            selected.reduce((sum, cb) => sum + parseInt(cb.value), 0);
+        const totalOptionPrice = (selectedG1 ? parseInt(selectedG1.value) : 0) +
+            selectedG2.reduce((sum, cb) => sum + parseInt(cb.value), 0);
 
         const targetItem =
             document.querySelectorAll('.menu-item')[currentItem.index];
@@ -201,24 +328,62 @@
         const summary =
             targetItem.querySelector('.option-summary');
 
-        if (selected.length === 0) {
+        let html = '';
+        let selectedOptions = [];
+        if (selectedG1) {
+            html += `
+                <div class="option-row">
+                    <span>${selectedG1.dataset.name}</span>
+                    <span>${parseInt(selectedG1.value) > 0 ? '+' + parseInt(selectedG1.value).toLocaleString() + '원' : '무료'}</span>
+                </div>
+            `;
+            selectedOptions.push({
+                optionId: selectedG1.dataset.id,
+                name: selectedG1.dataset.name,
+                price: parseInt(selectedG1.value)
+            });
+        }
+        
+        if (selectedG2.length > 0) {
+            html += selectedG2.map(cb => {
+                selectedOptions.push({
+                    optionId: cb.dataset.id,
+                    name: cb.dataset.name,
+                    price: parseInt(cb.value)
+                });
+                return `
+                <div class="option-row">
+                    <span>${cb.dataset.name}</span>
+                    <span>+${parseInt(cb.value).toLocaleString()}원</span>
+                </div>
+            `}).join('');
+        }
 
-            summary.innerHTML = `
+        if (!selectedG1 && selectedG2.length === 0) {
+            html = `
                 <div class="option-row">
                     <span>기본 옵션</span>
                     <span>무료</span>
                 </div>
             `;
-
-        } else {
-
-            summary.innerHTML = selected.map(cb => `
-                <div class="option-row">
-                    <span>${cb.dataset.name}</span>
-                    <span>+${parseInt(cb.value).toLocaleString()}원</span>
-                </div>
-            `).join('');
         }
+        
+        summary.innerHTML = html;
+
+        // 선택된 옵션 ID들을 hidden input에 저장하여 서버 전송 가능하게 함
+        const optionsInput = document.getElementById('selected-options-' + currentItem.index);
+        optionsInput.value = JSON.stringify(selectedOptions);
+        
+        // 만약 단일 optionId만 저장하는 컬럼(기존 구조)이 있다면 첫번째 옵션 ID를 설정
+        const hiddenInputs = targetItem.querySelector('.hidden-inputs');
+        let optionIdInput = hiddenInputs.querySelector('input[name$=".optionId"]');
+        if (!optionIdInput) {
+            optionIdInput = document.createElement('input');
+            optionIdInput.type = 'hidden';
+            optionIdInput.name = `items[${currentItem.index}].optionId`;
+            hiddenInputs.appendChild(optionIdInput);
+        }
+        optionIdInput.value = selectedOptions.length > 0 ? selectedOptions[0].optionId : '';
 
         document.getElementById('optionModal').style.display = 'none';
 
@@ -240,11 +405,6 @@
         document.getElementById('final-total-price').innerText =
             (sub + 3000).toLocaleString() + '원';
     }
-
-    /* ── 주문 전송(Send) 로딩 상태 ── */
-    document.getElementById('order-form')?.addEventListener('submit', () => {
-        setOrderButtonLoading(document.getElementById('submit-btn'), true);
-    });
 </script>
 </body>
 </html>

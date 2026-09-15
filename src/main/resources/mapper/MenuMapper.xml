@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" ?> <!--  테스트용 주석 -->
+<?xml version="1.0" encoding="UTF-8" ?> <!--  테스트용 주석 -->
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -20,7 +20,7 @@
         FROM menu
         WHERE menu_id = #{menuId}
     </select>
-    
+
     <insert id="insertMenu" parameterType="kr.com.brorder.menu.model.Menu">
         INSERT INTO menu (
             store_id,
@@ -29,12 +29,12 @@
             image,
             price
         ) VALUES (
-            #{storeId},
-            #{name},
-            #{content},
-            #{image},
-            #{price}
-        )
+                     #{storeId},
+                     #{name},
+                     #{content},
+                     #{image},
+                     #{price}
+                 )
     </insert>
 
     <delete id="deleteMenu">
@@ -66,5 +66,7 @@
             name,
             price
         FROM menu_option
-        WHERE group_id IN (1, 2)  </select>
+        WHERE group_id IN (1, 2)
+        ORDER BY group_id ASC, option_id ASC
+    </select>
 </mapper>
