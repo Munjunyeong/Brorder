@@ -1,6 +1,8 @@
 package kr.com.brorder.store;
 
 import jakarta.servlet.http.HttpSession;
+import kr.com.brorder.menu.model.Menu;
+import kr.com.brorder.menu.service.MenuService;
 import kr.com.brorder.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,9 @@ public class StoreController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private MenuService menuService;
 
     @Value("${kopo.upload.path}")
     private String path;
@@ -54,7 +59,10 @@ public class StoreController {
             return "error/404";
         }
 
+        List<Menu> menuList = menuService.selectMenuListByStoreId(store_id);
+
         model.addAttribute("store", store);
+        model.addAttribute("menuList", menuList);
         return "store/detail"; // src/main/resources/templates/store/detail.html
     }
 

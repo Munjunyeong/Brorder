@@ -39,8 +39,8 @@
     <tbody>
     <tr th:each="menu : ${menuList}">
         <td>
-            <img th:if="${menu.picture != null and menu.picture != ''}" th:src="@{/upload/{filename}(filename=${menu.picture})}" class="thumb-img">
-            <span th:unless="${menu.picture != null and menu.picture != ''}" style="color:#ccc; font-size:12px;">사진 없음</span>
+            <img th:if="${menu.image != null and menu.image != ''}" th:src="@{/upload/{filename}(filename=${menu.image})}" class="thumb-img">
+            <span th:unless="${menu.image != null and menu.image != ''}" style="color:#ccc; font-size:12px;">사진 없음</span>
         </td>
         <td th:text="${menu.name}" style="font-weight: bold;">메뉴명</td>
         <td th:text="${menu.content}" style="font-size: 14px; color: #666;">메뉴 소개</td>

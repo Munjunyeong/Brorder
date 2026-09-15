@@ -96,7 +96,7 @@ public class OrderController {
     }
 
     // 주문 확인 화면 + 장바구니 추가
-    @GetMapping("/add")
+    @RequestMapping(value = "/add", method = {RequestMethod.GET, RequestMethod.POST})
     public String add(@RequestParam(required = false) String storeId,
                       @RequestParam(required = false) Integer menuId,
                       HttpSession session,
@@ -128,6 +128,8 @@ public class OrderController {
 
             // sId가 없거나 menu의 storeId와 다르면 menu의 storeId로 갱신
             Integer targetStoreId = (menu != null) ? menu.getStoreId() : sId;
+            
+            // 담기 버튼 누른 후 flow: 장바구니 페이지(/orders/add)로 이동
             return "redirect:/orders/add?storeId=" + targetStoreId;
         }
 
@@ -151,6 +153,9 @@ public class OrderController {
 
                 model.addAttribute("user", user);
             }
+        } else if (!cart.isEmpty()) {
+            // storeId 파라미터가 없는데 장바구니에 상품이 있다면 해당 가게 장바구니로 리다이렉트
+            return "redirect:/orders/add?storeId=" + cart.get(0).getStoreId();
         }
 
         return "order/add";
