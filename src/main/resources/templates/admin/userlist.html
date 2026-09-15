@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>회원 관리 - 배달 서비스 관리자</title>
+<link rel="stylesheet" href="/css/userlist.css" />
+</head>
+<body>
+	<aside class="sidebar">
+		<div class="sidebar-brand">
+			<span class="brand-icon">G</span>
+			<div>
+				<div class="brand-title">
+					배달 서비스<br>관리자
+				</div>
+				<div class="brand-sub">Admin Console</div>
+			</div>
+		</div>
+
+		<nav class="sidebar-nav">
+			<div class="nav-section-label">관리 메뉴</div>
+			<ul>
+				<li class="nav-item active"><a href="userlist">회원 관리</a></li>
+				<li class="nav-item"><a href="storelist">스토어 관리</a></li>
+				<li class="nav-item"><a href="orderlist">주문 관리</a></li>
+			</ul>
+		</nav>
+
+		<div class="sidebar-footer">
+			<a href="#" class="sidebar-footer-link">설정</a> <a href="#"
+				class="sidebar-footer-link">로그아웃</a>
+		</div>
+	</aside>
+
+	<div class="main-wrapper">
+
+		<header class="topbar">
+			<span class="breadcrumb">홈 / 회원 관리</span>
+		</header>
+
+		<main class="content">
+
+			<div class="page-title-row">
+				<div>
+					<h1 class="page-title">회원 관리</h1>
+					<p class="page-breadcrumb">홈 / 회원 관리</p>
+				</div>
+			</div>
+
+			<div class="table-section">
+				<div class="table-header">
+					<h2 class="table-title">회원 관리 게시판</h2>
+					<div class="table-actions">
+						<input type="text" class="search-input" placeholder="검색..." />
+					</div>
+				</div>
+
+				<table class="member-table">
+					<thead>
+						<tr>
+							<th>유저 ID</th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>닉네임</th>
+							<th>전화번호</th>
+							<th>생성일자</th>
+							<th>관리</th>
+							<th></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:if="${userlist.size() < 1}">
+							<td colspan="8">조회된 정보가 없습니다</td>
+						</tr>
+
+						<tr th:each="item : ${userlist}">
+							<td th:text="${item.userid}"></td>
+							<td th:text="${item.id}"></td>
+							<td th:text="${item.name}"></td>
+							<td th:text="${item.nickname}"></td>
+							<td th:text="${item.phone}"></td>
+							<td th:text="${item.created_data}"></td>
+							<td><button class="btn-action">수정</button></td>
+							<td><button class="btn-action btn-delete">삭제</button></td>
+						</tr>
+					</tbody>
+
+					<tfoot>
+						<tr>
+							<td colspan="5">
+								<div class="pagination">
+									<div>
+										<a th:href="@{|?page=1${pager.query}|}">처음</a>
+									</div>
+									<div>
+										<a th:href="@{|?page=${pager.prev}${pager.query}|}">이전</a>
+									</div>
+									<div th:each="page : ${pager.list}">
+										<a th:href="@{|?page=${page}${pager.query}|}" th:text="${page}"> </a>
+									</div>
+									<div>
+										<a th:href="@{|?page=${pager.next}${pager.query}|}">다음</a>
+									</div>
+									<div>
+										<a th:href="@{|?page=${pager.last}${pager.query}|}">마지막</a>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</main>
+	</div>
+</body>
+</html>
