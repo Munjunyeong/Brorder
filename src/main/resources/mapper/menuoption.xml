@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.com.brorder.menu.MenuOption">
+
+    <!-- ==================== [메뉴 옵션 그룹] ==================== -->
+    <select id="selectGroupsByMenuId" parameterType="java.lang.Integer" resultType="kr.com.brorder.menu.MenuOptionGroup">
+        SELECT
+            group_id AS groupId,
+            menu_id AS menuId,
+            name
+        FROM menu_option_group
+        WHERE menu_id = #{menuId}
+        ORDER BY group_id ASC
+    </select>
+
+    <insert id="insertGroup" parameterType="kr.com.brorder.menu.MenuOptionGroup" useGeneratedKeys="true" keyProperty="groupId">
+        INSERT INTO menu_option_group (menu_id, name)
+        VALUES (#{menuId}, #{name})
+    </insert>
+
+    <delete id="deleteGroup" parameterType="java.lang.Integer">
+        DELETE FROM menu_option_group WHERE group_id = #{groupId}
+    </delete>
+
+    <!-- ==================== [상세 메뉴 옵션] ==================== -->
+    <select id="selectOptionsByGroupId" parameterType="java.lang.Integer" resultType="kr.com.brorder.menu.MenuOption">
+        SELECT
+            option_id AS optionId,
+            group_id AS groupId,
+            name,
+            price
+        FROM menu_option
+        WHERE group_id = #{groupId}
+        ORDER BY option_id ASC
+    </select>
+
+    <insert id="insertOption" parameterType="kr.com.brorder.menu.MenuOption">
+        INSERT INTO menu_option (group_id, name, price)
+        VALUES (#{groupId}, #{name}, #{price})
+    </insert>
+
+    <delete id="deleteOption" parameterType="java.lang.Integer">
+        DELETE FROM menu_option WHERE option_id = #{optionId}
+    </delete>
+
+</mapper>

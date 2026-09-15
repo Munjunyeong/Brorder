@@ -1,10 +1,10 @@
 package kr.com.brorder.users;
 
-import java.util.List;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -66,11 +66,6 @@ public class UsersServiceImpl implements UsersService {
 	@Override
 	public void updateaddress(Address item) {
 		usersDao.updateaddress(item);
-	}
-
-	@Override
-	public Users item(String id) {
-		return usersDao.item(id);
 	}
 
 }

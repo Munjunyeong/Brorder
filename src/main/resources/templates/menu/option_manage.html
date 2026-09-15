@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>메뉴 옵션 관리</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
+        .group-box { border: 2px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 8px; background-color: #f9f9f9; }
+        .option-list { margin-top: 10px; padding-left: 20px; border-left: 3px solid #ddd; }
+        .option-item { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+        .btn { padding: 4px 8px; border: none; border-radius: 4px; cursor: pointer; color: white; }
+        .btn-add { background-color: #4CAF50; }
+        .btn-delete { background-color: #f44336; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<h1>🛠️ [<span th:text="${menu.name}">메뉴명</span>] 옵션 관리</h1>
+<p>가게명: <strong th:text="${store.name}">대박치킨</strong></p>
+<hr>
+
+<!-- 1. 새 옵션 그룹 추가 폼 -->
+<div style="margin-bottom: 25px; padding: 15px; border: 2px dashed #008CBA; border-radius: 8px;">
+    <h3>+ 새 옵션 그룹 만들기 (예: 사이즈 선택, 맵기 조절)</h3>
+    <form th:action="@{/store/{storeId}/menu/{menuId}/options/group/add(storeId=${store.storeId}, menuId=${menu.menuId})}" method="post">
+        <input type="text" name="name" required placeholder="옵션 그룹 이름 입력">
+        <button type="submit" class="btn btn-add">그룹 생성</button>
+    </form>
+</div>
+
+<!-- 2. 등록된 옵션 그룹 및 하위 옵션 목록 -->
+<div th:each="group : ${optionGroups}" class="group-box">
+
+    <!-- 그룹 헤더 (그룹명 + 그룹 삭제 버튼) -->
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
+        <h3 style="margin: 0;" th:text="${group.name}">사이즈 선택</h3>
+        <form th:action="@{/store/{storeId}/menu/{menuId}/options/group/{groupId}/delete(storeId=${store.storeId}, menuId=${menu.menuId}, groupId=${group.groupId})}" method="post" onsubmit="return confirm('이 그룹과 하위 옵션이 모두 삭제됩니다. 계속하시겠습니까?');">
+            <button type="submit" class="btn btn-delete">그룹 통째로 삭제</button>
+        </form>
+    </div>
+
+    <!-- 3. 상세 옵션 추가 폼 -->
+    <form th:action="@{/store/{storeId}/menu/{menuId}/options/group/{groupId}/option/add(storeId=${store.storeId}, menuId=${menu.menuId}, groupId=${group.groupId})}" method="post" style="margin-top: 15px;">
+        <input type="text" name="name" required placeholder="옵션명 (예: 대 사이즈)">
+        <input type="number" name="price" required placeholder="추가 금액 (예: 2000)" value="0"> 원
+        <button type="submit" class="btn" style="background-color: #008CBA;">+ 상세 옵션 추가</button>
+    </form>
+
+    <!-- 4. 상세 옵션 리스트 출력 -->
+    <div class="option-list">
+        <div th:if="${#lists.isEmpty(group.options)}" style="color: #888; font-size: 14px;">등록된 상세 옵션이 없습니다.</div>
+
+        <div th:each="option : ${group.options}" class="option-item">
+            <span th:text="${option.name}">대 사이즈</span>
+            <span style="font-weight: bold; color: #ff6b00;">(+<span th:text="${option.price}">2000</span>원)</span>
+
+            <form th:action="@{/store/{storeId}/menu/{menuId}/options/option/{optionId}/delete(storeId=${store.storeId}, menuId=${menu.menuId}, optionId=${option.optionId})}" method="post" onsubmit="return confirm('삭제하시겠습니까?');">
+                <button type="submit" class="btn btn-delete">X</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<br>
+<a th:href="@{/store/{storeId}/menu/manage(storeId=${store.storeId})}">← 메뉴 목록으로 돌아가기</a>
+
+</body>
+</html>

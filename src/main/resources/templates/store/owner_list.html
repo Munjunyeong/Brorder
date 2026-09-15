@@ -55,6 +55,7 @@
             <span th:if="${store.status == 'CLOSE'}" style="color: red; font-weight: bold;">준비중</span>
         </td>
         <td>
+            <a th:href="@{/store/{id}/menu/manage(id=${store.storeId})}" class="btn" style="background-color: #ff9800; color: white;">메뉴 관리</a>
             <!-- 수정 페이지 연동 -->
             <a th:href="@{/store/{id}/update(id=${store.storeId})}" class="btn btn-edit">수정</a>
 

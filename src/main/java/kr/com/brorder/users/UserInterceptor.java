@@ -1,10 +1,9 @@
 package kr.com.brorder.users;
 
-import org.springframework.web.servlet.HandlerInterceptor;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 public class UserInterceptor implements HandlerInterceptor {
 	
@@ -19,11 +18,10 @@ public class UserInterceptor implements HandlerInterceptor {
 		if(users != null) {
 			String role = users.getRole().toUpperCase();
 		
-			if(role.equals("USER")) {
+			if(role.equals("USER"))
 				return true;
-			}
 		}
-
+		
 		response.sendRedirect("/");
 		return false;
 	}

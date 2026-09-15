@@ -1,6 +1,7 @@
 package kr.com.brorder.store;
 
 import jakarta.servlet.http.HttpSession;
+import kr.com.brorder.menu.MenuService;
 import kr.com.brorder.users.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,9 @@ public class StoreController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private MenuService menuService;
 
     @Value("${kopo.upload.path}")
     private String path;
@@ -54,6 +58,9 @@ public class StoreController {
             return "error/404";
         }
 
+        List<kr.com.brorder.menu.Menu> menuList = menuService.getMenusByStoreId(store_id);
+        model.addAttribute("menuList", menuList); // 뷰로 메뉴 목록 전달
+
         model.addAttribute("store", store);
         return "store/detail"; // src/main/resources/templates/store/detail.html
     }
@@ -87,8 +94,19 @@ public class StoreController {
 
     // 3. 수정 화면 이동
     @GetMapping("/{storeId}/update")
-    public String updateForm(@PathVariable("storeId") Integer storeId, Model model) {
-        model.addAttribute("store", storeService.getStoreById(storeId));
+    public String updateForm(@PathVariable("storeId") Integer storeId, HttpSession session ,Model model) {
+        Users users = (Users) session.getAttribute("users");
+        if (users == null) {
+            return "redirect:/login"; // 비로그인 시 로그인 페이지로 튕겨냄
+        }
+        Store store = storeService.getStoreById(storeId);
+
+        // 관리자(ADMIN)가 아니면서, 동시에 본인 가게도 아니라면 튕겨냅니다.
+        if (!"ADMIN".equals(users.getRole()) && !users.getUserid().equals(store.getUserid())) {
+            return "redirect:/store/list";
+        }
+
+        model.addAttribute("store", store);
         return "store/update"; // src/main/resources/templates/store/update.html 반환
     }
 
@@ -98,11 +116,24 @@ public class StoreController {
                               @ModelAttribute Store store,
                               @RequestParam("imageFile") MultipartFile imageFile,
                               HttpSession session) {
+        Users users = (Users) session.getAttribute("users");
+        if (users == null) return "redirect:/login";
+
+        // DB에서 원래 가게 정보를 불러와서 진짜 주인이 맞는지 한 번 더 꼼꼼히 확인 (POST 요청 위조 방지)
+        Store existingStore = storeService.getStoreById(storeId);
+        // 관리자가 아니면서, 본인 가게도 아닐 때 차단
+        if (!"ADMIN".equals(users.getRole()) && !users.getUserid().equals(existingStore.getUserid())) {
+            return "redirect:/store/list";
+        }
+
         store.setStoreId(storeId);
 
         if (imageFile != null && !imageFile.isEmpty()) {
             String savedFilename = saveImage(imageFile);
             store.setTitleImage(savedFilename);
+        } else {
+            // 이미지를 새로 안 올렸을 때 기존 이미지가 날아가지 않도록 유지하는 방어 코드
+            store.setTitleImage(existingStore.getTitleImage());
         }
 
         storeService.updateStore(store);
@@ -111,7 +142,16 @@ public class StoreController {
 
     // 5. 삭제 처리
     @PostMapping("{storeId}/delete")
-    public String deleteStore(@PathVariable("storeId") Integer storeId) {
+    public String deleteStore(@PathVariable("storeId") Integer storeId, HttpSession session) {
+        Users users = (Users) session.getAttribute("users");
+        if (users == null) return "redirect:/login";
+
+        Store existingStore = storeService.getStoreById(storeId);
+        // 관리자가 아니면서, 본인 가게도 아닐 때 차단
+        if (!"ADMIN".equals(users.getRole()) && !users.getUserid().equals(existingStore.getUserid())) {
+            return "redirect:/store/list";
+        }
+
         storeService.removeStore(storeId);
         return "redirect:/store/list";
     }

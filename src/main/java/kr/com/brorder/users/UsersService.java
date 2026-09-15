@@ -24,6 +24,4 @@ public interface UsersService {
 
 	void updateaddress(Address item);
 
-	Users item(String id);
-
 }
