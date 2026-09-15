@@ -1,10 +1,11 @@
 package kr.com.brorder;
 
-import kr.com.brorder.store.StoreInterceptor;
-import kr.com.brorder.users.UserInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import kr.com.brorder.users.UserInterceptor;
+import kr.com.brorder.store.StoreInterceptor;
 
 @Configuration
 public class InterceptorConfig {
@@ -15,6 +16,9 @@ public class InterceptorConfig {
 	}
 
 	@Bean
-	HandlerInterceptor storeInterceptor() { return new StoreInterceptor(); }
+	HandlerInterceptor storeInterceptor() {
+		return new StoreInterceptor();
+	}
+
 
 }
