@@ -99,6 +99,13 @@ public class RootController {
 		return "user/resultpw";
 	}
 	
+	@PostMapping("/resultpw")
+	String resultpw(Users item) {
+		usersService.resultpw(item);
+		
+		return "user/resultpw2";
+	}
+	
 	@ResponseBody
 	@GetMapping("/check_id/{id}")
 	String checkId(@PathVariable String id) {

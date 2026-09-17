@@ -1,50 +1,87 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRORDER - 배달 주소 관리</title>
+<link rel="stylesheet" href="/css/address.css" />
 </head>
 <body>
-	<div>
-		<div>
-			<h3>주소 관리</h3>
-		</div>
-		
-		<div>
-			<table border="1">
-				<thead>
-					<tr>
-						<th>별칭</th>
-						<th>주소</th>
-						<th>배달요청사항</th>
-						<th>공동현관비밀번호</th>	
-						<th>관리</th>		
-					</tr>
-				</thead>
-				
-				<tbody>
-					<tr th:if="${list.isEmpty()}">
-						<td colspan="5">등록된 주소가 없습니다</td>
-					</tr>
-					
-					<tr th:each="item : ${list}">
-						<td th:text="${item.addressname}"></td>
-						<td th:text="${item.address + ' ' + item.addressdetail}"></td>
-						<td th:text="${item.addresscomment}"></td>
-						<td th:text="${item.entrance}"></td>
-						<td>
-							<a th:href="@{|address/update/${item.addressid}|}">수정</a>
-							<a th:href="@{|address/delete/${item.addressid}|}">삭제</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		
-		<div>
-			<div><a href="address/add">주소 추가</a></div>
-			<div><a href="../my">이전</a></div>
-		</div>
-	</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <div>
+      <h1>배달 주소 관리</h1>
+      <p>자주 사용하는 주소를 등록하고 빠르게 주문하세요</p>
+    </div>
+    <button class="btn-add-address" onclick="location.href='address/add'">새 주소 추가</button>
+  </div>
+
+  <div class="info-banner">
+    <span class="icon">🕐</span>
+    <span><b>기본 주소</b>로 설정된 곳으로 주문이 기본 배달됩니다. 최대 <b>5개</b>까지 저장할 수 있어요.</span>
+  </div>
+
+  <div class="address-card is-default">
+    <div class="card-top">
+      <div class="tags">
+        <span class="tag home">🏠 집</span>
+        <span class="tag default-badge">기본 주소</span>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" title="수정">✎</button>
+      </div>
+    </div>
+    <div class="address-main">서울특별시 강남구 테헤란로 427</div>
+    <div class="address-detail">위워크타워 12층 · 문 앞에 놔주세요</div>
+    <div class="card-bottom">
+      <span class="used-time">🕐 최근 2시간 전 사용</span>
+    </div>
+  </div>
+
+  <div class="address-card">
+    <div class="card-top">
+      <div class="tags">
+        <span class="tag work">🏢 회사</span>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" title="수정">✎</button>
+        <button class="icon-btn" title="삭제">🗑</button>
+      </div>
+    </div>
+    <div class="address-main">서울특별시 마포구 월드컵북로 396</div>
+    <div class="address-detail">상암DMC 누리꿈스퀘어 7층 · 초인종 눌러주세요</div>
+    <div class="card-bottom">
+      <span class="used-time">🕐 최근 3일 전 사용</span>
+      <button class="btn-set-default">기본 주소로 설정</button>
+    </div>
+  </div>
+
+  <div class="address-card">
+    <div class="card-top">
+      <div class="tags">
+        <span class="tag etc">📍 기타</span>
+      </div>
+      <div class="card-actions">
+        <button class="icon-btn" title="수정">✎</button>
+        <button class="icon-btn" title="삭제">🗑</button>
+      </div>
+    </div>
+    <div class="address-main">서울특별시 서초구 반포대로 45</div>
+    <div class="address-detail">래미안퍼스티지 101동 1502호</div>
+    <div class="card-bottom">
+      <span class="used-time">🕐 최근 1주 전 사용</span>
+      <button class="btn-set-default">기본 주소로 설정</button>
+    </div>
+  </div>
+
+  <div class="add-address-box" onclick="location.href='address/add'">
+    <span>+</span>
+    <span>새 주소 추가하기</span>
+  </div>
+
+</div>
+
 </body>
 </html>

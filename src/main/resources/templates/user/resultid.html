@@ -1,29 +1,51 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>아이디 찾기 결과 | BRORDER</title>
+<link rel="stylesheet" href="/css/find-result.css" />
 </head>
-<body>	
-	<div>
-		<div>
-			<h3>ID 확인결과</h3>
-		</div>
-		
-		<div th:if="${findid == null}">
-			<p>조회결과가 없습니다.</p>
-		</div>
-		
-		<div th:if="${findid != null}">
-			<p th:text="${findid.id}">ID</p>
-		</div>
-		
-		<div>
-			<a href="../login">로그인</a>
-		</div>
-		<div>
-			<a href="../">메인화면</a>
-		</div>
-	</div>
+<body>
+
+<main class="wrap panel" id="p1" th:if="${findid != null}">
+  <h1 class="page-title">아이디 찾기</h1>
+
+  <div class="result-box">
+    <div class="mark ok">✓</div>
+    <p class="result-msg">조회하신 아이디입니다</p>
+    <p class="result-id" th:text="${findid.id}"></p>
+  </div>
+
+  <div class="btns">
+    <a class="btn btn-primary" href="/login">로그인하기</a>
+    <a class="btn btn-line" href="/findpw">비밀번호 찾기</a>
+  </div>
+
+  <div class="links">
+    <a href="#">회원가입</a><span>|</span><a href="#">고객센터</a>
+  </div>
+</main>
+
+<!-- 2. 아이디 조회 실패 -->
+<main class="wrap panel" id="p2" th:if="${findid == null}">
+  <h1 class="page-title">아이디 찾기</h1>
+
+  <div class="result-box empty">
+    <div class="mark no">!</div>
+    <p class="result-msg">일치하는 회원 정보가 없습니다</p>
+    <p class="result-desc">입력한 이름과 휴대폰 번호를 다시 확인해 주세요.<br>가입 시 사용한 번호가 맞는지도 함께 확인해 주세요.</p>
+  </div>
+
+  <div class="btns">
+    <a class="btn btn-primary" href="/findid">다시 찾기</a>
+    <a class="btn btn-line" href="/register">회원가입</a>
+  </div>
+
+  <div class="links">
+    <a href="/login">로그인</a><span>|</span><a href="#">고객센터</a>
+  </div>
+</main>
+
 </body>
 </html>
