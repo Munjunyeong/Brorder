@@ -62,5 +62,10 @@ public class UsersDaoImpl implements UsersDao {
 		sql.update("users.updateaddress", item);
 	}
 
+	@Override
+	public void resultpw(Users item) {
+		sql.update("users.resultpw", item);
+	}
+
 
 }
