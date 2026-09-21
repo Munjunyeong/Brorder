@@ -16,32 +16,7 @@ import jakarta.servlet.http.HttpSession;
 public class UsersController {
 	
 	@Autowired
-	UsersService service;
-
-	@GetMapping("/")
-	String index() {
-		return "index";
-	}
-
-	@GetMapping("/login")
-	String login() {
-		return "login";
-	}
-
-	@PostMapping("/login")
-	String login(Users item, HttpSession session) {
-		if (service.login(item)) {
-			session.setAttribute("users", item);
-			return "redirect:/";
-		}
-		return "redirect:/login";
-	}
-
-	@GetMapping("/logout")
-	String logout(HttpSession session) {
-		session.invalidate();
-		return "redirect:/";
-	}
+	UsersService service;8040
 
 	@GetMapping("/users/my")
 	String detail(Model model, HttpSession session) {

@@ -73,4 +73,9 @@ public class UsersServiceImpl implements UsersService {
 		return usersDao.item(id);
 	}
 
+	@Override
+	public void resultpw(Users item) {
+		usersDao.resultpw(item);
+	}
+
 }

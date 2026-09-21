@@ -1,0 +1,92 @@
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    color: #222;
+    background: #f5f5f5;
+    min-height: 100vh;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px 20px 100px;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+    color: #aaa;
+    margin-bottom: 30px;
+  }
+  .breadcrumb a {
+    color: #aaa;
+    text-decoration: none;
+  }
+  .breadcrumb a:hover { color: #777; }
+  .breadcrumb .sep { margin: 0 6px; }
+  .breadcrumb .current { color: #555; }
+
+  h1.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .info-banner {
+    background: #191d29;
+    color: #cfd3dc;
+    padding: 16px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  .info-banner b { color: #fff; }
+
+  .search-panel {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .search-panel label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .search-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .search-row input {
+    flex: 1;
+    padding: 13px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  .search-row input:focus { border-color: #ee2b4f; }
+  .search-row input::placeholder { color: #bbb; }
+
+  .btn-search {
+    padding: 0 24px;
+    border: none;
+    border-radius: 8px;
+    background: #ee2b4f;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-search:hover { background: #d5203f; }
+
+  .btn-locate {
+    padding: 11px 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    color: #333;
+    font-size: 13.5px;
+    cursor: pointer;
+  }
+  .btn-locate:hover { background: #fafafa; }
