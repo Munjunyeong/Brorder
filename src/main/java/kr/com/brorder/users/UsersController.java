@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 public class UsersController {
 	
 	@Autowired
-	UsersService service;8040
+	UsersService service;
 
 	@GetMapping("/users/my")
 	String detail(Model model, HttpSession session) {
