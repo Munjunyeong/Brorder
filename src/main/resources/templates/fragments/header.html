@@ -3,8 +3,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <header th:fragment="gnbHeader" class="header" id="mainHeader">
-    <a href="/" class="logo">
-        BRORDER<span class="logo-dot"></span>
+    <a href="/" class="logo" style="display: inline-flex; align-items: center; gap: 14px;">
+        BRORDER
+        <img th:src="@{/images/Brorder_icon.png}" alt="오토바이 아이콘" style="height: 40px; width: auto; object-fit: contain; margin-bottom: 2px;">
     </a>
 
     <ul class="nav-menu">

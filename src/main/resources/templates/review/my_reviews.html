@@ -92,7 +92,7 @@
 
                     <div class="mrc-body">
                         <div class="mrc-top-row">
-                            <span class="mrc-store-name">BRORDER 점포</span>
+                            <span class="mrc-store-name" th:text="${review.storeName}">BRORDER 점포</span>
                             <span class="mrc-store-tag">음식배달</span>
                             <span class="mrc-menu-chip" th:if="${review.menuName != null and review.menuName != ''}">
                                     <i class="fa-solid fa-utensils"></i>
