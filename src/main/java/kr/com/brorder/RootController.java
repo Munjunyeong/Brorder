@@ -42,25 +42,25 @@ public class RootController {
 		
 		return "redirect:/";
 	}
-	
+
 	@PostMapping("/login")
 	String login(Users item, HttpSession session) {
 		if(usersService.login(item)) {
-	        session.setAttribute("users", item);
-	        String role = item.getRole();
+			session.setAttribute("users", item);
+			String role = item.getRole();
 
-	        if(role.equals("USER")) {
-	            return "redirect:/";
-	        }
+			if("USER".equalsIgnoreCase(role)) {
+				return "redirect:/";
+			}
 
-	        if(role.equals("OWNER")) {
-	            return "redirect:/owner/list";
-	        }
+			if("OWNER".equalsIgnoreCase(role)) {
+				return "redirect:/owner/list";
+			}
 
-	        if(role.equals("ADMIN")) {
-	            return "redirect:/admin/userlist";
-	        }
-	    }
+			if("ADMIN".equalsIgnoreCase(role)) {
+				return "redirect:/admin/userlist";
+			}
+		}
 		return "redirect:/login";
 	}
 	
