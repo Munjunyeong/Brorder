@@ -7,24 +7,6 @@ window.addEventListener('scroll', () => {
     if (scrollTopBtn) scrollTopBtn.classList.toggle('show', y > 320);
 }, { passive: true });
 
-/* ── 카운트다운 처리 ── */
-function startTimer(duration, els) {
-    let t = duration;
-    const tick = () => {
-        const h = String(Math.floor(t / 3600)).padStart(2,'0');
-        const m = String(Math.floor((t % 3600) / 60)).padStart(2,'0');
-        const s = String(t % 60).padStart(2,'0');
-        const str = `${h}:${m}:${s}`;
-        els.forEach(el => { if (el) el.textContent = str; });
-        if (--t < 0) t = duration;
-    };
-    tick();
-    setInterval(tick, 1000);
-}
-startTimer(10800, [
-    document.getElementById('countdown')
-]);
-
 /* ── 스크롤 리빌 처리 ── */
 const revealEls = document.querySelectorAll('.reveal, .reveal-scale');
 const revealObs = new IntersectionObserver(entries => {
@@ -102,10 +84,10 @@ document.querySelectorAll('.rest-card, .store-card, .ts-card').forEach(card => {
     });
 });
 
-/* ── 카테고리 탭 활성 처리 ── */
-document.querySelectorAll('.cat-tab').forEach(tab => {
+/* ── 카테고리 탭 활성 처리 (드롭다운 트리거 버튼은 제외) ── */
+document.querySelectorAll('.cat-tab:not(.cat-tab--trigger)').forEach(tab => {
     tab.addEventListener('click', function() {
-        document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.cat-tab:not(.cat-tab--trigger)').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
     });
 });

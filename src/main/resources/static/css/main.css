@@ -1,9 +1,9 @@
-/* ══ [교정 완료] 스크롤 스냅 모션 완벽 제거 및 브라우저 순정 스크롤 시스템 복원 ══ */
+/* ══ 스크롤 스냅 모션 제거 및 브라우저 순정 스크롤 시스템 ══ */
 html {
     scroll-behavior: smooth;
 }
 
-/* 📲 [추가완료] 리뷰 화면 헤더와 글자 두께 및 자간을 100% 일치시키는 렌더링 동기화 */
+/* ══ 텍스트 렌더링 동기화 ══ */
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -29,7 +29,7 @@ body {
     transform: translateY(0);
 }
 
-/* ══ 기존 reveal 유지 ══ */
+/* ══ reveal ══ */
 .reveal {
     opacity: 0;
     transform: translateY(32px);
@@ -41,37 +41,14 @@ body {
     transform: translateY(0);
 }
 
-.reveal-d1 {
-    transition-delay: .08s;
-}
-
-.reveal-d2 {
-    transition-delay: .16s;
-}
-
-.reveal-d3 {
-    transition-delay: .24s;
-}
-
-.reveal-d4 {
-    transition-delay: .32s;
-}
-
-.reveal-d5 {
-    transition-delay: .40s;
-}
-
-.reveal-d6 {
-    transition-delay: .48s;
-}
-
-.reveal-d7 {
-    transition-delay: .56s;
-}
-
-.reveal-d8 {
-    transition-delay: .64s;
-}
+.reveal-d1 { transition-delay: .08s; }
+.reveal-d2 { transition-delay: .16s; }
+.reveal-d3 { transition-delay: .24s; }
+.reveal-d4 { transition-delay: .32s; }
+.reveal-d5 { transition-delay: .40s; }
+.reveal-d6 { transition-delay: .48s; }
+.reveal-d7 { transition-delay: .56s; }
+.reveal-d8 { transition-delay: .64s; }
 
 .reveal-scale {
     opacity: 0;
@@ -102,6 +79,7 @@ body {
     }
 }
 
+/* index 전용 hero 배경(네이비 그라디언트) 오버라이드 */
 .hero {
     background: linear-gradient(135deg, #1A1F2E 0%, #2D364D 100%);
 }

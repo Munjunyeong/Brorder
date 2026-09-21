@@ -88,9 +88,9 @@ public class ReviewController {
         List<MenuOptionDTO> menuOptions = reviewService.getMenusByStoreId(storeId);
         if (menuOptions == null) menuOptions = new ArrayList<>();
 
-        // [수정점] 리뷰가 있으면 DB에 연동된 진짜 상호명을 쓰고, 리뷰가 0개면 임시 상호명 분기 처리
+        //  리뷰가 있으면 DB에 연동된 진짜 상호명을 쓰고, 리뷰가 0개면 임시 상호명 분기 처리
         String storeName = "홍콩반점";
-        if (storeId == 2) storeName = "치킨천국"; // ◀ 혹시 2번 가게 이름이 치킨천국이면 이런 식으로 분기 추가 가능!
+        if (storeId == 2) storeName = "치킨천국"; // ◀ 혹시 2번 가게 이름이 치킨천국이면 이런 식으로 분기 추가
 
         if (!reviews.isEmpty()) {
             storeName = reviews.get(0).getStoreName();
@@ -98,7 +98,7 @@ public class ReviewController {
 
         model.addAttribute("reviewList", reviews);
         model.addAttribute("currentStoreId", storeId);
-        model.addAttribute("storeName", storeName); // ◀ 가방에 이름 쏙 넣기
+        model.addAttribute("storeName", storeName);
         model.addAttribute("menuOptions", menuOptions);
 
         return "review/store_reviews";
