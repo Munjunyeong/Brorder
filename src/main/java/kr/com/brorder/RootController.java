@@ -54,7 +54,7 @@ public class RootController {
 	        }
 
 	        if(role.equals("OWNER")) {
-	            return "redirect:/owner/list";
+	            return "redirect:/store/owner";
 	        }
 
 	        if(role.equals("ADMIN")) {
