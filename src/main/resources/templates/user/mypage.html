@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>마이페이지 - BRORDER</title>
+<link rel="stylesheet" href="/css/mypage.css" />
+</head>
+<body>
+	<div class="page-title">마이페이지</div>
+	<div class="layout">
+		<div class="sidebar">
+			<div class="profile-card">
+				<div class="avatar">김</div>
+				<div class="name" th:text="${users.id}"></div>
+			</div>
+
+			<div class="nav-card">
+				<div class="nav-section-title">회원 관리</div>
+				<div class="nav-item active">
+					<span class="icon"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<circle cx="12" cy="8" r="4" />
+							<path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>
+					</span> 내 정보
+				</div>
+				<div class="nav-item" onclick="location.href='/users/update'">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M12 20h9" />
+							<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+					</span> 회원정보 수정
+				</div>
+				<div class="nav-item" onclick="location.href='/users/my/address'">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z" />
+							<circle cx="12" cy="9" r="2.5" /></svg>
+					</span> 주소 관리 <span class="count">2</span>
+				</div>
+
+				<div class="nav-divider"></div>
+				<div class="nav-section-title">나의 활동</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M6 2h9l5 5v15H6Z" />
+							<path d="M14 2v6h6" /></svg>
+					</span> 주문내역 <span class="count">47</span>
+				</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path
+								d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1Z" /></svg>
+					</span> 내가 쓴 리뷰 <span class="count">12</span>
+				</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path
+								d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+					</span> 찜 목록 <span class="count">28</span>
+				</div>
+
+				<div class="nav-divider"></div>
+				<div class="nav-section-title">설정</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+							<path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
+					</span> 알림 설정
+				</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<rect x="4" y="11" width="16" height="9" rx="2" />
+							<path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+					</span> 비밀번호 변경
+				</div>
+				<div class="nav-item">
+					<span class="icon"> <svg width="16" height="16"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M3 12a9 9 0 0 1 18 0v6a2 2 0 0 1-2 2h-2v-8h4" />
+							<path d="M3 18v-6h4v8H5a2 2 0 0 1-2-2Z" /></svg>
+					</span> 고객센터
+				</div>
+			</div>
+		</div>
+
+		<div class="main">
+			<div class="card">
+				<div class="card-header">
+					<h2>
+						<svg class="icon" width="18" height="18" viewBox="0 0 24 24"
+							fill="none" stroke="currentColor" stroke-width="2">
+							<rect x="5" y="2" width="14" height="20" rx="2" />
+							<path d="M12 18h.01" /></svg>
+						회원 정보
+					</h2>
+					<button class="edit-btn" onclick="location.href='/users/update'">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M12 20h9" />
+							<path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+						정보 수정
+					</button>
+				</div>
+
+				<div class="info-row">
+					<span class="icon-wrap"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path d="M5 9h14M5 15h14M10 3 8 21M16 3l-2 18" /></svg>
+					</span> <span class="label">회원번호</span> <span class="value" th:text="${users.userid}"></span>
+				</div>
+
+				<div class="info-row">
+					<span class="icon-wrap"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<circle cx="12" cy="12" r="4" />
+							<path d="M16 12a4 4 0 1 0-4 4c1.7 0 2.5-.5 3-1" />
+							<path d="M20 12a8 8 0 1 1-3-6.2" /></svg>
+					</span> <span class="label">아이디</span> <span class="value" th:text="${users.id}"></span>
+				</div>
+
+				<div class="info-row">
+					<span class="icon-wrap"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<circle cx="12" cy="8" r="4" />
+							<path d="M4 21c0-4 4-6 8-6s8 2 8 6" /></svg>
+					</span> <span class="label">닉네임</span> <span class="value" th:text="${users.nickname}"></span>
+				</div>
+
+				<div class="info-row">
+					<span class="icon-wrap"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<path
+								d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .6 2.9a2 2 0 0 1-.4 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.9.6a2 2 0 0 1 1.7 2Z" /></svg>
+					</span> <span class="label">전화번호</span> <span class="value" th:text="${users.phone}">
+					<span class="verified">인증완료</span>
+					</span>
+				</div>
+
+				<div class="info-row">
+					<span class="icon-wrap"> <svg width="17" height="17"
+							viewBox="0 0 24 24" fill="none" stroke="currentColor"
+							stroke-width="2">
+							<rect x="3" y="4" width="18" height="18" rx="2" />
+							<path d="M16 2v4M8 2v4M3 10h18" /></svg>
+					</span> <span class="label">가입일</span> <span class="value" th:text="${users.created_data}"></span>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header">
+					<h2>
+						<svg class="icon" width="18" height="18" viewBox="0 0 24 24"
+							fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M3 17 9 11 13 15 21 7" />
+							<path d="M15 7h6v6" /></svg>
+						나의 활동
+					</h2>
+				</div>
+
+				<div class="activity-grid">
+					<div class="activity-item">
+						<div class="icon-badge orders">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path d="M6 2h9l5 5v15H6Z" />
+								<path d="M14 2v6h6" /></svg>
+						</div>
+						<div class="num red">47</div>
+						<div class="title">주문내역</div>
+						<div class="sub">누적 주문</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="icon-badge reviews">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path
+									d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1Z" /></svg>
+						</div>
+						<div class="num red">12</div>
+						<div class="title">내가 쓴 리뷰</div>
+						<div class="sub">작성 리뷰</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="icon-badge likes">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path
+									d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" /></svg>
+						</div>
+						<div class="num teal">28</div>
+						<div class="title">찜 목록</div>
+						<div class="sub">찜한 가게</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="icon-badge address">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z" />
+								<circle cx="12" cy="9" r="2.5" /></svg>
+						</div>
+						<div class="num">2</div>
+						<div class="title">주소 관리</div>
+						<div class="sub">저장된 주소</div>
+					</div>
+
+					<div class="activity-item">
+						<div class="icon-badge points">
+							<svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+								stroke="currentColor" stroke-width="2">
+								<path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-6" />
+								<rect x="2" y="7" width="20" height="5" />
+								<path d="M12 22V7" />
+								<path d="M12 7c-1.5-3-6-3.5-6 0s4.5 3 6 0Z" />
+								<path d="M12 7c1.5-3 6-3.5 6 0s-4.5 3-6 0Z" /></svg>
+						</div>
+						<div class="num">3,500</div>
+						<div class="title">포인트</div>
+						<div class="sub">P 보유 중</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 설정 -->
+			<div class="card">
+				<div class="card-header">
+					<h2>
+						<svg class="icon" width="18" height="18" viewBox="0 0 24 24"
+							fill="none" stroke="currentColor" stroke-width="2">
+							<circle cx="12" cy="12" r="3" />
+							<path
+								d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" /></svg>
+						설정
+					</h2>
+				</div>
+
+				<div class="settings-row">
+					<div class="icon-badge bell">
+						<svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+							<path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
+					</div>
+					<div class="text">
+						<div class="title">알림 설정</div>
+						<div class="sub">주문, 이벤트 알림 관리</div>
+					</div>
+					<div class="dot"></div>
+				</div>
+
+				<div class="settings-row">
+					<div class="icon-badge lock">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<rect x="4" y="11" width="16" height="9" rx="2" />
+							<path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+					</div>
+					<div class="text">
+						<div class="title">비밀번호 변경</div>
+						<div class="sub">마지막 변경: 6개월 전</div>
+					</div>
+				</div>
+
+				<div class="settings-row">
+					<div class="icon-badge support">
+						<svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2">
+							<path d="M3 12a9 9 0 0 1 18 0v6a2 2 0 0 1-2 2h-2v-8h4" />
+							<path d="M3 18v-6h4v8H5a2 2 0 0 1-2-2Z" /></svg>
+					</div>
+					<div class="text">
+						<div class="title">고객센터</div>
+						<div class="sub">1:1 문의 · FAQ · 공지사항</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+</body>
+</html>
