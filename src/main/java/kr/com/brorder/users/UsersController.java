@@ -22,8 +22,11 @@ public class UsersController {
 	@GetMapping("/my")
 	String detail(Model model, HttpSession session) {
 	    Users users = (Users) session.getAttribute("users");
+	    
+	    Info info = service.info(users);
 		
 		model.addAttribute("users", users);
+	    model.addAttribute("info", info);
 		
 		return "user/mypage";
 	}

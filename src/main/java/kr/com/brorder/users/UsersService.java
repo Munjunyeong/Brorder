@@ -28,4 +28,6 @@ public interface UsersService {
 
 	void resultpw(Users item);
 
+	Info info(Users users);
+
 }

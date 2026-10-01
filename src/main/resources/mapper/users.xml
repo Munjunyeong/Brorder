@@ -64,5 +64,18 @@
 	   SET password=#{password}
 	   WHERE id=#{id}
 	</update>
+	
+	<select id="info" resultType="kr.com.brorder.users.Info">
+	   SELECT 
+	    (SELECT COUNT(address_id)
+	     FROM user_address A
+	     WHERE A.user_id = #{userid}) AS address_count,
+	    (SELECT COUNT(order_id)
+	     FROM orders O
+	     WHERE O.user_id = #{userid}) AS order_count,
+	    (SELECT COUNT(review_id)
+	     FROM review R
+	     WHERE R.user_id = #{userid}) AS review_count;
+	</select>
 
 </mapper>
