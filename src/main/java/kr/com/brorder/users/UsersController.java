@@ -22,10 +22,13 @@ public class UsersController {
 	@GetMapping("/my")
 	String detail(Model model, HttpSession session) {
 	    Users users = (Users) session.getAttribute("users");
+	    
+	    Info info = service.info(users);
 		
 		model.addAttribute("users", users);
+	    model.addAttribute("info", info);
 		
-		return "user/detail";
+		return "user/mypage";
 	}
 	
 	@GetMapping("/update")
@@ -96,6 +99,13 @@ public class UsersController {
 	String updateAddress(@PathVariable Long addressid, Address item) {
 		service.updateaddress(item);
 		return "redirect:/users/my/address";
+	}
+	
+	@GetMapping("/my/order")
+	String myorder(Model model, HttpSession session) {
+		
+		
+		return "user/myorder";
 	}
 
 }

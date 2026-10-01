@@ -1,71 +1,83 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRORDER - 회원가입</title>
+<link rel="stylesheet" href="/css/register.css" />
 <script src="/js/register.js"></script>
 </head>
 <body>
-	<div>
-		<div>
-			<h3>회원가입</h3>
-		</div>
-		
-		<div>
-			<form method="post" id="register_form">
-				<div>
-					<div><label>아이디:</label></div>
-					<div><input name="id" type="text"></div>
-					<div><button type="button" id="check_id">중복 확인</button></div>
-				</div>
-			
-				<div>
-					<div><label>비밀번호:</label></div>
-					<div>
-						<input name="password" type="password">
-						<button type="button" class="view">*ㅅ*</button>
-					</div>
-				</div>
-				
-				<div>
-					<div><label>비밀번호확인:</label></div>
-					<div>
-						<input name="check_password" type="password">
-						<button type="button" class="view">*ㅅ*</button>
-					</div>
-				</div>
-				
-				<div>
-					<div><label>닉네임:</label></div>
-					<div><input name="nickname" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>이름:</label></div>
-					<div><input name="name" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>전화번호:</label></div>
-					<div><input name="phone" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>역할:</label></div>
-					<div>
-						<select name="role">
-							<option value="user">주문</option>
-							<option value="owner">판매</option>
-						</select>
-					</div>
-				</div>
-				
-				<div>
-					<div><button type="button" id="accuse" disabled>회원가입</button></div>
-					<div><a href="/">취소</a></div>
-				</div>
-			</form>
-		</div>
-	</div>
+
+<div class="container">
+
+  <form id="register_form" method="post">
+    <h2 class="section-title">필수 입력 정보</h2>
+    <div class="panel">
+
+      <div class="field">
+        <label for="userid">아이디</label>
+        <div class="id-row">
+          <input type="text" id="userid" name="id" placeholder="아이디를 입력하세요">
+          <button type="button" class="btn-dup" id="check_id">중복 체크</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">비밀번호</label>
+        <div class="id-row">
+	        <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요">
+	        <button type="button" class="view">*ㅅ*</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="passwordConfirm">비밀번호 확인</label>
+        <div class="id-row">
+            <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="비밀번호를 다시 입력하세요">
+            <button type="button" class="view">*ㅅ*</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="fullname">이름</label>
+        <input type="text" id="fullname" name="name" placeholder="이름을 입력하세요">
+      </div>
+      
+      <div class="field">
+        <label for="nickname">닉네임</label>
+        <input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요">
+      </div>
+
+      <div class="field">
+        <label>휴대폰 번호</label>
+        <div class="field-input-wrap">
+          <div class="phone-row">
+            <input type="tel" name="phone1" maxlength="3" placeholder="010">
+            <input type="tel" name="phone2" maxlength="4" placeholder="0000">
+            <input type="tel" name="phone3" maxlength="4" placeholder="0000">
+          </div>
+          <span class="verify-msg">✓ 인증이 완료되었습니다</span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>가입 목적</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="purpose" value="order" checked>
+            배달 주문
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="purpose" value="store">
+            스토어 개설
+          </label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="submit-btn" id="accuse" disabled>가입하기</button>
+  </form>
+</div>
+
 </body>
 </html>

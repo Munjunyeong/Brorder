@@ -1,0 +1,212 @@
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    color: #222;
+    background: #fff;
+  }
+
+  /* Header */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 64px;
+    border-bottom: 1px solid #eee;
+  }
+  .logo {
+    font-weight: 800;
+    font-size: 22px;
+    color: #ee2b4f;
+    letter-spacing: -0.5px;
+  }
+  nav {
+    display: flex;
+    gap: 40px;
+  }
+  nav a {
+    text-decoration: none;
+    color: #333;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .btn-login {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .btn-signup {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #1abc9c;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Container */
+  .container {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 60px 20px 100px;
+  }
+
+  /* Stepper */
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 12px;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+  }
+  .step-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-circle.done, .step-circle.active {
+    border-color: #1abc9c;
+  }
+  .step-circle.done::after, .step-circle.active::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1abc9c;
+  }
+  .step-line {
+    width: 110px;
+    height: 1px;
+    background: #ccc;
+  }
+  .step-labels {
+    display: flex;
+    justify-content: center;
+    gap: 76px;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 50px;
+  }
+
+  h2.section-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .panel {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 36px 40px;
+    margin-bottom: 40px;
+  }
+
+  .field {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+  .field:last-child { margin-bottom: 0; }
+  .field label {
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+  .field-input-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+  input[type="text"],
+  input[type="password"],
+  input[type="tel"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+  }
+  input:focus {
+    border-color: #1abc9c;
+  }
+  .id-row {
+    display: flex;
+    gap: 8px;
+  }
+  .id-row input { flex: 1; }
+  .btn-dup {
+    padding: 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .view {
+    padding: 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 13px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .phone-row {
+    display: flex;
+    gap: 8px;
+  }
+  .phone-row input { flex: 1; text-align: center; }
+  .verify-msg {
+    color: #1abc9c;
+    font-size: 12.5px;
+    margin-top: 8px;
+  }
+  .radio-group {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  input[type="radio"] {
+    accent-color: #1abc9c;
+    width: 16px;
+    height: 16px;
+  }
+
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    background: #f0323f;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  .submit-btn:hover { background: #d92a37; }

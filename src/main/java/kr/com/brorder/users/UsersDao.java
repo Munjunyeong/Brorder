@@ -24,4 +24,8 @@ public interface UsersDao {
 
 	void updateaddress(Address item);
 
+	void resultpw(Users item);
+
+	Info info(Users users);
+
 }

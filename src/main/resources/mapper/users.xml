@@ -21,7 +21,7 @@
 	</select>
 	
 	<select id="findpw" resultType="kr.com.brorder.users.Users">
-		SELECT password FROM users
+		SELECT id, password FROM users
 		WHERE id=#{id} AND phone=#{phone}
 	</select>
 	
@@ -58,5 +58,24 @@
 		SET address=#{address}, address_detail=#{addressdetail}, address_comment=#{addresscomment}, entrance=#{entrance}, address_name=#{addressname}
 		WHERE address_id=#{addressid}
 	</update>
+	
+	<update id="resultpw">
+	   UPDATE users
+	   SET password=#{password}
+	   WHERE id=#{id}
+	</update>
+	
+	<select id="info" resultType="kr.com.brorder.users.Info">
+	   SELECT 
+	    (SELECT COUNT(address_id)
+	     FROM user_address A
+	     WHERE A.user_id = #{userid}) AS address_count,
+	    (SELECT COUNT(order_id)
+	     FROM orders O
+	     WHERE O.user_id = #{userid}) AS order_count,
+	    (SELECT COUNT(review_id)
+	     FROM review R
+	     WHERE R.user_id = #{userid}) AS review_count;
+	</select>
 
 </mapper>

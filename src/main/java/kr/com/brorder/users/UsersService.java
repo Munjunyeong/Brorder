@@ -26,4 +26,8 @@ public interface UsersService {
 
 	Users item(String id);
 
+	void resultpw(Users item);
+
+	Info info(Users users);
+
 }

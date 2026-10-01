@@ -1,48 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRORDER - 새 주소 추가</title>
+<link rel="stylesheet" href="/css/addaddress.css" />
 </head>
 <body>
-	<div>
-		<div>
-			<h3>주소 추가</h3>
-		</div>
-		
-		<div>
-			<form method="post">
-				<div>
-					<div><label>주소:</label></div>
-					<div><input name="address" type="text"></div>
-				</div>
-			
-				<div>
-					<div><label>상세주소:</label></div>
-					<div><input name="addressdetail" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>배달요청사항:</label></div>
-					<div><input name="addresscomment" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>공동현관 비밀번호:</label></div>
-					<div><input name="entrance" type="text"></div>
-				</div>
-				
-				<div>
-					<div><label>별칭:</label></div>
-					<div><input name="addressname" type="text"></div>
-				</div>
-				
-				<div>
-					<div><button>등록</button></div>
-					<div><a href="/users/my/address">취소</a></div>
-				</div>
-			</form>
-		</div>
-	</div>
+    <div class="container">
+
+        <div class="breadcrumb">
+            <a href="/">홈</a><span class="sep">›</span>
+            <a href="/users/my">마이페이지</a>   <span class="sep">›</span>
+            <a href="/users/my/address">배달 주소 관리</a><span   class="sep">›</span>
+            <span class="current">새 주소 추가</span>
+        </div>
+
+        <h1 class="page-title">새 주소 추가</h1>
+        <div class="info-banner">
+            자주 사용하는 주소를 등록하고 빠르게 주문하세요. 최대 <b>5개</b>까지 저장할 수 있어요.
+        </div>
+
+        <div class="form-panel">
+            <form method="post">
+
+                <div class="field">
+                    <label for="address">주소</label>
+                    <input type="text" id="address" name="address"
+                        placeholder="위에서 주소를 검색해 주세요" required>
+                </div>
+
+                <div class="field">
+                    <label for="addressdetail">상세주소</label>
+                    <input type="text" id="addressdetail" name="addressdetail"
+                        placeholder="동, 호수 등 상세주소를 입력하세요">
+                </div>
+
+                <div class="field">
+                    <label for="entrance">공동현관 비밀번호</label>
+                    <input type="text" id="entrance" name="entrance" placeholder="예: #1234">
+                    <div class="hint">배달 기사님이 공동현관 출입 시 사용합니다.</div>
+                </div>
+
+                <div class="field">
+                    <label for="addresscomment">배달 요청사항</label>
+                    <input type="text" id="addresscomment" name="addresscomment"
+                        placeholder="예: 문 앞에 두고 벨 눌러주세요">
+                </div>
+
+                <div class="field">
+                    <label for="addressname">별칭</label>
+                    <input type="text" id="addressname" name="addressname"
+                        placeholder="주소를 구분할 이름을 입력하세요">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">등록</button>
+                    <a href="/users/my/address" class="btn-cancel">취소</a>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+
 </body>
 </html>

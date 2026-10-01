@@ -54,7 +54,7 @@ public class RootController {
 	        }
 
 	        if(role.equals("OWNER")) {
-	            return "redirect:/owner/list";
+	            return "redirect:/store/owner";
 	        }
 
 	        if(role.equals("ADMIN")) {
@@ -97,6 +97,13 @@ public class RootController {
 		model.addAttribute("findpw", findpw);
 		
 		return "user/resultpw";
+	}
+	
+	@PostMapping("/resultpw")
+	String resultpw(Users item) {
+		usersService.resultpw(item);
+		
+		return "user/resultpw2";
 	}
 	
 	@ResponseBody
