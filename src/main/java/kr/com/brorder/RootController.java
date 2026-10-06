@@ -30,7 +30,8 @@ public class RootController {
 	
 	@PostMapping("/register")
 	String register(Users item) {
-		usersService.register(item); //프론트에서 받은 데이터를 Users.java를 item이라는 이름으로 만들어서 데이터를 담고 서비스에게 넘김
+		usersService.register(item); //프론트에서 받은 데이터를 Users.java를 item이라는 이름으로 만들어서 
+								 	 //데이터를 담고 서비스에게 넘김
 		
 		return "redirect:"; // redirect : 해당 주소로 보내는 역할
 	}
@@ -45,7 +46,8 @@ public class RootController {
 	
 	@PostMapping("/login")
 	String login(Users item, HttpSession session) {
-		if(usersService.login(item)) {
+		boolean result = usersService.login(item);
+		if(result) {
 	        session.setAttribute("users", item);
 	        String role = item.getRole();
 
@@ -61,7 +63,7 @@ public class RootController {
 	            return "redirect:/admin/userlist";
 	        }
 	    }
-		return "redirect:/login";
+		return "redirect:/login?error=false";
 	}
 	
 	@GetMapping("/logout")
