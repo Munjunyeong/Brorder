@@ -22,6 +22,12 @@
         .option-row { display: flex; justify-content: space-between; font-size: 14px; color: #666; margin-bottom: 6px; }
         .btn-option-change { padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; cursor: pointer; margin-top: 12px; background: #fff; }
         .payment-section { padding: 24px 20px; border-top: 8px solid #f5f5f5; }
+        .payment-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 15px; color: #666; }
+        .payment-row.total { margin-top: 18px; padding-top: 18px; border-top: 1px solid #eee; color: #333; }
+        .payment-row.total span:last-child { font-size: 22px; font-weight: 900; color: #333; }
+        .payment-row .label { color: #333; font-weight: 500; }
+        .payment-row .price { font-weight: 700; color: #333; }
+        .payment-row .delivery-tip { color: #2ac1bc; font-weight: 700; }
         .bottom-actions { padding: 20px; position: sticky; bottom: 0; background: #fff; border-top: 1px solid #eee; display: flex; gap: 10px; }
         .btn-order-submit { flex: 2; padding: 16px; background: #2ac1bc; color: #fff; border: none; border-radius: 4px; font-size: 17px; font-weight: 800; cursor: pointer; }
         .hidden-inputs { display: none; }
@@ -38,12 +44,17 @@
         </header>
 
         <form method="post" action="/orders" id="order-form">
-            <div class="store-info-section">
+            <div class="store-info-section" th:if="${!#lists.isEmpty(menuList)}">
                 <div class="store-name" th:text="${store?.name ?: '가게 정보 없음'}"></div>
                 <input type="hidden" name="storeId" th:value="${store?.storeId}">
             </div>
 
             <div class="menu-list-section" id="menu-area">
+                <div th:if="${#lists.isEmpty(menuList)}" style="padding: 60px 20px; text-align: center; color: #999;">
+                    <i class="fa-solid fa-basket-shopping" style="font-size: 48px; margin-bottom: 20px; display: block; color: #eee;"></i>
+                    <p style="font-size: 16px; font-weight: 500;">장바구니가 비어있습니다.</p>
+                    <a href="/store/list" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #2ac1bc; color: #fff; text-decoration: none; border-radius: 4px; font-weight: 800;">음식 담으러 가기</a>
+                </div>
                 <div th:each="menu, stat : ${menuList}" class="menu-item">
                     <div class="menu-main">
                         <img th:src="@{'/upload/' + ${menu.image}}" class="menu-img">
@@ -73,26 +84,38 @@
                 </div>
             </div>
 
-            <div class="payment-section">
+            <div class="payment-section" th:if="${!#lists.isEmpty(menuList)}">
                 <div style="margin-bottom: 24px;">
                     <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">가게 요청사항</label>
                     <textarea name="requests" rows="3" placeholder="예) 견과류 빼주세요, 벨 누르고 문 앞에 놔주세요"
                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
                 </div>
 
-                <div style="margin-bottom: 15px;">
-                    <label style="font-weight: bold;">결제 수단</label>
-                    <div style="margin-top: 10px; padding: 12px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px; color: #333; font-weight: 500;">
-                        <i class="fa-solid fa-wallet" style="margin-right: 8px; color: #666;"></i>
-                        현장결제
-                    </div>
-                    <input type="hidden" name="paymentMethod" value="CASH">
+                <div style="margin-bottom: 24px;">
+                    <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">결제 수단</label>
+                    <select name="paymentMethod" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #fff; cursor: pointer;">
+                        <option value="KAKAOPAY">카카오페이</option>
+                        <option value="CARD_ON_SITE">현장 카드 결제</option>
+                        <option value="CASH_ON_SITE">현장 현금 결제</option>
+                        <option value="TOSS">토스페이</option>
+                        <option value="NAVERPAY">네이버페이</option>
+                    </select>
                 </div>
-                <div class="payment-row"><span>주문금액</span><span id="subtotal-price">0원</span></div>
-                <div class="total-price" id="final-total-price">0원</div>
+                <div class="payment-row">
+                    <span class="label">주문금액</span>
+                    <span class="price" id="subtotal-price">0원</span>
+                </div>
+                <div class="payment-row">
+                    <span class="label">배달팁</span>
+                    <span class="delivery-tip">+3,000원</span>
+                </div>
+                <div class="payment-row total">
+                    <span style="font-weight: 800; font-size: 18px;">총 결제금액</span>
+                    <span id="final-total-price">3,000원</span>
+                </div>
             </div>
 
-            <div class="bottom-actions">
+            <div class="bottom-actions" th:if="${!#lists.isEmpty(menuList)}">
                 <a th:href="@{/store/{id}(id=${store?.storeId})}"
                    style="display: inline-block; padding: 16px 20px; background: #eee; text-align: center; border-radius: 4px; text-decoration: none; color: #333; font-weight: 800; flex: 1;">
                     메뉴 추가
@@ -404,6 +427,17 @@
 
         document.getElementById('final-total-price').innerText =
             (sub + 3000).toLocaleString() + '원';
+
+        // 서버 전송용 총 가격 업데이트 (필요 시 hidden input 추가 가능)
+        const orderForm = document.getElementById('order-form');
+        let totalPriceInput = orderForm.querySelector('input[name="totalPrice"]');
+        if (!totalPriceInput) {
+            totalPriceInput = document.createElement('input');
+            totalPriceInput.type = 'hidden';
+            totalPriceInput.name = 'totalPrice';
+            orderForm.appendChild(totalPriceInput);
+        }
+        totalPriceInput.value = sub + 3000;
     }
 </script>
 </body>

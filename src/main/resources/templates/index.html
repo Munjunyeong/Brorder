@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 	<th:block th:replace="~{fragments/head :: commonHead}"></th:block>
 	<link rel="stylesheet" th:href="@{/css/main.css}">
@@ -74,9 +74,11 @@
 				<div class="q-icon q-1"><i class="fa-solid fa-motorcycle"></i></div><span>배달 주문</span>
 			</a>
 			<!-- ★ 인기 맛집 -> 인기 메뉴로 변경됨 -->
-			<a th:href="@{/menu/popular}" class="quick-item reveal reveal-d1">
-				<div class="q-icon q-3"><i class="fa-solid fa-utensils"></i></div><span>인기 메뉴</span>
+			<a href="#" class="quick-item reveal reveal-d1" onclick="alert('추후 업데이트 예정입니다!'); location.href='/'; return false;">
+				<div class="q-icon q-3"><i class="fa-solid fa-utensils"></i></div>
+				<span>인기 메뉴</span>
 			</a>
+
 			<a th:href="@{/store/list}" class="quick-item reveal reveal-d2">
 				<div class="q-icon q-4"><i class="fa-solid fa-star"></i></div><span>별점 TOP</span>
 			</a>

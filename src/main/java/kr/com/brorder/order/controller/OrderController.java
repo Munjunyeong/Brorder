@@ -130,7 +130,7 @@ public class OrderController {
             Integer targetStoreId = (menu != null) ? menu.getStoreId() : sId;
             
             // 담기 버튼 누른 후 flow: 장바구니 페이지(/orders/add)로 이동
-            return "redirect:/orders/add?storeId=" + targetStoreId;
+            return "redirect:/orders/add" + (targetStoreId != null ? "?storeId=" + targetStoreId : "");
         }
 
         if (sId != null) {
