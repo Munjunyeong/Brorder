@@ -10,24 +10,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class RootConfig implements WebMvcConfigurer{
-	
+
 	@Value("${kopo.upload.url}")
 	private String uploadUrl;
-	
+
 	@Autowired
 	HandlerInterceptor userInterceptor;
 
-	
+	@Autowired
+	HandlerInterceptor storeInterceptor;
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(userInterceptor).addPathPatterns("/users/**");
+		registry.addInterceptor(storeInterceptor).addPathPatterns("/store/manage/**", "/store/add", "/store/*/update", "/store/*/delete", "/store/owner");
 	}
-	
+
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry
-		.addResourceHandler("/upload/**")
-		.addResourceLocations(uploadUrl);
+				.addResourceHandler("/upload/**")
+				.addResourceLocations(uploadUrl);
 	}
 
 }

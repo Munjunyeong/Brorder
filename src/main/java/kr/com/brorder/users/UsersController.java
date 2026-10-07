@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/users")
 public class UsersController {
 	
 	@Autowired
 	UsersService service;
 
-	@GetMapping("/my")
+	@GetMapping("/users/my")
 	String detail(Model model, HttpSession session) {
 	    Users users = (Users) session.getAttribute("users");
 	    
@@ -31,7 +30,7 @@ public class UsersController {
 		return "user/mypage";
 	}
 	
-	@GetMapping("/update")
+	@GetMapping("/users/update")
 	String update(Model model, HttpSession session) {
 	    Users users = (Users) session.getAttribute("users");
 		
@@ -40,7 +39,7 @@ public class UsersController {
 		return "user/update";
 	}
 	
-	@PostMapping("/update")
+	@PostMapping("/users/update")
 	String update(Users item, HttpSession session) {
 		Users users = (Users) session.getAttribute("users");
 		
@@ -53,7 +52,7 @@ public class UsersController {
 		return "redirect:/users/my";
 	}
 	
-	@GetMapping("/my/address")
+	@GetMapping("/users/my/address")
 	String address(Model model, HttpSession session) {
 		Users users = (Users) session.getAttribute("users");
 		
@@ -64,12 +63,12 @@ public class UsersController {
 		return "user/address";
 	}
 	
-	@GetMapping("/my/address/add")
+	@GetMapping("/users/my/address/add")
 	String addaddress() {
 		return "user/addaddress";
 	}
 	
-	@PostMapping("/my/address/add")
+	@PostMapping("/users/my/address/add")
 	String addaddress(Address item, HttpSession session) {
 		Users users = (Users) session.getAttribute("users");
 		item.setUserid(users.getUserid());
@@ -79,14 +78,14 @@ public class UsersController {
 		return "redirect:/users/my/address";
 	}
 	
-	@GetMapping("/my/address/delete/{addressid}")
+	@GetMapping("/users/my/address/delete/{addressid}")
 	String deleteaddress(@PathVariable Long addressid) {
 		service.deleteaddress(addressid);
 		
 		return "redirect:/users/my/address";
 	}
 	
-	@GetMapping("/my/address/update/{addressid}")
+	@GetMapping("/users/my/address/update/{addressid}")
 	String updateAddress(@PathVariable Long addressid, Model model) {
 		Address item = service.addressitem(addressid);
 		
@@ -95,13 +94,13 @@ public class UsersController {
 		return "user/addressupdate";
 	}
 	
-	@PostMapping("/my/address/update/{addressid}")
+	@PostMapping("/users/my/address/update/{addressid}")
 	String updateAddress(@PathVariable Long addressid, Address item) {
 		service.updateaddress(item);
 		return "redirect:/users/my/address";
 	}
 	
-	@GetMapping("/my/order")
+	@GetMapping("/users/my/order")
 	String myorder(Model model, HttpSession session) {
 		
 		

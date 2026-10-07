@@ -224,6 +224,40 @@ body {
     z-index: 2;
 }
 
+/* 찜 버튼 추가 */
+.sl-wish-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sl-wish-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+}
+
+.sl-wish-btn i {
+    font-size: 1.1rem;
+    color: #ccc;
+    transition: color 0.2s ease;
+}
+
+.sl-wish-btn.active i {
+    color: #E8213A;
+}
+
 /* ── 하단 정보 정렬 ── */
 .sl-info {
     display: flex;

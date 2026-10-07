@@ -17,11 +17,7 @@ public class UserInterceptor implements HandlerInterceptor {
 		Users users = (Users) session.getAttribute("users");
 		
 		if(users != null) {
-			String role = users.getRole().toUpperCase();
-		
-			if(role.equals("USER")) {
-				return true;
-			}
+			return true;
 		}
 
 		response.sendRedirect("/");

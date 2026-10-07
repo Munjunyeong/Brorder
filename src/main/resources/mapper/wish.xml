@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.com.brorder.wish.WishMapper">
+
+    <insert id="insertWish" parameterType="kr.com.brorder.wish.Wish">
+        INSERT INTO wishlist (user_id, store_id, created_data)
+        VALUES (#{userid}, #{storeId}, NOW())
+    </insert>
+
+    <delete id="deleteWish">
+        DELETE FROM wishlist 
+        WHERE user_id = #{userid} AND store_id = #{storeId}
+    </delete>
+
+    <select id="checkWish" resultType="int">
+        SELECT COUNT(*) 
+        FROM wishlist 
+        WHERE user_id = #{userid} AND store_id = #{storeId}
+    </select>
+
+    <select id="selectWishedStoreIds" resultType="int">
+        SELECT store_id 
+        FROM wishlist 
+        WHERE user_id = #{userid}
+    </select>
+
+</mapper>
