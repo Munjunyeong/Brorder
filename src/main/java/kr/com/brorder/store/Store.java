@@ -12,6 +12,15 @@ public class Store {
     private LocalDateTime createdData;
     private String status;
     private String titleImage;
+    private boolean isWished;
+
+    public boolean isWished() {
+        return isWished;
+    }
+
+    public void setWished(boolean wished) {
+        isWished = wished;
+    }
 
     public String getTitleImage() {
         return titleImage;

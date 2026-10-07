@@ -60,6 +60,12 @@
            th:classappend="${store.status == 'CLOSE' ? ' sl-card--closed' : ''}">
 
             <div class="sl-thumb">
+                <!-- 찜 버튼 추가 -->
+                <button type="button" class="sl-wish-btn" th:classappend="${store.wished ? 'active' : ''}" 
+                        th:onclick="'toggleWish(event, ' + ${store.storeId} + ')'">
+                    <i th:class="${store.wished ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+                </button>
+
                 <img th:if="${store.titleImage != null and store.titleImage != ''}"
                      th:src="@{/upload/{filename}(filename=${store.titleImage})}"
                      class="sl-thumb__img"
@@ -112,6 +118,49 @@
 </main>
 
 <th:block th:replace="~{fragments/footer :: defaultFooter}"></th:block>
+
+<script>
+    function toggleWish(event, storeId) {
+        // 부모 a 태그의 클릭 이벤트(상세 페이지 이동) 전파 방지
+        event.preventDefault();
+        event.stopPropagation();
+
+        const btn = event.currentTarget;
+        const icon = btn.querySelector('i');
+
+        fetch(`/wish/toggle/${storeId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.status === 401) {
+                alert('로그인이 필요한 기능입니다.');
+                location.href = '/login';
+                return;
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.success) {
+                if (data.isWished) {
+                    btn.classList.add('active');
+                    icon.className = 'fa-solid fa-heart';
+                } else {
+                    btn.classList.remove('active');
+                    icon.className = 'fa-regular fa-heart';
+                }
+            } else if (data) {
+                alert(data.message || '처리 중 오류가 발생했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('통신 중 오류가 발생했습니다.');
+        });
+    }
+</script>
 
 </body>
 </html>

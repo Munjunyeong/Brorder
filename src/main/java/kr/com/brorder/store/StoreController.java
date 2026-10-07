@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import kr.com.brorder.menu.model.Menu;
 import kr.com.brorder.menu.service.MenuService;
 import kr.com.brorder.users.Users;
+import kr.com.brorder.wish.WishService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,9 @@ public class StoreController {
     @Autowired
     private MenuService menuService;
 
+    @Autowired
+    private WishService wishService;
+
     @Value("${kopo.upload.path}")
     private String path;
 
@@ -34,9 +38,21 @@ public class StoreController {
     @GetMapping("/list")
     public String storeList(@RequestParam(value = "category", required = false) String category,
                             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+                            HttpSession session,
                             Model model) {
         // 카테고리와 검색어를 모두 서비스로 전달
         List<Store> list = storeService.getStoreList(category, searchKeyword);
+
+        // 로그인한 사용자가 있다면 찜 목록 확인
+        Users users = (Users) session.getAttribute("users");
+        if (users != null) {
+            List<Integer> wishedStoreIds = wishService.getWishedStoreIds(users.getUserid());
+            for (Store store : list) {
+                if (wishedStoreIds.contains(store.getStoreId())) {
+                    store.setWished(true);
+                }
+            }
+        }
 
         model.addAttribute("stores", list);
         model.addAttribute("selectedCategory", category); // 선택된 카테고리 강조용
