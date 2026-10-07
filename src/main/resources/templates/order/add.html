@@ -91,6 +91,15 @@
                               style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
                 </div>
 
+                <!-- 🚀 새로 추가하는 수령 방법 섹션 -->
+                <div style="margin-bottom: 24px;">
+                    <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">수령 방법</label>
+                    <select name="deliveryType" onchange="calculateTotal()" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #fff; cursor: pointer;">
+                        <option value="DELIVERY">한집 배달</option>
+                        <option value="PICKUP">픽업</option>
+                    </select>
+                </div>
+
                 <div style="margin-bottom: 24px;">
                     <label style="font-weight: 800; color: #333; font-size: 16px; display: block; margin-bottom: 12px;">결제 수단</label>
                     <select name="paymentMethod" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; background: #fff; cursor: pointer;">
