@@ -53,7 +53,13 @@
         <p><strong>현재상태:</strong> <span th:text="${store.status}">OPEN</span></p>
     </div>
 
-    <div><button>"안녕하세요"</button></div>
+    <!-- 가게 리뷰 -->
+    <div style="margin-top: 20px; text-align: right;">
+        <a th:href="@{/review/store/{id}(id=${store.storeId})}"
+           style="display: inline-block; padding: 10px 20px; background-color: #ff9800; color: white; border-radius: 8px; font-weight: bold; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            ⭐ 이 가게 리뷰 보러가기
+        </a>
+    </div>
 
     <!-- 메뉴 목록 및 관리 (B 기준 + A 권한 체크 적용) -->
     <div class="menu-section">
