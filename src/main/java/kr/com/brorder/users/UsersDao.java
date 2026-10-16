@@ -26,4 +26,6 @@ public interface UsersDao {
 
 	void resultpw(Users item);
 
+	Info info(Users users);
+
 }

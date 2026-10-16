@@ -67,5 +67,10 @@ public class UsersDaoImpl implements UsersDao {
 		sql.update("users.resultpw", item);
 	}
 
+	@Override
+	public kr.com.brorder.users.Info info(Users users) {
+		return sql.selectOne("info", users);
+	}
+
 
 }
