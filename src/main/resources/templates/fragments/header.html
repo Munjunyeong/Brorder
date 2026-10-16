@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <header th:fragment="gnbHeader" class="header" id="mainHeader">
-    <a href="/" class="logo">
-        BRORDER<span class="logo-dot"></span>
+    <a href="/" class="logo" style="display: inline-flex; align-items: center; gap: 14px;">
+        BRORDER
+        <img th:src="@{/images/Brorder_icon.png}" alt="오토바이 아이콘" style="height: 40px; width: auto; object-fit: contain; margin-bottom: 2px;">
     </a>
 
     <ul class="nav-menu">
-        <li><a href="store/list">음식배달</a></li>
+        <li><a th:href="@{/store/list}">음식배달</a></li>
         <li><a href="#">포장주문</a></li>
         <li><a href="#">이벤트</a></li>
         <li><a href="#">브랜드</a></li>
@@ -24,9 +25,9 @@
             <a href="/users/my" class="icon-btn" title="마이페이지">
                 <i class="fa-solid fa-user"></i>
             </a>
-            <a href="#" class="icon-btn" title="장바구니">
+            <a href="/orders/add" class="icon-btn" title="장바구니">
                 <i class="fa-solid fa-basket-shopping"></i>
-                <span class="i-badge">0</span>
+                <span class="i-badge" th:text="${session.cart != null ? session.cart.size() : 0}">0</span>
             </a>
             <a href="/logout" class="btn-auth btn-auth-login">로그아웃</a>
 
