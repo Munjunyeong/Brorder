@@ -23,7 +23,21 @@ public class UsersController {
 	String detail(Model model, HttpSession session) {
 	    Users users = (Users) session.getAttribute("users");
 	    
+	    if (users == null) {
+	        return "redirect:/login";
+	    }
+	    
+	    Long userid = users.getUserid();
+	    
 	    Info info = service.info(users);
+	    users = service.userinfo(userid);
+	    
+	    if (info == null) {
+	        info = new Info();
+	        info.setAddressCount("0");
+	        info.setOrderCount("0");
+	        info.setReviewCount("0");
+	    }
 		
 		model.addAttribute("users", users);
 	    model.addAttribute("info", info);

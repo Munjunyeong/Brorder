@@ -72,5 +72,10 @@ public class UsersDaoImpl implements UsersDao {
 		return sql.selectOne("info", users);
 	}
 
+	@Override
+	public Users userinfo(Long user_id) {
+		return sql.selectOne("userinfo", user_id);
+	}
+
 
 }

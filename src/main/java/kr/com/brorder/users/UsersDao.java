@@ -28,4 +28,6 @@ public interface UsersDao {
 
 	Info info(Users users);
 
+	Users userinfo(Long user_id);
+
 }

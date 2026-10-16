@@ -66,16 +66,16 @@
 	</update>
 	
 	<select id="info" resultType="kr.com.brorder.users.Info">
-	   SELECT 
-	    (SELECT COUNT(address_id)
-	     FROM user_address A
-	     WHERE A.user_id = #{userid}) AS address_count,
-	    (SELECT COUNT(order_id)
-	     FROM orders O
-	     WHERE O.user_id = #{userid}) AS order_count,
-	    (SELECT COUNT(review_id)
-	     FROM review R
-	     WHERE R.user_id = #{userid}) AS review_count;
+       SELECT 
+        (SELECT COUNT(address_id) FROM user_address A WHERE A.user_id = #{userid}) AS addressCount,
+        (SELECT COUNT(order_id) FROM orders O WHERE O.user_id = #{userid}) AS orderCount,
+        (SELECT COUNT(review_id) FROM review R WHERE R.user_id = #{userid}) AS reviewCount;
+	</select>
+	
+	<select id="userinfo" resultType="kr.com.brorder.users.Users">
+	   SELECT U.user_id, U.id, U.name, U.phone, U.role, U.created_data
+       FROM users U
+       WHERE U.user_id = #{user_id};
 	</select>
 
 </mapper>

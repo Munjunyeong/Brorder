@@ -30,4 +30,7 @@ public interface UsersService {
 
 	Info info(Users users);
 
+	Users userinfo(Long user_id);
+
+
 }

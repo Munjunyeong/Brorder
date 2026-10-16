@@ -9,6 +9,7 @@ public class Users {
 	private String role;
 	private String created_data;
 	private String nickname;
+	private String user_address;
 	
 	public Long getUserid() {
 		return userid;
@@ -57,6 +58,12 @@ public class Users {
 	}
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	public String getUser_address() {
+		return user_address;
+	}
+	public void setUser_address(String user_address) {
+		this.user_address = user_address;
 	}
 	
 		

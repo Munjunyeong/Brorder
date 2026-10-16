@@ -83,4 +83,9 @@ public class UsersServiceImpl implements UsersService {
 		return usersDao.info(users);
 	}
 
+	@Override
+	public Users userinfo(Long user_id) {
+		return usersDao.userinfo(user_id);
+	}
+
 }

@@ -38,7 +38,7 @@
 							stroke-width="2">
 							<path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z" />
 							<circle cx="12" cy="9" r="2.5" /></svg>
-					</span> 주소 관리 <span class="count">2</span>
+					</span> 주소 관리 <span class="count" th:text="${info?.addressCount ?: '0'}"></span>
 				</div>
 
 				<div class="nav-divider"></div>
@@ -49,7 +49,7 @@
 							stroke-width="2">
 							<path d="M6 2h9l5 5v15H6Z" />
 							<path d="M14 2v6h6" /></svg>
-					</span> 주문내역 <span class="count" >47</span>
+					</span> 주문내역 <span class="count" th:text="${info?.orderCount ?: '0'}">47</span>
 				</div>
 				<div class="nav-item">
 					<span class="icon"> <svg width="16" height="16"
@@ -57,7 +57,7 @@
 							stroke-width="2">
 							<path
 								d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1Z" /></svg>
-					</span> 내가 쓴 리뷰 <span class="count">12</span>
+					</span> 내가 쓴 리뷰 <span class="count" th:text="${info?.reviewCount ?: '0'}">12</span>
 				</div>
 				<div class="nav-item">
 					<span class="icon"> <svg width="16" height="16"
@@ -187,7 +187,7 @@
 								<path d="M6 2h9l5 5v15H6Z" />
 								<path d="M14 2v6h6" /></svg>
 						</div>
-						<div class="num red">47</div>
+						<div class="num red" th:text="${info?.orderCount ?: '0'}">47</div>
 						<div class="title">주문내역</div>
 						<div class="sub">누적 주문</div>
 					</div>
@@ -199,7 +199,7 @@
 								<path
 									d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1Z" /></svg>
 						</div>
-						<div class="num red">12</div>
+						<div class="num red" th:text="${info?.reviewCount ?: '0'}">12</div>
 						<div class="title">내가 쓴 리뷰</div>
 						<div class="sub">작성 리뷰</div>
 					</div>
@@ -211,7 +211,7 @@
 								<path d="M12 22s8-7.5 8-13a8 8 0 1 0-16 0c0 5.5 8 13 8 13Z" />
 								<circle cx="12" cy="9" r="2.5" /></svg>
 						</div>
-						<div class="num">2</div>
+						<div class="num" th:text="${info?.addressCount ?: '0'}">2</div>
 						<div class="title">주소 관리</div>
 						<div class="sub">저장된 주소</div>
 					</div>
