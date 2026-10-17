@@ -41,7 +41,7 @@ public class RootController {
 		if(session.getAttribute("users") == null)
 			return "login"; //로그인 페이지
 		
-		return "redirect:/login";
+		return "redirect:/";
 	}
 	
 	@PostMapping("/login")
