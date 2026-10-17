@@ -65,11 +65,12 @@
         <label>가입 목적</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="purpose" value="order" checked>
+            <!-- name을 role로 변경, value를 DB에 맞게 수정 -->
+            <input type="radio" name="role" value="USER" checked>
             배달 주문
           </label>
           <label class="radio-option">
-            <input type="radio" name="purpose" value="store">
+            <input type="radio" name="role" value="OWNER">
             스토어 개설
           </label>
         </div>
