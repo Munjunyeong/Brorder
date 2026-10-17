@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: commonHead}"></head>
+<body>
+
+<header th:replace="~{fragments/header :: gnbHeader}"></header>
+
+<!-- ══ 고객센터 히어로 ══ -->
+<section class="support-hero">
+    <div class="support-hero-inner">
+        <span class="section-label" style="color: rgba(255,255,255,.75);">SUPPORT</span>
+        <h1>무엇을 도와드릴까요?</h1>
+        <p>자주 묻는 질문을 먼저 확인해보시고, 해결되지 않으면 아래 연락처로 문의해주세요.</p>
+    </div>
+</section>
+
+<!-- ══ 연락처 카드 ══ -->
+<section class="contact-section">
+    <div class="contact-grid">
+        <div class="contact-card">
+            <div class="contact-icon ci-phone"><i class="fa-solid fa-phone"></i></div>
+            <h3>전화 문의</h3>
+            <p class="contact-main">1588-0000</p>
+            <p class="contact-sub">평일 09:00~22:00<br>주말·공휴일 10:00~20:00</p>
+        </div>
+        <div class="contact-card">
+            <div class="contact-icon ci-mail"><i class="fa-solid fa-envelope"></i></div>
+            <h3>이메일 문의</h3>
+            <p class="contact-main">help@brorder.co.kr</p>
+            <p class="contact-sub">영업일 기준 1~2일 내 답변드려요</p>
+        </div>
+        <div class="contact-card">
+            <div class="contact-icon ci-chat"><i class="fa-solid fa-comment-dots"></i></div>
+            <h3>카카오톡 문의</h3>
+            <p class="contact-main">@BRORDER고객센터</p>
+            <p class="contact-sub">채팅 상담 평일 10:00~18:00</p>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 자주 묻는 질문 ══ -->
+<section class="faq-section">
+    <div class="faq-inner">
+        <h2 class="faq-title"><i class="fa-solid fa-circle-question"></i> 자주 묻는 질문</h2>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>주문을 취소하고 싶어요. 어떻게 하나요?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>주문 완료 후 매장에서 접수(조리 시작) 전까지는 마이페이지 &gt; 주문내역에서 직접 취소할 수 있습니다. 조리가 이미 시작된 경우에는 매장과 직접 조율이 필요하니 고객센터로 문의해주세요.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>배달이 너무 늦어지고 있어요.</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>마이페이지 &gt; 주문내역에서 실시간 배달 상태를 확인하실 수 있습니다. 예상 시간보다 30분 이상 지연되고 있다면 고객센터로 문의해주시면 매장 확인 후 안내드립니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>환불은 언제, 어떻게 처리되나요?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>주문 취소가 승인되면 결제 수단에 따라 영업일 기준 3~5일 이내 환불이 완료됩니다. 카드 결제의 경우 카드사 사정에 따라 조금 더 소요될 수 있습니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>리뷰는 언제부터 작성할 수 있나요?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>주문 상태가 '배달완료'로 변경된 이후부터 해당 주문에 대한 리뷰를 작성하실 수 있습니다. 마이페이지 &gt; 주문내역에서 리뷰 작성 버튼을 확인해주세요.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>회원 탈퇴는 어떻게 하나요?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>마이페이지 &gt; 계정 설정에서 회원 탈퇴를 진행하실 수 있습니다. 진행 중인 주문이 있는 경우 완료 후 탈퇴가 가능합니다.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-q" type="button">
+                    <span>주소를 여러 개 등록할 수 있나요?</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </button>
+                <div class="faq-a">
+                    <p>네, 마이페이지 &gt; 배송지 관리에서 여러 개의 주소를 등록하고 주문 시 선택하실 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/footer :: defaultFooter}"></footer>
+
+<style>
+    /* ══ SUPPORT HERO ══ */
+    .support-hero {
+        background: linear-gradient(135deg, #0f0f1e 0%, #161628 55%, #0a1628 100%);
+        padding: 64px var(--side-pad) 56px;
+        text-align: center;
+    }
+    .support-hero-inner { max-width: 640px; margin: 0 auto; }
+    .support-hero h1 { font-size: 32px; font-weight: 900; color: #fff; margin: 10px 0 12px; letter-spacing: -1px; }
+    .support-hero p { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.7; }
+
+    /* ══ CONTACT CARDS ══ */
+    .contact-section { background: #fff; padding: 48px var(--side-pad); border-bottom: 2px solid var(--light-gray); }
+    .contact-grid { max-width: var(--content-max); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: -92px; position: relative; z-index: 2; }
+    .contact-card { background: #fff; border-radius: 20px; border: 1px solid var(--border-color); box-shadow: var(--shadow-md); padding: 30px 26px; text-align: center; transition: transform .25s, box-shadow .25s; }
+    .contact-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .contact-icon { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin: 0 auto 16px; }
+    .ci-phone { background: linear-gradient(135deg,var(--primary-red),#8e0b26); }
+    .ci-mail { background: linear-gradient(135deg,var(--primary-mint),#15807d); }
+    .ci-chat { background: linear-gradient(135deg,var(--primary-gold),#c58e00); }
+    .contact-card h3 { font-size: 14px; font-weight: 800; color: #999; margin-bottom: 8px; }
+    .contact-main { font-size: 18px; font-weight: 900; color: var(--dark-charcoal); margin-bottom: 8px; }
+    .contact-sub { font-size: 12px; color: #aaa; line-height: 1.6; }
+
+    /* ══ FAQ ══ */
+    .faq-section { background: var(--light-gray); padding: 56px var(--side-pad) 72px; }
+    .faq-inner { max-width: 780px; margin: 0 auto; }
+    .faq-title { font-size: 20px; font-weight: 900; display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
+    .faq-title i { color: var(--primary-red); }
+    .faq-list { display: flex; flex-direction: column; gap: 10px; }
+    .faq-item { background: #fff; border: 1px solid var(--border-color); border-radius: 14px; overflow: hidden; }
+    .faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 22px; background: none; border: none; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--dark-charcoal); text-align: left; }
+    .faq-q i { color: #bbb; font-size: 13px; transition: transform .25s ease; flex-shrink: 0; }
+    .faq-item.open .faq-q i { transform: rotate(180deg); color: var(--primary-mint); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; padding: 0 22px; }
+    .faq-item.open .faq-a { max-height: 240px; padding: 0 22px 18px; }
+    .faq-a p { font-size: 13px; color: #777; line-height: 1.75; }
+
+    @media (max-width: 960px) {
+        .contact-grid { grid-template-columns: 1fr; margin-top: -60px; }
+    }
+    @media (max-width: 680px) {
+        .support-hero h1 { font-size: 24px; }
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.faq-q').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            var item = btn.closest('.faq-item');
+            var wasOpen = item.classList.contains('open');
+            document.querySelectorAll('.faq-item.open').forEach(function (openItem) {
+                if (openItem !== item) openItem.classList.remove('open');
+            });
+            item.classList.toggle('open', !wasOpen);
+        });
+    });
+</script>
+
+</body>
+</html>
