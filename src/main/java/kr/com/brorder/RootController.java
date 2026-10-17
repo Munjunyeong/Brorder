@@ -33,7 +33,7 @@ public class RootController {
 		usersService.register(item); //프론트에서 받은 데이터를 Users.java를 item이라는 이름으로 만들어서 
 								 	 //데이터를 담고 서비스에게 넘김
 		
-		return "redirect:"; // redirect : 해당 주소로 보내는 역할
+		return "redirect:/"; // redirect : 해당 주소로 보내는 역할
 	}
 	
 	@GetMapping("/login")
@@ -41,7 +41,7 @@ public class RootController {
 		if(session.getAttribute("users") == null)
 			return "login"; //로그인 페이지
 		
-		return "redirect:/";
+		return "redirect:/login";
 	}
 	
 	@PostMapping("/login")

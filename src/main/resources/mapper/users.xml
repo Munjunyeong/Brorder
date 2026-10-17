@@ -5,9 +5,9 @@
 
 	<insert id="register">
 		INSERT INTO users
-		(id, password, name, phone, role, created_data)
+		(id, password, name, nickname, phone, role, created_data)
 		VALUES
-		(#{id}, #{password}, #{name}, #{phone}, #{role}, NOW())
+		(#{id}, #{password}, #{name}, #{nickname}, #{phone}, #{role}, NOW())
 	</insert>
 	
 	<select id="item" resultType="kr.com.brorder.users.Users">
